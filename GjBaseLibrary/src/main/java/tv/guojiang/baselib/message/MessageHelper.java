@@ -1,4 +1,4 @@
-package com.efeizao.massage;
+package tv.guojiang.baselib.message;
 
 /**
  * 消息对外处理类
