@@ -5,23 +5,26 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import tv.guojiang.baselib.image.builder.ImageBuilder;
+import tv.guojiang.baselib.image.factory.GlideFactory;
 import tv.guojiang.baselib.image.factory.ImageFactory;
-import tv.guojiang.baselib.image.model.ImageEntity;
 
 /**
  * @author Elvis
  * @date 20/11/2017
- * @description 用于操作工厂：讲builder+factory
+ * @description 用于App使用
  */
 
-public class ImageDirector<T extends ImageBuilder> {
+public class ImageDirector {
 	private static ImageDirector imageDirector;
-	public ImageFactory mFactory;
-	public T mImageBuilder;
+	private static ImageFactory mFactory = ImageConfig.mConfigBuilder.imageFactory;
+	private static ImageBuilder mImageBuilder;
 	private Context mContext;
 
 	private ImageDirector(Context context) {
 		this.mContext = context;
+		if (mFactory == null) {
+			mFactory = new GlideFactory();
+		}
 	}
 
 	public static ImageDirector getInstance(Context context) {
@@ -35,17 +38,30 @@ public class ImageDirector<T extends ImageBuilder> {
 		return imageDirector;
 	}
 
-	public ImageDirector factory(ImageFactory factory) {
-		mFactory = factory;
+	public ImageBuilder imageBuilder() {
+		if (mImageBuilder == null) {
+			mImageBuilder = new ImageBuilder(mContext);
+		}
+		// 清除上一次的entity配置
+		mImageBuilder.clearEntity();
+		return mImageBuilder;
+	}
+
+	public ImageDirector loadImage() {
+		if (mImageBuilder != null) {
+			mFactory.loadImage(mContext, mImageBuilder.mImageEntity);
+		}
 		return this;
 	}
 
-	public <T extends ImageBuilder> T imageBuilder(T imageBuilder) {
-		return imageBuilder;
-	}
-
-	public <K extends ImageEntity> ImageDirector loadImage(@NonNull K imageEntity) {
-		mFactory.loadImage(mContext, imageEntity);
+	/**
+	 * 加载显示图片
+	 *
+	 * @param imageBuilder
+	 * @return
+	 */
+	public ImageDirector loadImage(@NonNull ImageBuilder imageBuilder) {
+		mFactory.loadImage(mContext, imageBuilder.mImageEntity);
 		return this;
 	}
 

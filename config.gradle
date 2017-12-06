@@ -7,6 +7,6 @@ ext {
             support: ['com.android.support:appcompat-v7:26.+',
                       'com.android.support.constraint:constraint-layout:1.0.2'],
             glide  : ['com.github.bumptech.glide:glide:4.3.0',
-                      'jp.wasabeef:glide-transformations:2.0.2']
+                      'jp.wasabeef:glide-transformations:3.0.1']
     ]
 }

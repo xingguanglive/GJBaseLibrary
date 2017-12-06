@@ -1,13 +1,14 @@
 package tv.guojiang.baselib.image;
 
-import tv.guojiang.baselib.image.builder.ImageBuilder;
-
 /**
  * @author Elvis
  * @date 24/11/2017
- * @description tv.guojiang.baselib.image
+ * @description Image初始化配置
  */
 public class ImageConfig {
+	public static ConfigBuilder mConfigBuilder;
 
-
+	public static void init(ConfigBuilder configBuilder) {
+		mConfigBuilder = configBuilder;
+	}
 }

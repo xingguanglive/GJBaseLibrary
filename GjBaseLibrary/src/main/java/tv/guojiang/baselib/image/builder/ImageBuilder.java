@@ -1,11 +1,16 @@
 package tv.guojiang.baselib.image.builder;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import jp.wasabeef.glide.transformations.CropTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import tv.guojiang.baselib.image.ImageDirector;
+import tv.guojiang.baselib.image.annotation.ImageTransfor;
+import tv.guojiang.baselib.image.annotation.ImageType;
 import tv.guojiang.baselib.image.listener.ImageLoadingListener;
 import tv.guojiang.baselib.image.model.ImageEntity;
 import tv.guojiang.baselib.image.model.ImageSize;
@@ -16,13 +21,13 @@ import tv.guojiang.baselib.image.model.ImageSize;
  * @description tv.guojiang.baselib.image
  */
 
-public abstract class ImageBuilder<T extends ImageEntity> {
-	public Context mContext;
-	public T mImageEntity;
+public class ImageBuilder {
+	private Context mContext;
+	public ImageEntity mImageEntity;
 
-	public ImageBuilder(Context context, T imageEntity) {
+	public ImageBuilder(Context context) {
 		this.mContext = context;
-		this.mImageEntity = imageEntity;
+		this.mImageEntity = new ImageEntity();
 	}
 
 	public ImageBuilder imageSize(@NonNull ImageSize imageSize) {
@@ -45,18 +50,28 @@ public abstract class ImageBuilder<T extends ImageEntity> {
 		return this;
 	}
 
+	public ImageBuilder loadingImage(Drawable loadingDrawable) {
+		mImageEntity.loadingDrawable = loadingDrawable;
+		return this;
+	}
+
 	public ImageBuilder errorImage(@DrawableRes int errorImage) {
 		mImageEntity.errorImage = errorImage;
 		return this;
 	}
 
-	public ImageBuilder imageView(ImageView imageView) {
-		mImageEntity.imageView = imageView;
+	public ImageBuilder errorImage(Drawable loadingDrawable) {
+		mImageEntity.errorDrawable = loadingDrawable;
 		return this;
 	}
 
-	public ImageBuilder imageType(ImageEntity.ImageType imageType) {
+	public ImageBuilder imageType(@ImageType int imageType) {
 		mImageEntity.imageType = imageType;
+		return this;
+	}
+
+	public ImageBuilder scaleType(ImageView.ScaleType scaleType) {
+		mImageEntity.scaleType = scaleType;
 		return this;
 	}
 
@@ -65,8 +80,57 @@ public abstract class ImageBuilder<T extends ImageEntity> {
 		return this;
 	}
 
+	public ImageBuilder imageTransformation(@ImageTransfor int... transfors) {
+		for (int transfor : transfors) {
+			mImageEntity.imageTransfor.add(transfor);
+		}
+		return this;
+	}
 
-	public void build() {
-		ImageDirector.getInstance(mContext).loadImage(mImageEntity);
+	public ImageBuilder radius(int radius) {
+		mImageEntity.radius = radius;
+		return this;
+	}
+
+	public ImageBuilder cornerType(RoundedCornersTransformation.CornerType cornerType) {
+		mImageEntity.cornerType = cornerType;
+		return this;
+	}
+
+	public ImageBuilder cropWidth(int cropWidth) {
+		mImageEntity.cropWidth = cropWidth;
+		return this;
+	}
+
+	public ImageBuilder cropHeight(int cropHeight) {
+		mImageEntity.cropHeight = cropHeight;
+		return this;
+	}
+
+	public ImageBuilder cropType(CropTransformation.CropType cropType) {
+		mImageEntity.cropType = cropType;
+		return this;
+	}
+
+	public ImageBuilder colorFilter(int colorFilter) {
+		mImageEntity.colorFilter = colorFilter;
+		return this;
+	}
+
+	public void clearEntity() {
+		mImageEntity = null;
+		mImageEntity = new ImageEntity();
+	}
+
+	/**
+	 * 图片显示
+	 *
+	 * @param imageView
+	 * @return
+	 */
+	public ImageBuilder into(ImageView imageView) {
+		mImageEntity.imageView = imageView;
+		ImageDirector.getInstance(mContext).loadImage();
+		return this;
 	}
 }
