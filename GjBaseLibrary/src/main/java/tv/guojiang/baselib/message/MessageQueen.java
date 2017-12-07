@@ -24,7 +24,7 @@ public class MessageQueen {
     }
 
     /**
-     * 延迟加入队列
+     * 延迟弹出队列
      * @param waitTime
      * @return
      */
@@ -39,7 +39,7 @@ public class MessageQueen {
     }
 
     /**
-     * 出队列
+     * 加入队列
      * @param link
      */
     public void enqueue(MessageLink link) {

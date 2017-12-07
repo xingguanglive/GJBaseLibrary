@@ -12,7 +12,7 @@ import tv.guojiang.baselib.image.model.ImageEntity;
  * @description tv.guojiang.baselib.image
  */
 
-public interface ImageFactory<T extends ImageEntity> {
+public interface ImageFactory {
 
 	/**
 	 * 加载图片
@@ -20,19 +20,19 @@ public interface ImageFactory<T extends ImageEntity> {
 	 * @param context
 	 * @param entity  imageview不为空则显示，为空只加载
 	 */
-	public void loadImage(@NonNull Context context, T entity);
+	void loadImage(@NonNull Context context, ImageEntity entity);
 
 	/**
 	 * 清除内存
 	 *
 	 * @param context
 	 */
-	public void clearMemory(@NonNull Context context);
+	void clearMemory(@NonNull Context context);
 
 	/**
 	 * 取消加载
 	 *
 	 * @param context
 	 */
-	public void clear(@NonNull Context context, ImageView imageView);
+	void clear(@NonNull Context context, ImageView imageView);
 }
