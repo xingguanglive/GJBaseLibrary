@@ -1,4 +1,4 @@
-package tv.guojiang.baselib.image;
+package tv.guojiang.baselib;
 
 import tv.guojiang.baselib.image.factory.ImageFactory;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import tv.guojiang.baselib.BaseLibConfig;
 import tv.guojiang.baselib.image.builder.ImageBuilder;
 import tv.guojiang.baselib.image.factory.GlideFactory;
 import tv.guojiang.baselib.image.factory.ImageFactory;
@@ -16,7 +17,7 @@ import tv.guojiang.baselib.image.factory.ImageFactory;
 
 public class ImageDirector {
 	private static ImageDirector imageDirector;
-	private static ImageFactory mFactory = ImageConfig.mConfigBuilder.imageFactory;
+	private static ImageFactory mFactory = BaseLibConfig.mConfigBuilder.imageFactory;
 	private static ImageBuilder mImageBuilder;
 	private Context mContext;
 
