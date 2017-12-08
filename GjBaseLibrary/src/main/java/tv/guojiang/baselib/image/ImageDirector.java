@@ -70,8 +70,8 @@ public class ImageDirector {
 		mFactory.clear(mContext, imageView);
 	}
 
-	public void clearMemory(@NonNull Context context) {
-		mFactory.clearMemory(context);
+	public void clearMemory() {
+		mFactory.clearMemory(mContext);
 	}
 
 }
