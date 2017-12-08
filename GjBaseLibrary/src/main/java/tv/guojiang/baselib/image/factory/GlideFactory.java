@@ -11,7 +11,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -48,7 +47,7 @@ public class GlideFactory implements ImageFactory {
 		RequestBuilder requestBuilder = requestManager.load(entity.imageUrl);
 		RequestOptions requestOptions = new RequestOptions();
 		requestOptions = addOptions(requestOptions, entity);
-		requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+		requestOptions.diskCacheStrategy(entity.diskCacheStrategy);
 		requestBuilder.apply(requestOptions);
 		if (entity.imageView != null) {
 			if (entity.imageLoadingListener == null) {

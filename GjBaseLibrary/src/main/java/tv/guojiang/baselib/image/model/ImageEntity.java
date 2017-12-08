@@ -3,6 +3,7 @@ package tv.guojiang.baselib.image.model;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class ImageEntity {
 	public int maskId;
 	// color
 	public int colorFilter;
+	// 缓存策略
+	public DiskCacheStrategy diskCacheStrategy = DiskCacheStrategy.ALL;
 	// 绑定的控件
 	public ImageView imageView;
 }

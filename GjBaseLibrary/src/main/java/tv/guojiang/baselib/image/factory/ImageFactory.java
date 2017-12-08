@@ -29,6 +29,7 @@ public interface ImageFactory {
 	 */
 	void clearMemory(@NonNull Context context);
 
+
 	/**
 	 * 取消加载
 	 *

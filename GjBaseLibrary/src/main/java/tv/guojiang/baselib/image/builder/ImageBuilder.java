@@ -6,6 +6,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import tv.guojiang.baselib.image.ImageDirector;
@@ -114,6 +116,11 @@ public class ImageBuilder {
 
 	public ImageBuilder colorFilter(int colorFilter) {
 		mImageEntity.colorFilter = colorFilter;
+		return this;
+	}
+
+	public ImageBuilder diskCacheStrategy(DiskCacheStrategy diskCacheStrategy) {
+		mImageEntity.diskCacheStrategy = diskCacheStrategy;
 		return this;
 	}
 
