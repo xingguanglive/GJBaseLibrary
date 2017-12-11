@@ -49,36 +49,34 @@ public class GlideFactory implements ImageFactory {
 		requestOptions = addOptions(requestOptions, entity);
 		requestOptions.diskCacheStrategy(entity.diskCacheStrategy);
 		requestBuilder.apply(requestOptions);
-		if (entity.imageView != null) {
-			if (entity.imageLoadingListener == null) {
-				if (entity.imageView == null) {
-					requestBuilder.preload(entity.imageSize.getWidth(), entity.imageSize.getHeigth());
-				} else {
-					requestBuilder.into(entity.imageView);
-				}
+		if (entity.imageLoadingListener == null) {
+			if (entity.imageView == null) {
+				requestBuilder.preload(entity.imageSize.getWidth(), entity.imageSize.getHeigth());
 			} else {
-				requestBuilder.into(new SimpleTarget<Drawable>(entity.imageSize.getWidth(), entity.imageSize.getHeigth()) {
-					@Override
-					public void onResourceReady(Drawable resource, Transition transition) {
-						entity.imageLoadingListener.onLoadingComplete(resource);
-					}
-
-					@Override
-					public void onLoadStarted(@Nullable Drawable placeholder) {
-						entity.imageLoadingListener.onLoadStarted(placeholder);
-					}
-
-					@Override
-					public void onLoadFailed(@Nullable Drawable errorDrawable) {
-						entity.imageLoadingListener.onLoadFailed(errorDrawable);
-					}
-
-					@Override
-					public void onLoadCleared(@Nullable Drawable placeholder) {
-						entity.imageLoadingListener.onLoadCleared(placeholder);
-					}
-				});
+				requestBuilder.into(entity.imageView);
 			}
+		} else {
+			requestBuilder.into(new SimpleTarget<Drawable>(entity.imageSize.getWidth(), entity.imageSize.getHeigth()) {
+				@Override
+				public void onResourceReady(Drawable resource, Transition transition) {
+					entity.imageLoadingListener.onLoadingComplete(resource);
+				}
+
+				@Override
+				public void onLoadStarted(@Nullable Drawable placeholder) {
+					entity.imageLoadingListener.onLoadStarted(placeholder);
+				}
+
+				@Override
+				public void onLoadFailed(@Nullable Drawable errorDrawable) {
+					entity.imageLoadingListener.onLoadFailed(errorDrawable);
+				}
+
+				@Override
+				public void onLoadCleared(@Nullable Drawable placeholder) {
+					entity.imageLoadingListener.onLoadCleared(placeholder);
+				}
+			});
 		}
 	}
 
