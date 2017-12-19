@@ -3,6 +3,7 @@ package tv.guojiang.baselib.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 /**
@@ -38,6 +39,9 @@ public class ToastUtil {
 	 */
 	@UiThread
 	public static void showToast(@NonNull Context context, String msg) {
+		if(TextUtils.isEmpty(msg)){
+			return;
+		}
 		if (null == toast) {
 			toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
 		} else {
@@ -55,6 +59,9 @@ public class ToastUtil {
 	 */
 	@UiThread
 	public static void showToast(@NonNull Context context, String msg, int duration) {
+		if(TextUtils.isEmpty(msg)){
+			return;
+		}
 		if (null == toast) {
 			toast = Toast.makeText(context, msg, duration > 0 ? duration : Toast.LENGTH_SHORT);
 		} else {
@@ -88,6 +95,9 @@ public class ToastUtil {
 	 */
 	@UiThread
 	public static void showToastLongTime(@NonNull Context context, String msg) {
+		if(TextUtils.isEmpty(msg)){
+			return;
+		}
 		if (null == toast) {
 			toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
 		} else {
@@ -126,10 +136,13 @@ public class ToastUtil {
 	/**
 	 * toast不為空，更改內容，時間
 	 *
-	 * @param toastId
+	 * @param msg
 	 * @param duration
 	 */
 	private static void show(String msg, int duration) {
+		if(TextUtils.isEmpty(msg)){
+			return;
+		}
 		toast.setText(msg);
 		toast.setDuration(duration);
 	}
