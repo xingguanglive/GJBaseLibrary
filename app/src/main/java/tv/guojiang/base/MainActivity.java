@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import tv.guojiang.sample.ImageLoadSampleActivity;
+import tv.guojiang.sample.NetworkSampleActivity;
 
 public class MainActivity extends AppCompatActivity {
 

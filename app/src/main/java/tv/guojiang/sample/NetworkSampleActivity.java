@@ -1,8 +1,9 @@
-package tv.guojiang.base;
+package tv.guojiang.sample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import tv.guojiang.base.R;
 
 /**
  * @author leo

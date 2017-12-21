@@ -20,8 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".NetworkSampleActivity"/>
-        <activity android:name=".ImageLoadSampleActivity"/>
+        <activity android:name="tv.guojiang.sample.NetworkSampleActivity"/>
+        <activity android:name="tv.guojiang.sample.ImageLoadSampleActivity"/>
     </application>
 
 </manifest>
