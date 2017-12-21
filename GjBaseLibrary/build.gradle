@@ -27,5 +27,7 @@ dependencies {
     compile rootProject.ext.dependencies.retrofit
     compile rootProject.ext.dependencies.okhttp
     compile rootProject.ext.dependencies.glide
-    compile rootProject.ext.dependencies.util
+    compile rootProject.ext.dependencies.multitype
+    compile rootProject.ext.dependencies.luban
+    compile rootProject.ext.dependencies.logger
 }
