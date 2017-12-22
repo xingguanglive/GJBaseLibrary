@@ -5,6 +5,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import java.lang.reflect.Type;
+import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.exception.ApiException;
 import tv.guojiang.baselib.util.GsonProvider;
@@ -44,6 +45,7 @@ public class PagerNetworkTransformer<T> implements ObservableTransformer<String,
                     throw new ApiException(code, response.msg);
                 }
                 return response;
-            });
+            })
+            .compose(new NetworkExceptionTransformer<>());
     }
 }

@@ -10,9 +10,9 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
-import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
+import tv.guojiang.baselib.network.request.BaseRequest;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
 import tv.guojiang.baselib.network.response.PagerResponse;
@@ -34,6 +34,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         ApiClient.Builder builder = new Builder()
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
+            .joinParamsIntoUrl(true)
             .mockData(true)
             .header("header-key", "header.value")
             .param("param-key", "param-value");
@@ -47,12 +48,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.user = "leo";
         request.password = "root";
         request.version = 7;
-        request.pagerSize = 20;
-        request.pager = 1;
 
-        NetworkBiz.getInstance().post("a/b/c", request)
+        NetworkBiz.getInstance().get("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
-            .compose(new NetworkExceptionTransformer<>())
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<PagerResponse<Person>>() {
                 @Override
@@ -78,7 +76,38 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     }
 
-    public static class LoginRequest extends PagerRequest {
+    public void post(View view){
+        PagerRequest request = new PagerRequest();
+        request.pagerSize = 20;
+        request.pager = 1;
+
+        NetworkBiz.getInstance().post("a/b/c", request)
+            .compose(new PagerNetworkTransformer<>(Person.class))
+            .compose(new NormalSchedulerTransformer<>())
+            .subscribe(new Observer<PagerResponse<Person>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(PagerResponse<Person> response) {
+                    Log.d(TAG, "结果长度 ：" + response.data.size());
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+    }
+
+    public static class LoginRequest extends BaseRequest {
 
         @SerializedName("androidVersion")
         public int version;

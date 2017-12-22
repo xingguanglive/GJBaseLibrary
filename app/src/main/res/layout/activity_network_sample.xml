@@ -10,4 +10,10 @@
         android:onClick="get"
         android:text="GET请求"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="post"
+        android:text="POST请求"/>
+
 </LinearLayout>
