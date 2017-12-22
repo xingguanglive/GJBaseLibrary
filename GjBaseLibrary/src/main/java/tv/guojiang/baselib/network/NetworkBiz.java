@@ -2,10 +2,10 @@ package tv.guojiang.baselib.network;
 
 import io.reactivex.Observable;
 import java.io.File;
+import java.util.Map;
 import okhttp3.ResponseBody;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.BaseApi;
-import tv.guojiang.baselib.network.interceptor.UrlInterceptor;
 import tv.guojiang.baselib.network.request.BaseRequest;
 import tv.guojiang.baselib.network.response.DownloadFunction;
 
@@ -34,17 +34,13 @@ public class NetworkBiz {
     private Observable<String> getFinalUrl(String url) {
         return
             Observable.fromCallable(() -> {
+
                 String baseUrl = ApiClient.getInstance().getBaseUrl();
 
                 StringBuilder sb = new StringBuilder();
                 sb.append(baseUrl);
                 sb.append(url);
 
-                // 公共拼接在url中的参数
-                UrlInterceptor urlInterceptor = ApiClient.getInstance().getUrlInterceptor();
-                if (urlInterceptor != null) {
-                    sb.append(urlInterceptor.intercept(url));
-                }
                 return sb.toString();
             });
     }
@@ -69,7 +65,7 @@ public class NetworkBiz {
      */
     public <T extends BaseRequest> Observable<String> post(String url, BaseRequest request) {
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.post(finalUrl, request.getRequestParams()))
+            .flatMap(finalUrl -> mBaseApi.post(finalUrl, joinParams(request.getRequestParams())))
             .map(ResponseBody::string);
     }
 
@@ -83,6 +79,14 @@ public class NetworkBiz {
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.download(url))
             .map(new DownloadFunction(file));
+    }
+
+    private Map<String, String> joinParams(Map<String, String> source) {
+        Map<String, String> params = ApiClient.getInstance().getParams();
+        if (params != null && params.size() > 0) {
+            source.putAll(params);
+        }
+        return source;
     }
 
 }

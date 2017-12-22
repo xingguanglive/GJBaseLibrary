@@ -8,11 +8,11 @@ import android.view.View;
 import com.google.gson.annotations.SerializedName;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import okhttp3.OkHttpClient;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ApiClient;
+import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
 import tv.guojiang.baselib.network.response.PagerResponse;
@@ -30,9 +30,14 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
-        OkHttpClient okHttpClient = ApiClient.getInstance().getOkHttpClient(true);
-        ApiClient.getInstance().setBaseUrl("http://www.baidu.com/");
-        ApiClient.getInstance().initRetrofit(okHttpClient);
+        ApiClient.Builder builder = new Builder()
+            .baseUrl("http://www.baidu.com")
+            .httpLogEnable(true)
+            .mockData(true)
+            .header("header-key", "header.value")
+            .param("param-key", "param-value");
+
+        ApiClient.getInstance().build(builder);
     }
 
     public void get(View view) {
@@ -44,7 +49,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.pagerSize = 20;
         request.pager = 1;
 
-        NetworkBiz.getInstance().post("a/b/c", request)
+        NetworkBiz.getInstance().get("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NetworkExceptionTransformer<>())
             .subscribe(new Observer<PagerResponse<Person>>() {

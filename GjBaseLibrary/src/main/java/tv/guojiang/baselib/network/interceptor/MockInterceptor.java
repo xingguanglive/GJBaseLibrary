@@ -12,7 +12,7 @@ import okhttp3.ResponseBody;
  *
  * @author leo
  */
-public class TestInterceptor implements Interceptor {
+public class MockInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {

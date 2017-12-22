@@ -1,23 +1,26 @@
 package tv.guojiang.baselib.network.config;
 
+import android.support.v4.util.ArrayMap;
+import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tv.guojiang.baselib.network.interceptor.TestInterceptor;
-import tv.guojiang.baselib.network.interceptor.UrlInterceptor;
+import tv.guojiang.baselib.network.interceptor.HeaderInterceptor;
+import tv.guojiang.baselib.network.interceptor.MockInterceptor;
+import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
 /**
  * OkHttp与Retrofit的配置信息。接口业务状态码请在{@link ServerCode}中进行配置。
  */
-public class ApiClient {
+public final class ApiClient {
+
+    private Builder mBuilder;
 
     private Retrofit mRetrofit;
 
-    private String mBaseUrl;
-
-    private UrlInterceptor mUrlInterceptor;
+    private Map<String, String> mParams;
 
     private ApiClient() {
     }
@@ -32,76 +35,73 @@ public class ApiClient {
     }
 
     /**
-     * 初始化BaseUrl.<em>Url格式为 http://www.guojiang.tv/ </em>
+     * 构造客户端时必须调用的方法，以配置参数
      */
-    public void setBaseUrl(String baseUrl) {
-        mBaseUrl = baseUrl;
+    public void build(Builder builder) {
+        mBuilder = builder;
     }
 
     public String getBaseUrl() {
-        return mBaseUrl;
-    }
-
-    public void setUrlInterceptor(UrlInterceptor interceptor) {
-        mUrlInterceptor = interceptor;
-    }
-
-    public UrlInterceptor getUrlInterceptor() {
-        return mUrlInterceptor;
-    }
-
-    /**
-     * 默认的OkHttpClient
-     *
-     * @param logEnable 是否打印网络日志
-     */
-    public OkHttpClient getOkHttpClient(boolean logEnable) {
-
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-        if (logEnable) {
-            // 网络请求Log信息
-            HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
-            loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(loggerInterceptor);
-            builder.addInterceptor(new TestInterceptor());
+        String baseUrl = mBuilder.mBaseUrl;
+        if (baseUrl == null) {
+            throw new NullPointerException(
+                "call " + Builder.class.getName() + ".baseUrl(url) first !!");
         }
+        return baseUrl;
+    }
 
-        return builder.build();
+    public Map<String, String> getParams() {
+        return mParams;
     }
 
     /**
      * 初始化Retrofit
      */
-    public void initRetrofit(OkHttpClient okHttpClient) {
-        mRetrofit = new Retrofit.Builder()
-            .baseUrl(mBaseUrl)
+    private Retrofit initRetrofit() {
+
+        if (mBuilder == null) {
+            throw new NullPointerException("call ApiClient.build(builder) first !!! ");
+        }
+
+        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
+
+        // 注意几个Interceptor的顺序
+
+        // http 日志
+        if (mBuilder.mHttpLogEnable) {
+            HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
+            loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            okHttpBuilder.addInterceptor(loggerInterceptor);
+        }
+
+        // 请求头
+        if (mBuilder.mHeaders != null && mBuilder.mHeaders.size() > 0) {
+            okHttpBuilder.addInterceptor(new HeaderInterceptor(mBuilder.mHeaders));
+        }
+
+        // 公共参数
+        if (mBuilder.mParams != null && mBuilder.mParams.size() > 0) {
+            if (mBuilder.mJoinParamIntoUrl) {
+                // 添加到Url上
+                okHttpBuilder.addInterceptor(new UrlParamsInterceptor(mBuilder.mParams));
+            } else {
+                // 添加到参数中
+                mParams = mBuilder.mParams;
+            }
+        }
+
+        if (mBuilder.mMockData) {
+            okHttpBuilder.addInterceptor(new MockInterceptor());
+        }
+
+        OkHttpClient okHttpClient = okHttpBuilder.build();
+
+        return new Retrofit.Builder()
+            .baseUrl(getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(okHttpClient)
             .build();
-    }
-
-    /**
-     * 获取  Retrofit Service. 预留的,暂时可以不使用
-     *
-     * @param serviceClazz Retrofit Api Service's Class
-     * @param retrofit Retrofit
-     * @return Retrofit Api Service Object
-     */
-    public <T> T getApiService(Class<T> serviceClazz, Retrofit retrofit) {
-
-        if (retrofit == null) {
-            throw new NullPointerException(
-                "call ApiClient.getInstance().initRetrofit(OkHttpClient client) first!!!");
-        }
-
-        if (mBaseUrl == null) {
-            throw new NullPointerException(
-                "call ApiClient.getInstance().setBaseUrl(String baseUrl) first!!!");
-        }
-
-        return retrofit.create(serviceClazz);
     }
 
     /**
@@ -111,6 +111,103 @@ public class ApiClient {
      * @return Retrofit Api Service Object
      */
     public <T> T getApiService(Class<T> serviceClazz) {
-        return getApiService(serviceClazz, mRetrofit);
+        if (mRetrofit == null) {
+            mRetrofit = initRetrofit();
+        }
+        return mRetrofit.create(serviceClazz);
+    }
+
+
+    public final static class Builder {
+
+        /**
+         * 是否打印 Http Log
+         */
+        private boolean mHttpLogEnable;
+
+        /**
+         * 是否需要模拟数据. 测试的时候使用
+         */
+        private boolean mMockData;
+
+        /**
+         * 通用的参数
+         */
+        private Map<String, String> mParams;
+
+        /**
+         * 是否将公共参数拼接在 url上
+         */
+        private boolean mJoinParamIntoUrl;
+
+        private Map<String, String> mHeaders;
+
+        private String mBaseUrl;
+
+        public Builder httpLogEnable(boolean logEnable) {
+            this.mHttpLogEnable = logEnable;
+            return this;
+        }
+
+        public Builder mockData(boolean mockData) {
+            this.mMockData = mockData;
+            return this;
+        }
+
+        /**
+         * 初始化BaseUrl.<em>Url格式为 http://www.guojiang.tv/ </em>
+         */
+        public Builder baseUrl(String baseUrl) {
+            this.mBaseUrl = baseUrl;
+            return this;
+        }
+
+        /**
+         * 接口统一添加的请求头
+         */
+        public Builder header(String key, String value) {
+            if (mHeaders == null) {
+                mHeaders = new ArrayMap<>();
+            }
+            mHeaders.put(key, value);
+            return this;
+        }
+
+        /**
+         * 接口统一添加的请求头
+         */
+        public Builder headers(Map<String, String> headers) {
+            this.mHeaders = headers;
+            return this;
+        }
+
+        /**
+         * 接口的通用参数
+         */
+        public Builder param(String key, String value) {
+            if (mParams == null) {
+                mParams = new ArrayMap<>();
+            }
+            mParams.put(key, value);
+            return this;
+        }
+
+        /**
+         * 接口的通用参数
+         */
+        public Builder params(Map<String, String> params) {
+            this.mParams = params;
+            return this;
+        }
+
+        /**
+         * 是否将通用的参数拼接到url上
+         *
+         * @param joinParamIntoUrl true:通用参数将被添加到请求头上 false:通用参数根据请求方式的普通添加到对应的参数中
+         */
+        public Builder joinParamsIntoUrl(boolean joinParamIntoUrl) {
+            this.mJoinParamIntoUrl = joinParamIntoUrl;
+            return this;
+        }
     }
 }
