@@ -53,7 +53,7 @@ public class NetworkBiz {
      */
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.get(finalUrl, request.getRequestParams()))
+            .flatMap(finalUrl -> mBaseApi.get(finalUrl, joinParams(request.getRequestParams())))
             .map(ResponseBody::string);
     }
 

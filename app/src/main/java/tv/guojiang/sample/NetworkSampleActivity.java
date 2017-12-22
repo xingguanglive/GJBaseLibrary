@@ -16,6 +16,7 @@ import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
 import tv.guojiang.baselib.network.response.PagerResponse;
+import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
 
 /**
  * @author leo
@@ -31,7 +32,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_network_sample);
 
         ApiClient.Builder builder = new Builder()
-            .baseUrl("http://www.baidu.com")
+            .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
             .mockData(true)
             .header("header-key", "header.value")
@@ -49,9 +50,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.pagerSize = 20;
         request.pager = 1;
 
-        NetworkBiz.getInstance().get("a/b/c", request)
+        NetworkBiz.getInstance().post("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NetworkExceptionTransformer<>())
+            .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<PagerResponse<Person>>() {
                 @Override
                 public void onSubscribe(Disposable d) {

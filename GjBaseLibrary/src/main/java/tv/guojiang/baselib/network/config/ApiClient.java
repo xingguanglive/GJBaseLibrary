@@ -66,14 +66,6 @@ public final class ApiClient {
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
 
         // 注意几个Interceptor的顺序
-
-        // http 日志
-        if (mBuilder.mHttpLogEnable) {
-            HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
-            loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            okHttpBuilder.addInterceptor(loggerInterceptor);
-        }
-
         // 请求头
         if (mBuilder.mHeaders != null && mBuilder.mHeaders.size() > 0) {
             okHttpBuilder.addInterceptor(new HeaderInterceptor(mBuilder.mHeaders));
@@ -90,6 +82,14 @@ public final class ApiClient {
             }
         }
 
+        // http 日志
+        if (mBuilder.mHttpLogEnable) {
+            HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
+            loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            okHttpBuilder.addInterceptor(loggerInterceptor);
+        }
+
+        // 模拟数据
         if (mBuilder.mMockData) {
             okHttpBuilder.addInterceptor(new MockInterceptor());
         }
