@@ -55,7 +55,7 @@ public class NetworkBiz {
      * @param url 接口地址
      * @param request 请求
      */
-    public Observable<String> get(String url, BaseRequest request) {
+    public <T extends BaseRequest> Observable<String> get(String url, T request) {
         return
             getFinalUrl(url)
                 .flatMap(finalUrl -> mBaseApi.get(finalUrl, request.getRequestParams()))
@@ -68,7 +68,7 @@ public class NetworkBiz {
      * @param url 接口地址
      * @param request 请求
      */
-    public Observable<String> post(String url, BaseRequest request) {
+    public <T extends BaseRequest> Observable<String> post(String url, T request) {
         return
             getFinalUrl(url)
                 .flatMap(finalUrl -> mBaseApi.post(finalUrl, request.getRequestParams()))

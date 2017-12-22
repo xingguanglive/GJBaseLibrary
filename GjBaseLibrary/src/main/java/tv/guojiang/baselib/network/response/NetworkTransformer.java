@@ -36,7 +36,7 @@ public class NetworkTransformer<T> implements ObservableTransformer<String, Base
         return upstream
             .map(json -> {
                 // 将json->BaseResponse<T> 对象
-                Type type = TypeToken.getParameterized(Response.class, mDataClazz).getType();
+                Type type = TypeToken.getParameterized(BaseResponse.class, mDataClazz).getType();
                 BaseResponse<T> response = GsonProvider.getInstance().fromJson(json, type);
 
                 int code = response.code;

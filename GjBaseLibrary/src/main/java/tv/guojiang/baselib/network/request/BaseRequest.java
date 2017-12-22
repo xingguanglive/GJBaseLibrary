@@ -18,7 +18,7 @@ public class BaseRequest {
      * 获取请求参数
      */
     public Map<String, String> getRequestParams() {
-        return getRequestParams(getClass());
+        return getRequestParams(this.getClass());
     }
 
     private Map<String, String> getRequestParams(Class clazz) {

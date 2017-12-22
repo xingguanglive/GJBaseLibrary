@@ -4,7 +4,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import tv.guojiang.baselib.network.exception.NetworkExceptionWrapper;
-import tv.guojiang.baselib.network.response.BaseResponse;
 
 /**
  * 处理网络错误的Transformer.
@@ -12,10 +11,10 @@ import tv.guojiang.baselib.network.response.BaseResponse;
  * @author leo
  */
 public class NetworkExceptionTransformer<T> implements
-    ObservableTransformer<BaseResponse<T>, BaseResponse<T>> {
+    ObservableTransformer<T, T> {
 
     @Override
-    public ObservableSource<BaseResponse<T>> apply(Observable<BaseResponse<T>> upstream) {
+    public ObservableSource<T> apply(Observable<T> upstream) {
         return upstream
             // 调用链只要有错误发生时，就会调用该方法
             // 不需要再做其他的错误处理
