@@ -43,6 +43,9 @@ public class BaseRequest {
                 try {
                     if (field.getType() == String.class && field.get(this) == null) {
                         continue;
+                    } else if (field.getType() == Map.class) {
+                        // 避免map被加入参数中
+                        continue;
                     }
                     requestParams.put(field.getName(), String.valueOf(field.get(this)));
                 } catch (IllegalAccessException e) {

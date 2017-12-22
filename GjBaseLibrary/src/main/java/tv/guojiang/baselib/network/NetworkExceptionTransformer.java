@@ -10,8 +10,7 @@ import tv.guojiang.baselib.network.exception.NetworkExceptionWrapper;
  *
  * @author leo
  */
-public class NetworkExceptionTransformer<T> implements
-    ObservableTransformer<T, T> {
+public class NetworkExceptionTransformer<T> implements ObservableTransformer<T, T> {
 
     @Override
     public ObservableSource<T> apply(Observable<T> upstream) {

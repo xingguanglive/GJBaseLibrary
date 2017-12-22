@@ -13,7 +13,7 @@ import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ApiClient;
-import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
 import tv.guojiang.baselib.network.response.PagerResponse;
 
@@ -41,6 +41,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.user = "leo";
         request.password = "root";
         request.version = 7;
+        request.pagerSize = 20;
+        request.pager = 1;
 
         NetworkBiz.getInstance().post("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
@@ -69,7 +71,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     }
 
-    public static class LoginRequest extends BaseRequest {
+    public static class LoginRequest extends PagerRequest {
 
         @SerializedName("androidVersion")
         public int version;
