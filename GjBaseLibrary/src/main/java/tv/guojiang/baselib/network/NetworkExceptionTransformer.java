@@ -3,8 +3,6 @@ package tv.guojiang.baselib.network;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import tv.guojiang.baselib.network.config.ServerCode;
-import tv.guojiang.baselib.network.exception.ApiException;
 import tv.guojiang.baselib.network.exception.NetworkExceptionWrapper;
 import tv.guojiang.baselib.network.response.BaseResponse;
 
@@ -19,13 +17,6 @@ public class NetworkExceptionTransformer<T> implements
     @Override
     public ObservableSource<BaseResponse<T>> apply(Observable<BaseResponse<T>> upstream) {
         return upstream
-            .doOnNext(response -> {
-                int code = response.code;
-                // 封装业务错误
-                if (code != ServerCode.SUCCESS) {
-                    throw new ApiException(code, response.msg);
-                }
-            })
             // 调用链只要有错误发生时，就会调用该方法
             // 不需要再做其他的错误处理
             .onErrorResumeNext(throwable -> {

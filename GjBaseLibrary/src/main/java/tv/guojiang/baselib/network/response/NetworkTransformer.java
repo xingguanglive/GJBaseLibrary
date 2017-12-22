@@ -4,8 +4,10 @@ import com.google.gson.reflect.TypeToken;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.functions.Function;
 import java.lang.reflect.Type;
+import tv.guojiang.baselib.network.NetworkExceptionTransformer;
+import tv.guojiang.baselib.network.config.ServerCode;
+import tv.guojiang.baselib.network.exception.ApiException;
 import tv.guojiang.baselib.util.GsonProvider;
 
 /**
@@ -32,15 +34,19 @@ public class NetworkTransformer<T> implements ObservableTransformer<String, Base
     @Override
     public ObservableSource<BaseResponse<T>> apply(Observable<String> upstream) {
         return upstream
-            .map(new Function<String, BaseResponse<T>>() {
-                @Override
-                public BaseResponse<T> apply(String json) throws Exception {
-                    // 将json->BaseResponse<T> 对象
-                    Type type = TypeToken.getParameterized(Response.class, mDataClazz).getType();
-                    return GsonProvider.getInstance().fromJson(json, type);
-                }
-            });
+            .map(json -> {
+                // 将json->BaseResponse<T> 对象
+                Type type = TypeToken.getParameterized(Response.class, mDataClazz).getType();
+                BaseResponse<T> response = GsonProvider.getInstance().fromJson(json, type);
 
-        // todo 错误处理
+                int code = response.code;
+                // 封装业务错误
+                if (code != ServerCode.SUCCESS) {
+                    throw new ApiException(code, response.msg);
+                }
+
+                return response;
+            })
+            .compose(new NetworkExceptionTransformer<>());
     }
 }
