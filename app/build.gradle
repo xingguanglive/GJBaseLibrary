@@ -27,4 +27,6 @@ dependencies {
     compile rootProject.ext.dependencies.support
     testCompile 'junit:junit:4.12'
     compile project(':GjBaseLibrary')
+
+//    compile 'com.github.xingguanglive:GJBaseLibrary:1.0.6'
 }
