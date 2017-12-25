@@ -40,13 +40,19 @@ public class LogsWriter {
         return mHandler.obtainMessage(0, new Date() + " ------ " + tag + " ------------- " + msg + "/r");
     }
 
+    /**
+     * 删除7天日志
+     */
     private void deleteFile() {
         File fileMK = new File(DISK_PATH);
         File[] files = fileMK.listFiles();
-        if (null == files){
+        if (null == files) {
             return;
         }
         for (File f : files) {
+            if (f.getName().indexOf("_") < 0) {
+                break;
+            }
             String fileTime = f.getName().substring(0, f.getName().indexOf("_"));
             try {
                 Date fdate = new SimpleDateFormat("yyyy-MM-dd").parse(fileTime);
