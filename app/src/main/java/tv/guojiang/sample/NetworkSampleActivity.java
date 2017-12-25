@@ -31,15 +31,15 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
-        ApiClient.Builder builder = new Builder()
+        ApiClient apiClient = new Builder()
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
-            .joinParamsIntoUrl(true)
+            .joinParamsIntoUrl(false)
             .mockData(true)
             .header("header-key", "header.value")
-            .param("param-key", "param-value");
+            .param("param-key", "param-value")
+            .builder();
 
-        ApiClient.getInstance().build(builder);
     }
 
     public void get(View view) {
@@ -76,7 +76,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     }
 
-    public void post(View view){
+    public void post(View view) {
         PagerRequest request = new PagerRequest();
         request.pagerSize = 20;
         request.pager = 1;

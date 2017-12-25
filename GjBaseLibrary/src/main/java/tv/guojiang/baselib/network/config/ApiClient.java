@@ -34,10 +34,7 @@ public final class ApiClient {
         return Singleton.INSTANCE;
     }
 
-    /**
-     * 构造客户端时必须调用的方法，以配置参数
-     */
-    public void build(Builder builder) {
+    private void setBuilder(Builder builder) {
         mBuilder = builder;
     }
 
@@ -104,6 +101,7 @@ public final class ApiClient {
             .build();
     }
 
+
     /**
      * 获取通用的 Retrofit Service
      *
@@ -116,7 +114,6 @@ public final class ApiClient {
         }
         return mRetrofit.create(serviceClazz);
     }
-
 
     public final static class Builder {
 
@@ -209,5 +206,12 @@ public final class ApiClient {
             this.mJoinParamIntoUrl = joinParamIntoUrl;
             return this;
         }
+
+        public ApiClient builder() {
+            ApiClient apiClient = ApiClient.getInstance();
+            apiClient.setBuilder(this);
+            return apiClient;
+        }
+
     }
 }

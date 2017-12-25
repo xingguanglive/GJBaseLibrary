@@ -1,17 +1,22 @@
 package tv.guojiang.baselib.network.request;
 
 import android.support.v4.util.ArrayMap;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * Request基类
+ * Request基类.
+ *
+ * 默认情况下会将所有的字段当做请求参数传递到后台，如果不想最后的参数被当做请求参数传递到服务器，
+ * 请使用{@link com.google.gson.annotations.Expose}注解指明
  *
  * @author leo
  */
 public class BaseRequest {
 
+    @Expose
     private Map<String, String> requestParams = new ArrayMap<>();
 
     /**
@@ -25,6 +30,11 @@ public class BaseRequest {
 
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
+
+            Expose expose = field.getAnnotation(Expose.class);
+            if (expose != null) {
+                continue;
+            }
 
             SerializedName name = field.getAnnotation(SerializedName.class);
             if (name != null) {
@@ -42,9 +52,6 @@ public class BaseRequest {
                 // 没有 SerializedName 注解，读取字段与值
                 try {
                     if (field.getType() == String.class && field.get(this) == null) {
-                        continue;
-                    } else if (field.getType() == Map.class) {
-                        // 避免map被加入参数中
                         continue;
                     }
                     requestParams.put(field.getName(), String.valueOf(field.get(this)));
