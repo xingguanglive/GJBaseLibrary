@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class LogsWriter {
 
-    private static String DISK_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "com.abc/log/";
+    private static String DISK_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "guojiang/log/";
     private static String FILE_NAME = "_logs.txt";
 
     private LogsWriterHandler mHandler;
