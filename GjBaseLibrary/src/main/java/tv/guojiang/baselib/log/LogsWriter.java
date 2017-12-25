@@ -53,7 +53,6 @@ public class LogsWriter {
             if (f.getName().indexOf("_") < 0) {
                 break;
             }
-            int a = f.getName().indexOf("_");
             String fileTime = f.getName().substring(0, f.getName().indexOf("_"));
             try {
                 Date fdate = new SimpleDateFormat("yyyy-MM-dd").parse(fileTime);
