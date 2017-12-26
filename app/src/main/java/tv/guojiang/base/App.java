@@ -22,6 +22,7 @@ public class App extends Application {
 		initImageConfig();
 	}
 
+
 	private void initImageConfig() {
 		BaseLibConfig.init(new ConfigBuilder().imageFactory(new GlideFactory()));
 	}
