@@ -2,11 +2,6 @@ package tv.guojiang.base;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import tv.guojiang.baselib.image.ImageDirector;
-import tv.guojiang.baselib.image.model.ImageConstants;
 import tv.guojiang.baselib.log.Logs;
 
 public class MainActivity extends AppCompatActivity {
