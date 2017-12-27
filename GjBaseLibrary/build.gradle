@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 def depend = rootProject.ext.dependencies
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION as String
@@ -22,6 +23,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.0'
+    compile 'com.orhanobut:logger:2.1.1'
     compile depend.support
     compile depend.glide
 }
