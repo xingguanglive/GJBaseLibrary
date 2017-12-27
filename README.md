@@ -17,7 +17,7 @@ allprojects {
 (2) module--build.gradle
 ```
 dependencies {
-  compile 'com.github.xingguanglive:GJBaseLibrary:1.0.2'
+  compile 'com.github.xingguanglive:GJBaseLibrary:1.0.6'
 }
 ```
 3. 功能使用
