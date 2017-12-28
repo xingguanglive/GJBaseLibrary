@@ -3,7 +3,6 @@ package tv.guojiang.baselib.image.factory;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
-
 import tv.guojiang.baselib.image.model.ImageEntity;
 
 /**
@@ -21,6 +20,13 @@ public interface ImageFactory {
 	 * @param entity  imageview不为空则显示，为空只加载
 	 */
 	void loadImage(@NonNull Context context, ImageEntity entity);
+
+	/**
+	 * 同步加载图片
+	 * @param context
+	 * @param entity
+	 */
+	Object loadImageSyn(@NonNull Context context,ImageEntity entity) throws Exception;
 
 	/**
 	 * 清除内存
