@@ -62,7 +62,7 @@ Image：图片加载
 
                   }
                 })  //加载状态监听
-                .into((ImageView) findViewById(R.id.iv_main_corner));//显示控件，如果为空则只加载。
+                .into((ImageView) findViewById(R.id.iv_main_corner));//显示控件，如果为空则只加载。intoSyn()同步加载图片
 ```
 Message：消息分发
 ----

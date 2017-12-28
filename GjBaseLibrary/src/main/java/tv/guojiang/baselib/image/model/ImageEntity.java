@@ -2,13 +2,11 @@ package tv.guojiang.baselib.image.model;
 
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
-
+import com.bumptech.glide.request.transition.TransitionFactory;
 import java.util.ArrayList;
 import java.util.List;
-
 import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import tv.guojiang.baselib.image.listener.ImageLoadingListener;
@@ -45,6 +43,8 @@ public class ImageEntity {
 	public int cropWidth;
 	public int cropHeight;
 	public CropTransformation.CropType cropType = CropTransformation.CropType.CENTER;
+	// 过度动画设置
+	public TransitionFactory transitionFactory;
 	// mask
 	public int maskId;
 	// color
