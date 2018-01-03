@@ -141,11 +141,17 @@ public final class ApiClient {
 
         private String mBaseUrl;
 
+        /**
+         * 是否打印Http的日志信息
+         */
         public Builder httpLogEnable(boolean logEnable) {
             this.mHttpLogEnable = logEnable;
             return this;
         }
 
+        /**
+         * 用于测试。模拟数据参考 {@link MockInterceptor}
+         */
         public Builder mockData(boolean mockData) {
             this.mMockData = mockData;
             return this;
@@ -200,7 +206,7 @@ public final class ApiClient {
         /**
          * 是否将通用的参数拼接到url上
          *
-         * @param joinParamIntoUrl true:通用参数将被添加到请求头上 false:通用参数根据请求方式的普通添加到对应的参数中
+         * @param joinParamIntoUrl true:通用参数将被添加到请求头上 false:通用参数根据请求方式的添加到对应的参数中(GET-请求行;POST-请求体)
          */
         public Builder joinParamsIntoUrl(boolean joinParamIntoUrl) {
             this.mJoinParamIntoUrl = joinParamIntoUrl;
