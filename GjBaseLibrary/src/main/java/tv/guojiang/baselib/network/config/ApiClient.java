@@ -39,7 +39,7 @@ public final class ApiClient {
     }
 
     public String getBaseUrl() {
-        String baseUrl = mBuilder.mBaseUrl;
+        String baseUrl = mBuilder.baseUrl;
         if (baseUrl == null) {
             throw new NullPointerException(
                 "call " + Builder.class.getName() + ".baseUrl(url) first !!");
@@ -57,37 +57,37 @@ public final class ApiClient {
     private Retrofit initRetrofit() {
 
         if (mBuilder == null) {
-            throw new NullPointerException("call ApiClient.build(builder) first !!! ");
+            throw new NullPointerException("call ApiClient.build(build) first !!! ");
         }
 
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
 
         // 注意几个Interceptor的顺序
         // 请求头
-        if (mBuilder.mHeaders != null && mBuilder.mHeaders.size() > 0) {
-            okHttpBuilder.addInterceptor(new HeaderInterceptor(mBuilder.mHeaders));
+        if (mBuilder.headers != null && mBuilder.headers.size() > 0) {
+            okHttpBuilder.addInterceptor(new HeaderInterceptor(mBuilder.headers));
         }
 
         // 公共参数
-        if (mBuilder.mParams != null && mBuilder.mParams.size() > 0) {
-            if (mBuilder.mJoinParamIntoUrl) {
+        if (mBuilder.params != null && mBuilder.params.size() > 0) {
+            if (mBuilder.joinParamIntoUrl) {
                 // 添加到Url上
-                okHttpBuilder.addInterceptor(new UrlParamsInterceptor(mBuilder.mParams));
+                okHttpBuilder.addInterceptor(new UrlParamsInterceptor(mBuilder.params));
             } else {
                 // 添加到参数中
-                mParams = mBuilder.mParams;
+                mParams = mBuilder.params;
             }
         }
 
         // http 日志
-        if (mBuilder.mHttpLogEnable) {
+        if (mBuilder.httpLogEnable) {
             HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
             loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             okHttpBuilder.addInterceptor(loggerInterceptor);
         }
 
         // 模拟数据
-        if (mBuilder.mMockData) {
+        if (mBuilder.mockData) {
             okHttpBuilder.addInterceptor(new MockInterceptor());
         }
 
@@ -120,32 +120,32 @@ public final class ApiClient {
         /**
          * 是否打印 Http Log
          */
-        private boolean mHttpLogEnable;
+        private boolean httpLogEnable;
 
         /**
          * 是否需要模拟数据. 测试的时候使用
          */
-        private boolean mMockData;
+        private boolean mockData;
 
         /**
          * 通用的参数
          */
-        private Map<String, String> mParams;
+        private Map<String, String> params;
 
         /**
          * 是否将公共参数拼接在 url上
          */
-        private boolean mJoinParamIntoUrl;
+        private boolean joinParamIntoUrl;
 
-        private Map<String, String> mHeaders;
+        private Map<String, String> headers;
 
-        private String mBaseUrl;
+        private String baseUrl;
 
         /**
          * 是否打印Http的日志信息
          */
         public Builder httpLogEnable(boolean logEnable) {
-            this.mHttpLogEnable = logEnable;
+            this.httpLogEnable = logEnable;
             return this;
         }
 
@@ -153,7 +153,7 @@ public final class ApiClient {
          * 用于测试。模拟数据参考 {@link MockInterceptor}
          */
         public Builder mockData(boolean mockData) {
-            this.mMockData = mockData;
+            this.mockData = mockData;
             return this;
         }
 
@@ -161,7 +161,7 @@ public final class ApiClient {
          * 初始化BaseUrl.<em>Url格式为 http://www.guojiang.tv/ </em>
          */
         public Builder baseUrl(String baseUrl) {
-            this.mBaseUrl = baseUrl;
+            this.baseUrl = baseUrl;
             return this;
         }
 
@@ -169,10 +169,10 @@ public final class ApiClient {
          * 接口统一添加的请求头
          */
         public Builder header(String key, String value) {
-            if (mHeaders == null) {
-                mHeaders = new ArrayMap<>();
+            if (headers == null) {
+                headers = new ArrayMap<>();
             }
-            mHeaders.put(key, value);
+            headers.put(key, value);
             return this;
         }
 
@@ -180,7 +180,7 @@ public final class ApiClient {
          * 接口统一添加的请求头
          */
         public Builder headers(Map<String, String> headers) {
-            this.mHeaders = headers;
+            this.headers = headers;
             return this;
         }
 
@@ -188,10 +188,10 @@ public final class ApiClient {
          * 接口的通用参数
          */
         public Builder param(String key, String value) {
-            if (mParams == null) {
-                mParams = new ArrayMap<>();
+            if (params == null) {
+                params = new ArrayMap<>();
             }
-            mParams.put(key, value);
+            params.put(key, value);
             return this;
         }
 
@@ -199,7 +199,7 @@ public final class ApiClient {
          * 接口的通用参数
          */
         public Builder params(Map<String, String> params) {
-            this.mParams = params;
+            this.params = params;
             return this;
         }
 
@@ -209,12 +209,12 @@ public final class ApiClient {
          * @param joinParamIntoUrl true:通用参数将被添加到请求头上 false:通用参数根据请求方式的添加到对应的参数中(GET-请求行;POST-请求体)
          */
         public Builder joinParamsIntoUrl(boolean joinParamIntoUrl) {
-            this.mJoinParamIntoUrl = joinParamIntoUrl;
+            this.joinParamIntoUrl = joinParamIntoUrl;
             return this;
         }
 
-        public ApiClient builder() {
-            ApiClient apiClient = ApiClient.getInstance();
+        public ApiClient build() {
+            ApiClient apiClient = new ApiClient();
             apiClient.setBuilder(this);
             return apiClient;
         }

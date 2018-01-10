@@ -17,6 +17,6 @@ public class PagerResponse<T> extends Response {
      * 当前页数据是否为空
      */
     public boolean isEmpty() {
-        return data == null || data.size() == 0;
+        return data != null && data.isEmpty();
     }
 }

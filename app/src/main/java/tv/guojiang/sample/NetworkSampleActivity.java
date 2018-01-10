@@ -38,7 +38,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .mockData(true)
             .header("header-key", "header.value")
             .param("param-key", "param-value")
-            .builder();
+            .build();
+
 
     }
 
