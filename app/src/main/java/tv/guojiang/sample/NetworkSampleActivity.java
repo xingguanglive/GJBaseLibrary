@@ -31,6 +31,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
+        // 初始化
         ApiClient apiClient = new Builder()
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
@@ -40,7 +41,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .param("param-key", "param-value")
             .build();
 
-
+        NetworkBiz.getInstance().setApiClient(apiClient);
     }
 
     public void get(View view) {

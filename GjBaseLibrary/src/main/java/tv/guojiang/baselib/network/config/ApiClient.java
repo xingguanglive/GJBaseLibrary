@@ -12,7 +12,21 @@ import tv.guojiang.baselib.network.interceptor.MockInterceptor;
 import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
 /**
- * OkHttp与Retrofit的配置信息。接口业务状态码请在{@link ServerCode}中进行配置。
+ * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
+ * <pre>
+ * ApiClient apiClient = new Builder()
+ *      .baseUrl("http://www.baidu.com/")
+ *      .httpLogEnable(true)
+ *      .joinParamsIntoUrl(false)
+ *      .mockData(true)
+ *      .header("header-key", "header.value")
+ *      .param("param-key", "param-value")
+ *      .build();
+ *
+ * NetworkBiz.getInstance().setApiClient(apiClient);
+ * </pre>
+ *
+ * - 接口业务状态码请在{@link ServerCode}中进行配置。
  */
 public final class ApiClient {
 
@@ -21,18 +35,6 @@ public final class ApiClient {
     private Retrofit mRetrofit;
 
     private Map<String, String> mParams;
-
-    private ApiClient() {
-    }
-
-    private static final class Singleton {
-
-        private static final ApiClient INSTANCE = new ApiClient();
-    }
-
-    public static ApiClient getInstance() {
-        return Singleton.INSTANCE;
-    }
 
     private void setBuilder(Builder builder) {
         mBuilder = builder;

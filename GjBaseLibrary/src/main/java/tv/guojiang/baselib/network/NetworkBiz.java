@@ -14,7 +14,9 @@ import tv.guojiang.baselib.network.response.DownloadFunction;
  */
 public class NetworkBiz {
 
-    private BaseApi mBaseApi = ApiClient.getInstance().getApiService(BaseApi.class);
+    private ApiClient mApiClient;
+
+    private BaseApi mBaseApi;
 
     private NetworkBiz() {
     }
@@ -22,6 +24,17 @@ public class NetworkBiz {
     private static final class Singleton {
 
         private static final NetworkBiz INSTANCE = new NetworkBiz();
+    }
+
+    /**
+     * 设置 ApiClient
+     */
+    public void setApiClient(ApiClient apiClient) {
+        if (apiClient == null) {
+            throw new NullPointerException("apiClient == null");
+        }
+        mApiClient = apiClient;
+        mBaseApi = mApiClient.getApiService(BaseApi.class);
     }
 
     public static NetworkBiz getInstance() {
@@ -32,17 +45,16 @@ public class NetworkBiz {
      * 最终发起请求所用的Url
      */
     private Observable<String> getFinalUrl(String url) {
-        return
-            Observable.fromCallable(() -> {
+        return Observable.fromCallable(() -> {
 
-                String baseUrl = ApiClient.getInstance().getBaseUrl();
+            String baseUrl = mApiClient.getBaseUrl();
 
-                StringBuilder sb = new StringBuilder();
-                sb.append(baseUrl);
-                sb.append(url);
+            StringBuilder sb = new StringBuilder();
+            sb.append(baseUrl);
+            sb.append(url);
 
-                return sb.toString();
-            });
+            return sb.toString();
+        });
     }
 
     /**
@@ -82,7 +94,7 @@ public class NetworkBiz {
     }
 
     private Map<String, String> joinParams(Map<String, String> source) {
-        Map<String, String> params = ApiClient.getInstance().getParams();
+        Map<String, String> params = mApiClient.getParams();
         if (params != null && params.size() > 0) {
             source.putAll(params);
         }
