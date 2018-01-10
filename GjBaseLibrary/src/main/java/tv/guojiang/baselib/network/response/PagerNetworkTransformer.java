@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.exception.ApiException;
-import tv.guojiang.baselib.util.GsonProvider;
+import tv.guojiang.baselib.util.JsonUtils;
 
 /**
  * 对分页的json数据进行解析
@@ -37,7 +37,7 @@ public class PagerNetworkTransformer<T> implements ObservableTransformer<String,
 
                 // 解析数据
                 Type type = TypeToken.getParameterized(PagerResponse.class, mItemClazz).getType();
-                PagerResponse<T> response = GsonProvider.getInstance().fromJson(json, type);
+                PagerResponse<T> response = JsonUtils.getInstance().fromJson(json, type);
 
                 int code = response.code;
                 // 封装业务错误

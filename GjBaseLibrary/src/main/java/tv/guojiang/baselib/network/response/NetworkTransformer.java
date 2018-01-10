@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.exception.ApiException;
-import tv.guojiang.baselib.util.GsonProvider;
+import tv.guojiang.baselib.util.JsonUtils;
 
 /**
  * 将接口的数据转换为实体类.
@@ -37,7 +37,7 @@ public class NetworkTransformer<T> implements ObservableTransformer<String, Base
             .map(json -> {
                 // 将json->BaseResponse<T> 对象
                 Type type = TypeToken.getParameterized(BaseResponse.class, mDataClazz).getType();
-                BaseResponse<T> response = GsonProvider.getInstance().fromJson(json, type);
+                BaseResponse<T> response = JsonUtils.getInstance().fromJson(json, type);
 
                 int code = response.code;
                 // 封装业务错误

@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 /**
  * 提供Gson对象
  */
-public class GsonProvider {
+public class JsonUtils {
 
     // 所有注解都生成json
     private Gson mGson = new Gson();
@@ -45,16 +45,16 @@ public class GsonProvider {
         })
         .create();
 
-    private GsonProvider() {
+    private JsonUtils() {
     }
 
-    public static GsonProvider getInstance() {
+    public static JsonUtils getInstance() {
         return Singleton.INSTANCE;
     }
 
     private static final class Singleton {
 
-        private static final GsonProvider INSTANCE = new GsonProvider();
+        private static final JsonUtils INSTANCE = new JsonUtils();
     }
 
     /**
