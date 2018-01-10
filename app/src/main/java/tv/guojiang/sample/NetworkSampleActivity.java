@@ -3,13 +3,11 @@ package tv.guojiang.sample;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import com.google.gson.annotations.SerializedName;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
+import tv.guojiang.baselib.network.NetworkObserver;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
@@ -54,24 +52,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
         NetworkBiz.getInstance().get("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NormalSchedulerTransformer<>())
-            .subscribe(new Observer<PagerResponse<Person>>() {
+            .subscribe(new NetworkObserver<PagerResponse<Person>>() {
                 @Override
-                public void onSubscribe(Disposable d) {
-
-                }
-
-                @Override
-                public void onNext(PagerResponse<Person> response) {
-                    Log.d(TAG, "结果长度 ：" + response.data.size());
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                }
-
-                @Override
-                public void onComplete() {
+                public void onNext(PagerResponse<Person> personPagerResponse) {
 
                 }
             });
@@ -86,24 +69,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
         NetworkBiz.getInstance().post("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NormalSchedulerTransformer<>())
-            .subscribe(new Observer<PagerResponse<Person>>() {
+            .subscribe(new NetworkObserver<PagerResponse<Person>>() {
                 @Override
-                public void onSubscribe(Disposable d) {
-
-                }
-
-                @Override
-                public void onNext(PagerResponse<Person> response) {
-                    Log.d(TAG, "结果长度 ：" + response.data.size());
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                }
-
-                @Override
-                public void onComplete() {
+                public void onNext(PagerResponse<Person> personPagerResponse) {
 
                 }
             });

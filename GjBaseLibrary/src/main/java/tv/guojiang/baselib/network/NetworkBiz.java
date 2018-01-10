@@ -26,6 +26,10 @@ public class NetworkBiz {
         private static final NetworkBiz INSTANCE = new NetworkBiz();
     }
 
+    public static NetworkBiz getInstance() {
+        return Singleton.INSTANCE;
+    }
+
     /**
      * 设置 ApiClient
      */
@@ -33,12 +37,9 @@ public class NetworkBiz {
         if (apiClient == null) {
             throw new NullPointerException("apiClient == null");
         }
+
         mApiClient = apiClient;
         mBaseApi = mApiClient.getApiService(BaseApi.class);
-    }
-
-    public static NetworkBiz getInstance() {
-        return Singleton.INSTANCE;
     }
 
     /**
@@ -64,10 +65,19 @@ public class NetworkBiz {
      * @param request 请求
      */
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
+        checkApiClient();
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.get(finalUrl, joinParams(request.getRequestParams())))
             .map(ResponseBody::string);
     }
+
+    private void checkApiClient() {
+        if (mApiClient == null) {
+            throw new NullPointerException(
+                "call " + NetworkBiz.class.getSimpleName() + ".setApiClient(client) first");
+        }
+    }
+
 
     /**
      * 发送 POST 请求
@@ -76,6 +86,7 @@ public class NetworkBiz {
      * @param request 请求
      */
     public <T extends BaseRequest> Observable<String> post(String url, BaseRequest request) {
+        checkApiClient();
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.post(finalUrl, joinParams(request.getRequestParams())))
             .map(ResponseBody::string);
@@ -88,6 +99,7 @@ public class NetworkBiz {
      * @param file 下载之后的文件
      */
     public Observable<File> download(String url, File file) {
+        checkApiClient();
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.download(url))
             .map(new DownloadFunction(file));
