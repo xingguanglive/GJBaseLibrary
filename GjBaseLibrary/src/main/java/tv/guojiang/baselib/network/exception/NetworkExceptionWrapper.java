@@ -27,11 +27,15 @@ public class NetworkExceptionWrapper {
     // http 的 状态码
     interface HTTP {
 
+        int ACCESS_DENIED = 302;
+
         int UNAUTHORIZED = 401;
 
         int FORBIDDEN = 403;
 
         int NOT_FOUND = 404;
+
+        int HANDEL_ERROR = 417;
 
         int REQUEST_TIMEOUT = 408;
 
@@ -43,9 +47,6 @@ public class NetworkExceptionWrapper {
 
         int GATEWAY_TIMEOUT = 504;
 
-        int ACCESS_DENIED = 302;
-
-        int HANDEL_ERROR = 417;
     }
 
 
@@ -127,7 +128,7 @@ public class NetworkExceptionWrapper {
                 case HTTP.FORBIDDEN:
                     networkException.setMessage("禁止访问");
                 case HTTP.NOT_FOUND:
-                    networkException.setMessage("服务器地址未找到");
+                    networkException.setMessage("资源不存在");
                 case HTTP.REQUEST_TIMEOUT:
                     networkException.setMessage("请求超时");
                 case HTTP.GATEWAY_TIMEOUT:
