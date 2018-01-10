@@ -7,6 +7,9 @@ public class NetworkException extends Exception {
 
     private int code;
 
+    /**
+     * 展示给用户的提示信息.<br/>真实的报错信息会在控制台打印
+     */
     private String message;
 
     public NetworkException(Throwable throwable, int code) {

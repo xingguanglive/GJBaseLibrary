@@ -35,14 +35,14 @@ public abstract class NetworkObserver<T> implements Observer<T> {
             if (cause instanceof ApiException && onFailed(networkException.getCode())) {
                 // 业务错误
                 //todo toast 显示
-//                UIUtils.showToast(e.getMessage());
+                //                UIUtils.showToast(e.getMessage());
             } else if (onError(networkException.getCode())) {
                 // 网络错误
-//                UIUtils.showToast(e.getMessage());
+                //                UIUtils.showToast(e.getMessage());
             }
 
             // 打印错误信息
-            Logger.e(cause, networkException.getMessage());
+            Logger.e(cause, cause.getMessage());
         }
     }
 

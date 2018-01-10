@@ -114,10 +114,11 @@ public class NetworkExceptionWrapper {
 
         if (e instanceof UnknownHostException) {
             networkException = new NetworkException(e, SERVER_ERROR.NO_CONNECT);
-            networkException.setMessage("暂无网络连接,请检查网络设置");
+            networkException.setMessage("暂无网络连接，请检查网络设置");
             return networkException;
         } else if (e instanceof HttpException) {
             // retrofit 抛出的 网络错误
+
             HttpException httpException = (HttpException) e;
             networkException = new NetworkException(e, SERVER_ERROR.HTTP_ERROR);
             switch (httpException.code()) {

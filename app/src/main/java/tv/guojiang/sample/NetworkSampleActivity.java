@@ -3,8 +3,11 @@ package tv.guojiang.sample;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import com.google.gson.annotations.SerializedName;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkObserver;
@@ -29,12 +32,14 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
+        Logger.addLogAdapter(new AndroidLogAdapter());
+
         // 初始化
         ApiClient apiClient = new Builder()
             .baseUrl("http://www.baidu.com/")
-            .httpLogEnable(true)
+//            .httpLogEnable(true)
             .joinParamsIntoUrl(false)
-            .mockData(true)
+//            .mockData(true) // 模糊数据会直接跳过外网的访问，直接成功
             .header("header-key", "header.value")
             .param("param-key", "param-value")
             .build();
@@ -55,7 +60,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .subscribe(new NetworkObserver<PagerResponse<Person>>() {
                 @Override
                 public void onNext(PagerResponse<Person> personPagerResponse) {
-
+                    Log.d("Network", "结果：" + personPagerResponse.data.size());
                 }
             });
 
@@ -72,7 +77,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .subscribe(new NetworkObserver<PagerResponse<Person>>() {
                 @Override
                 public void onNext(PagerResponse<Person> personPagerResponse) {
-
+                    Log.d("Network", "结果：" + personPagerResponse.data.size());
                 }
             });
     }
