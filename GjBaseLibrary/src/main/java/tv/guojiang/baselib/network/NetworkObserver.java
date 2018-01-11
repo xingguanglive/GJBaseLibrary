@@ -43,6 +43,8 @@ public abstract class NetworkObserver<T> implements Observer<T> {
 
             // 打印错误信息
             Logger.e(cause, cause.getMessage());
+        } else {
+            Logger.e(e, e.getMessage());
         }
     }
 

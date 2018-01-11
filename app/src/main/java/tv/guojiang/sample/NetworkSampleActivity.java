@@ -37,9 +37,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
         // 初始化
         ApiClient apiClient = new Builder()
             .baseUrl("http://www.baidu.com/")
-//            .httpLogEnable(true)
+            .httpLogEnable(true)
             .joinParamsIntoUrl(false)
-//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("header-key", "header.value")
             .param("param-key", "param-value")
             .build();
@@ -56,11 +56,18 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         NetworkBiz.getInstance().get("a/b/c", request)
             .compose(new PagerNetworkTransformer<>(Person.class))
+            // 网络访问已经成功
+            // 对成功后的数据进行处理
+            .map(personPagerResponse -> {
+                Logger.i("数据变换时的线程信息:"+Thread.currentThread().getName());
+                return personPagerResponse.data.size() + "";
+            })
+            // 线程切换放到最后面
             .compose(new NormalSchedulerTransformer<>())
-            .subscribe(new NetworkObserver<PagerResponse<Person>>() {
+            .subscribe(new NetworkObserver<String>() {
                 @Override
-                public void onNext(PagerResponse<Person> personPagerResponse) {
-                    Log.d("Network", "结果：" + personPagerResponse.data.size());
+                public void onNext(String s) {
+                    Logger.w("变换后的结果:" + s);
                 }
             });
 
