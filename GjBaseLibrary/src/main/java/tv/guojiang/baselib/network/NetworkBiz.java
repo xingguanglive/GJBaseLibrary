@@ -46,29 +46,18 @@ public class NetworkBiz {
      * 最终发起请求所用的Url
      */
     private Observable<String> getFinalUrl(String url) {
-        return Observable.fromCallable(() -> {
+        //        return Observable.fromCallable(() -> {
+        //
+        //            String baseUrl = mApiClient.getBaseUrl();
+        //
+        //            StringBuilder sb = new StringBuilder();
+        //            sb.append(baseUrl);
+        //            sb.append(url);
+        //
+        //            return sb.toString();
+        //        });
 
-            String baseUrl = mApiClient.getBaseUrl();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(baseUrl);
-            sb.append(url);
-
-            return sb.toString();
-        });
-    }
-
-    /**
-     * 发送 GET 请求
-     *
-     * @param url 接口地址
-     * @param request 请求
-     */
-    public <T extends BaseRequest> Observable<String> get(String url, T request) {
-        checkApiClient();
-        return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.get(finalUrl, joinParams(request.getRequestParams())))
-            .map(ResponseBody::string);
+        return Observable.just(url);
     }
 
     private void checkApiClient() {
@@ -78,11 +67,24 @@ public class NetworkBiz {
         }
     }
 
+    /**
+     * 发送 GET 请求
+     *
+     * @param url 全路径接口地址
+     * @param request 请求
+     */
+    public <T extends BaseRequest> Observable<String> get(String url, T request) {
+        checkApiClient();
+        return getFinalUrl(url)
+            .flatMap(finalUrl -> mBaseApi.get(finalUrl, joinParams(request.getRequestParams())))
+            .map(ResponseBody::string);
+    }
+
 
     /**
      * 发送 POST 请求
      *
-     * @param url 接口地址
+     * @param url 全路径接口地址
      * @param request 请求
      */
     public <T extends BaseRequest> Observable<String> post(String url, BaseRequest request) {
@@ -95,7 +97,7 @@ public class NetworkBiz {
     /**
      * 文件下载
      *
-     * @param url 文件地址
+     * @param url 全路径文件地址
      * @param file 下载之后的文件
      */
     public Observable<File> download(String url, File file) {

@@ -62,6 +62,7 @@ projects.ext {
                 multitype         : "me.drakeet.multitype:multitype:3.4.0",
                 luban             : "top.zibin:Luban:1.1.2",
                 logger            : "com.orhanobut:logger:2.1.1",
+                cookie            : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
 
         ]
     }

@@ -3,7 +3,6 @@ package tv.guojiang.sample;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import com.google.gson.annotations.SerializedName;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -14,10 +13,10 @@ import tv.guojiang.baselib.network.NetworkObserver;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
-import tv.guojiang.baselib.network.request.PagerRequest;
-import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
-import tv.guojiang.baselib.network.response.PagerResponse;
+import tv.guojiang.baselib.network.response.BaseResponse;
+import tv.guojiang.baselib.network.response.NetworkTransformer;
 import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
+import tv.guojiang.baselib.util.SSLUtils;
 
 /**
  * @author leo
@@ -35,32 +34,36 @@ public class NetworkSampleActivity extends AppCompatActivity {
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         // 初始化
-        ApiClient apiClient = new Builder()
+        ApiClient apiClient = new Builder(this)
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
+            .cookie(true)
             .joinParamsIntoUrl(false)
-            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
-            .header("header-key", "header.value")
-            .param("param-key", "param-value")
+            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+                        .header("user-agent", "android")
+            //            .param("param-key", "param-value")
             .build();
 
         NetworkBiz.getInstance().setApiClient(apiClient);
     }
 
-    public void get(View view) {
+    public void login(View view) {
 
         LoginRequest request = new LoginRequest();
-        request.user = "leo";
-        request.password = "root";
-        request.version = 7;
+        request.username = "18175140004";
+        request.password = SSLUtils.getEncryptPassword("123456");
+        request.remember = true;
+        request.android = 999;
 
-        NetworkBiz.getInstance().get("a/b/c", request)
-            .compose(new PagerNetworkTransformer<>(Person.class))
+        NetworkBiz.getInstance().post(
+            "http://106.75.114.173/user/login?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
+            request)
+            .compose(new NetworkTransformer<>(Person.class))
             // 网络访问已经成功
             // 对成功后的数据进行处理
             .map(personPagerResponse -> {
-                Logger.i("数据变换时的线程信息:"+Thread.currentThread().getName());
-                return personPagerResponse.data.size() + "";
+                Logger.i("数据变换时的线程信息:" + Thread.currentThread().getName());
+                return personPagerResponse.data + "";
             })
             // 线程切换放到最后面
             .compose(new NormalSchedulerTransformer<>())
@@ -73,39 +76,41 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     }
 
-    public void post(View view) {
-        PagerRequest request = new PagerRequest();
-        request.pagerSize = 20;
-        request.pager = 1;
+    public void home(View view) {
+        BaseRequest request = new BaseRequest();
 
-        NetworkBiz.getInstance().post("a/b/c", request)
-            .compose(new PagerNetworkTransformer<>(Person.class))
+        NetworkBiz.getInstance().post(
+            "http://106.75.114.173/chat/getConfig?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
+            request)
+            .compose(new NetworkTransformer<>(Data.class))
             .compose(new NormalSchedulerTransformer<>())
-            .subscribe(new NetworkObserver<PagerResponse<Person>>() {
+            .subscribe(new NetworkObserver<BaseResponse<Data>>() {
                 @Override
-                public void onNext(PagerResponse<Person> personPagerResponse) {
-                    Log.d("Network", "结果：" + personPagerResponse.data.size());
+                public void onNext(BaseResponse<Data> dataBaseResponse) {
+                    Logger.w(dataBaseResponse.data.serverIp);
                 }
             });
     }
 
     public static class LoginRequest extends BaseRequest {
 
-        @SerializedName("androidVersion")
-        public int version;
-
-        public String user;
-
+        public String username;
         public String password;
+        public boolean remember;
 
+        public int android;
+
+    }
+
+    public static class Data {
+
+        public String serverIp;
+        public String serverPort;
     }
 
     public static class Person {
 
-        @SerializedName("name")
-        public String name;
-
-        @SerializedName("age")
-        public int age;
+        @SerializedName("uid")
+        public String uid;
     }
 }

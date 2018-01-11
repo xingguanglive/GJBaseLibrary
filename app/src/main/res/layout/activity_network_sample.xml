@@ -7,13 +7,14 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="get"
-        android:text="GET请求"/>
+        android:onClick="login"
+        android:textAllCaps="false"
+        android:text="登录login"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="post"
-        android:text="POST分页请求"/>
+        android:onClick="home"
+        android:text="首页"/>
 
 </LinearLayout>

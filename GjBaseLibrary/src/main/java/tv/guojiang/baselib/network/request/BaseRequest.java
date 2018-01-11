@@ -29,44 +29,62 @@ public class BaseRequest {
     private Map<String, String> getRequestParams(Class clazz) {
 
         for (Field field : clazz.getDeclaredFields()) {
+
             field.setAccessible(true);
 
-            Expose expose = field.getAnnotation(Expose.class);
-            if (expose != null) {
-                continue;
-            }
+            try {
+                // 对不符合要求的字段进行过滤
+                if (doFilter(field, this)) {
+                    continue;
+                }
 
-            SerializedName name = field.getAnnotation(SerializedName.class);
-            if (name != null) {
-                // 有 SerializedName 注解，读取注解与值
-                try {
-                    // 跳过String 为空的字段
-                    if (field.getType() == String.class && field.get(this) == null) {
-                        continue;
-                    }
-                    requestParams.put(name.value(), String.valueOf(field.get(this)));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // 没有 SerializedName 注解，读取字段与值
-                try {
-                    if (field.getType() == String.class && field.get(this) == null) {
-                        continue;
-                    }
+                SerializedName name = field.getAnnotation(SerializedName.class);
+                if (name == null) {
                     requestParams.put(field.getName(), String.valueOf(field.get(this)));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                } else {
+                    requestParams.put(name.value(), String.valueOf(field.get(this)));
                 }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
 
         // 获取父类上的请求
+        // 排除Object类中的字段
         Class superClazz = clazz.getSuperclass();
-        if (superClazz != null) {
-            getRequestParams(superClazz);
+        if (superClazz == null || superClazz.equals(Object.class)) {
+            return requestParams;
         }
 
-        return requestParams;
+        return getRequestParams(superClazz);
+    }
+
+    /**
+     * 字段过滤
+     */
+    private static boolean doFilter(Field field, Object obj) throws IllegalAccessException {
+        Object value = field.get(obj);
+        if (value == null) {
+            // 过滤掉没有值的
+            return true;
+        } else if (field.getName().contains("serialVersionUID")) {
+            // 过滤掉serialVersionUID
+            return true;
+        } else if (field.getType() == String.class) {
+            // 非空字符串不过滤
+            return false;
+        } else if (value instanceof Number) {
+            // 数字Byte,Short,Integer,Long,Float,Double 不过滤
+            return false;
+        } else if (value instanceof Boolean) {
+            // Boolean 不过滤
+            return false;
+        } else if (field.getAnnotation(Expose.class) == null) {
+            // 不包含 Expose 注解不过滤
+            return false;
+        }
+
+        // 其他的都过滤掉
+        return true;
     }
 }

@@ -1,6 +1,11 @@
 package tv.guojiang.baselib.network.config;
 
+import android.content.Context;
 import android.support.v4.util.ArrayMap;
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -40,7 +45,7 @@ public final class ApiClient {
         mBuilder = builder;
     }
 
-    public String getBaseUrl() {
+    private String getBaseUrl() {
         String baseUrl = mBuilder.baseUrl;
         if (baseUrl == null) {
             throw new NullPointerException(
@@ -63,8 +68,8 @@ public final class ApiClient {
         }
 
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
-
         // 注意几个Interceptor的顺序
+
         // 请求头
         if (mBuilder.headers != null && mBuilder.headers.size() > 0) {
             okHttpBuilder.addInterceptor(new HeaderInterceptor(mBuilder.headers));
@@ -79,6 +84,14 @@ public final class ApiClient {
                 // 添加到参数中
                 mParams = mBuilder.params;
             }
+        }
+
+        // cookie
+        if (mBuilder.cookie) {
+            ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(),
+                    new SharedPrefsCookiePersistor(mBuilder.context));
+            okHttpBuilder.cookieJar(cookieJar);
         }
 
         // http 日志
@@ -144,6 +157,17 @@ public final class ApiClient {
         private String baseUrl;
 
         /**
+         * 是否添加cookie管理
+         */
+        private boolean cookie;
+
+        private Context context;
+
+        public Builder(Context context) {
+            this.context = context.getApplicationContext();
+        }
+
+        /**
          * 是否打印Http的日志信息
          */
         public Builder httpLogEnable(boolean logEnable) {
@@ -202,6 +226,14 @@ public final class ApiClient {
          */
         public Builder params(Map<String, String> params) {
             this.params = params;
+            return this;
+        }
+
+        /**
+         * 是否添加cookie
+         */
+        public Builder cookie(boolean cookie) {
+            this.cookie = cookie;
             return this;
         }
 
