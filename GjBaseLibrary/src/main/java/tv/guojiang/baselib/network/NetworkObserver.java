@@ -47,10 +47,10 @@ public abstract class NetworkObserver<T> implements Observer<T> {
     }
 
     /**
-     * 业务错误的回掉
+     * 业务错误的回掉.
      *
      * @param errorCode 错误码
-     * @return True 错误时给出Toast提示
+     * @return True 错误时给出Toast提示，默认为True
      */
     protected boolean onFailed(int errorCode) {
         return true;
@@ -60,7 +60,7 @@ public abstract class NetworkObserver<T> implements Observer<T> {
      * 网络错误的回掉
      *
      * @param errorCode 错误码
-     * @return True 错误时给出Toast提示
+     * @return True 错误时给出Toast提示，默认为True
      */
     protected boolean onError(int errorCode) {
         return true;

@@ -39,7 +39,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .baseUrl("http://www.baidu.com/")
 //            .httpLogEnable(true)
             .joinParamsIntoUrl(false)
-//            .mockData(true) // 模糊数据会直接跳过外网的访问，直接成功
+//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("header-key", "header.value")
             .param("param-key", "param-value")
             .build();
