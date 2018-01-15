@@ -40,11 +40,12 @@ public class NetworkTransformer<T> implements ObservableTransformer<String, Base
                 // {"errno":0, "msg":"", "data":{}}
 
                 JSONObject jsonObject = new JSONObject(json);
-                int code = jsonObject.getInt("errno");
+                int code = jsonObject.optInt("errno", ServerCode.SERVER_ERROR);
 
                 // 封装业务错误
                 if (code != ServerCode.SUCCESS) {
-                    throw new ApiException(code, jsonObject.getString("msg"));
+                    String msg = jsonObject.optString("msg", "No error message from serve!");
+                    throw new ApiException(code, msg);
                 }
 
                 // 将json->BaseResponse<T> 对象

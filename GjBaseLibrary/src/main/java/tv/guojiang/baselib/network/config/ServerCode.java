@@ -9,4 +9,6 @@ public interface ServerCode {
 
     int SUCCESS = 0;
 
+    int SERVER_ERROR = -1;
+
 }
