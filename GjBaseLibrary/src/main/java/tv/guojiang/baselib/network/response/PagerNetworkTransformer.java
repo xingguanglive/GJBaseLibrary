@@ -41,6 +41,7 @@ public class PagerNetworkTransformer<T> implements ObservableTransformer<String,
                 int code = jsonObject.optInt("errno",ServerCode.SERVER_ERROR);
 
                 // 封装业务错误
+                // 避免后台给的 data 不是数组引发异常
                 if (code != ServerCode.SUCCESS) {
                     String msg = jsonObject.optString("msg", "No error message from serve!");
                     throw new ApiException(code, msg);
