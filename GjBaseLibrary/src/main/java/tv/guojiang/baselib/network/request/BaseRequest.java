@@ -5,28 +5,57 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
+import tv.guojiang.baselib.network.annotation.GJHeader;
 
 /**
- * Request基类.
+ * Request基类.封装了单个请求的header和参数
  *
- * 默认情况下会将所有的字段当做请求参数传递到后台，如果不想最后的参数被当做请求参数传递到服务器，
- * 请使用{@link com.google.gson.annotations.Expose}注解指明
+ * 默认情况下会将所有的字段当做请求参数传递到后台；如果
+ * 如果不想最后的参数被当做请求参数传递到服务器，请使用{@link com.google.gson.annotations.Expose}注解指明
  *
  * @author leo
  */
 public class BaseRequest {
 
     @Expose
-    private Map<String, String> requestParams = new ArrayMap<>();
+    private boolean isParsing;
+
+    @Expose
+    private Map<String, String> params = new ArrayMap<>();
+
+    @Expose
+    private Map<String, String> headers = new ArrayMap<>();
+
 
     /**
      * 获取请求参数
      */
-    public Map<String, String> getRequestParams() {
-        return getRequestParams(this.getClass());
+    public Map<String, String> getParams() {
+        parseAnnotation();
+        return params;
     }
 
-    private Map<String, String> getRequestParams(Class clazz) {
+    /**
+     * 获取请求Headers
+     */
+    public Map<String, String> getHeaders() {
+        parseAnnotation();
+        return headers;
+    }
+
+    private void parseAnnotation() {
+        // 确保只解析一次注解
+        if (isParsing) {
+            return;
+        }
+        isParsing = true;
+        parse(getClass());
+    }
+
+    /**
+     * 解析注解，获取参数
+     */
+    private void parse(Class clazz) {
 
         for (Field field : clazz.getDeclaredFields()) {
 
@@ -38,11 +67,18 @@ public class BaseRequest {
                     continue;
                 }
 
+                // params
                 SerializedName name = field.getAnnotation(SerializedName.class);
                 if (name == null) {
-                    requestParams.put(field.getName(), String.valueOf(field.get(this)));
+                    params.put(field.getName(), String.valueOf(field.get(this)));
                 } else {
-                    requestParams.put(name.value(), String.valueOf(field.get(this)));
+                    params.put(name.value(), String.valueOf(field.get(this)));
+                }
+
+                // Header
+                GJHeader header = field.getAnnotation(GJHeader.class);
+                if (header != null) {
+                    headers.put(header.value(), String.valueOf(field.get(this)));
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -53,10 +89,10 @@ public class BaseRequest {
         // 排除Object类中的字段
         Class superClazz = clazz.getSuperclass();
         if (superClazz == null || superClazz.equals(Object.class)) {
-            return requestParams;
+            return;
         }
 
-        return getRequestParams(superClazz);
+        parse(superClazz);
     }
 
     /**
@@ -80,7 +116,10 @@ public class BaseRequest {
             // Boolean 不过滤
             return false;
         } else if (field.getAnnotation(Expose.class) == null) {
-            // 不包含 Expose 注解不过滤
+            // 不包含 Expose 的注解不过滤
+            return false;
+        } else if (field.getAnnotation(GJHeader.class) != null) {
+            // 包含 GJHeader的注解不过滤
             return false;
         }
 

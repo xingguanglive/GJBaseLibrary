@@ -75,9 +75,11 @@ public class NetworkBiz {
      */
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
         checkApiClient();
+        //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.get(finalUrl, joinParams(request.getRequestParams())))
+            .flatMap(finalUrl -> mBaseApi.get(finalUrl, request.getHeaders(),joinParams(request.getParams())))
             .map(ResponseBody::string);
+        //@formatter:on
     }
 
 
@@ -89,9 +91,11 @@ public class NetworkBiz {
      */
     public <T extends BaseRequest> Observable<String> post(String url, BaseRequest request) {
         checkApiClient();
+        //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.post(finalUrl, joinParams(request.getRequestParams())))
+            .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(), joinParams(request.getParams())))
             .map(ResponseBody::string);
+        //@formatter:on
     }
 
     /**

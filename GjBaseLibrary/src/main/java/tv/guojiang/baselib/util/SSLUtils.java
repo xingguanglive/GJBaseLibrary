@@ -45,7 +45,7 @@ public class SSLUtils {
             byte[] cipherData = cipher.doFinal(sourceBytes);
             return Base64.encodeToString(cipherData, Base64.NO_WRAP).trim();
         } catch (Exception e) {
-            //
+            e.printStackTrace();
         }
 
         return null;

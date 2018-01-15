@@ -10,6 +10,7 @@ import com.orhanobut.logger.Logger;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkObserver;
+import tv.guojiang.baselib.network.annotation.GJHeader;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
@@ -54,6 +55,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.password = SSLUtils.getEncryptPassword("123456");
         request.remember = true;
         request.android = 999;
+        request.business = "Seven-Android";
+        request.seven = 77777;
 
         NetworkBiz.getInstance().post(
             "http://106.75.114.173/user/login?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
@@ -99,6 +102,12 @@ public class NetworkSampleActivity extends AppCompatActivity {
         public boolean remember;
 
         public int android;
+
+        @GJHeader("business")
+        public String business;
+
+        @GJHeader("seven")
+        public int seven;
 
     }
 
