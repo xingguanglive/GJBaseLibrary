@@ -15,6 +15,9 @@ import tv.guojiang.baselib.network.request.BaseRequest;
 @Target(ElementType.FIELD)
 public @interface Header {
 
+    /**
+     * 参数的名称
+     */
     String value() default "";
 
 }
