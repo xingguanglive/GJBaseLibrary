@@ -5,6 +5,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import java.lang.reflect.Type;
+import org.json.JSONObject;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
 import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.exception.ApiException;
@@ -35,17 +36,21 @@ public class NetworkTransformer<T> implements ObservableTransformer<String, Base
     public ObservableSource<BaseResponse<T>> apply(Observable<String> upstream) {
         return upstream
             .map(json -> {
-                // 将json->BaseResponse<T> 对象
-                Type type = TypeToken.getParameterized(BaseResponse.class, mDataClazz).getType();
-                BaseResponse<T> response = JsonUtils.getInstance().fromJson(json, type);
 
-                int code = response.code;
+                // {"errno":0, "msg":"", "data":{}}
+
+                JSONObject jsonObject = new JSONObject(json);
+                int code = jsonObject.getInt("errno");
+
                 // 封装业务错误
                 if (code != ServerCode.SUCCESS) {
-                    throw new ApiException(code, response.msg);
+                    throw new ApiException(code, jsonObject.getString("msg"));
                 }
 
-                return response;
+                // 将json->BaseResponse<T> 对象
+                Type type = TypeToken.getParameterized(BaseResponse.class, mDataClazz).getType();
+
+                return JsonUtils.getInstance().<BaseResponse<T>>fromJson(json, type);
             })
             .compose(new NetworkExceptionTransformer<>());
     }
