@@ -17,7 +17,9 @@ import tv.guojiang.baselib.network.annotation.Header;
  * 添加了{@link Header}注解的字段会被当做请求头传递到后台
  * - 如果字段的名字与接口中参数的名字不同，可以指定{@link Header}的属性值来指明请求头的名称
  *
- * 如果不希望该字段z被传递到后台，请使用{@link Ignore}注解以忽略该字段。
+ * 如果不希望该字段z被传递到后台，请使用{@link Ignore}注解以忽略该字段
+ *
+ * 注意：请求头和header只支持基本数据类型与{@link String}.
  * </pre>
  *
  * @author leo
