@@ -19,7 +19,7 @@ import tv.guojiang.baselib.network.annotation.Header;
  *
  * 如果不希望该字段z被传递到后台，请使用{@link Ignore}注解以忽略该字段
  *
- * 注意：请求头和header只支持基本数据类型与{@link String}.
+ * 注意：请求头和header只支持基本数据类型与{@link String}类型.
  * </pre>
  *
  * @author leo
