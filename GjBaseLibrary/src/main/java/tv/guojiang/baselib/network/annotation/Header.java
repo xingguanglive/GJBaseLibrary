@@ -4,15 +4,16 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
- * 请求中的Header。
+ * {@link BaseRequest}请求中的Header。
  *
  * @author leo
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface GJHeader {
+public @interface Header {
 
     String value();
 

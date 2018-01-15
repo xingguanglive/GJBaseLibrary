@@ -10,7 +10,7 @@ import com.orhanobut.logger.Logger;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkObserver;
-import tv.guojiang.baselib.network.annotation.GJHeader;
+import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
@@ -103,10 +103,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         public int android;
 
-        @GJHeader("business")
+        @Header("business")
         public String business;
 
-        @GJHeader("seven")
+        @Header("seven")
         public int seven;
 
     }

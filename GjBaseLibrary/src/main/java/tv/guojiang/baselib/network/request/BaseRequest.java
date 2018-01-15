@@ -1,11 +1,11 @@
 package tv.guojiang.baselib.network.request;
 
 import android.support.v4.util.ArrayMap;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
-import tv.guojiang.baselib.network.annotation.GJHeader;
+import tv.guojiang.baselib.network.annotation.Filter;
+import tv.guojiang.baselib.network.annotation.Header;
 
 /**
  * Request基类.封装了单个请求的header和参数
@@ -17,13 +17,13 @@ import tv.guojiang.baselib.network.annotation.GJHeader;
  */
 public class BaseRequest {
 
-    @Expose
+    @Filter
     private boolean isParsing;
 
-    @Expose
+    @Filter
     private Map<String, String> params = new ArrayMap<>();
 
-    @Expose
+    @Filter
     private Map<String, String> headers = new ArrayMap<>();
 
 
@@ -67,17 +67,17 @@ public class BaseRequest {
                     continue;
                 }
 
-                // params
                 SerializedName name = field.getAnnotation(SerializedName.class);
-                if (name == null) {
-                    params.put(field.getName(), String.valueOf(field.get(this)));
+                Header header = field.getAnnotation(Header.class);
+                if (header == null) {
+                    // 请求参数
+                    if (name == null) {
+                        params.put(field.getName(), String.valueOf(field.get(this)));
+                    } else {
+                        params.put(name.value(), String.valueOf(field.get(this)));
+                    }
                 } else {
-                    params.put(name.value(), String.valueOf(field.get(this)));
-                }
-
-                // Header
-                GJHeader header = field.getAnnotation(GJHeader.class);
-                if (header != null) {
+                    // Header
                     headers.put(header.value(), String.valueOf(field.get(this)));
                 }
             } catch (IllegalAccessException e) {
@@ -106,6 +106,9 @@ public class BaseRequest {
         } else if (field.getName().contains("serialVersionUID")) {
             // 过滤掉serialVersionUID
             return true;
+        } else if (field.getAnnotation(Filter.class) != null) {
+            // 过滤掉有Filter注解的
+            return true;
         } else if (field.getType() == String.class) {
             // 非空字符串不过滤
             return false;
@@ -114,12 +117,6 @@ public class BaseRequest {
             return false;
         } else if (value instanceof Boolean) {
             // Boolean 不过滤
-            return false;
-        } else if (field.getAnnotation(Expose.class) == null) {
-            // 不包含 Expose 的注解不过滤
-            return false;
-        } else if (field.getAnnotation(GJHeader.class) != null) {
-            // 包含 GJHeader的注解不过滤
             return false;
         }
 
