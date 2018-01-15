@@ -15,6 +15,6 @@ import tv.guojiang.baselib.network.request.BaseRequest;
 @Target(ElementType.FIELD)
 public @interface Header {
 
-    String value();
+    String value() default "";
 
 }

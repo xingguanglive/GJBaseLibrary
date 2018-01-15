@@ -13,6 +13,6 @@ import tv.guojiang.baselib.network.request.BaseRequest;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Filter {
+public @interface Ignore {
 
 }

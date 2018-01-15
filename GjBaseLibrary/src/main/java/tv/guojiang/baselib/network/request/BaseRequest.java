@@ -1,29 +1,35 @@
 package tv.guojiang.baselib.network.request;
 
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
-import tv.guojiang.baselib.network.annotation.Filter;
+import tv.guojiang.baselib.network.annotation.Ignore;
 import tv.guojiang.baselib.network.annotation.Header;
 
 /**
- * Request基类.封装了单个请求的header和参数
+ * Request基类。封装了单个请求的header和参数<br/>
+ * <pre>
+ * 默认情况下所有的字段都会当做请求参数。
+ * - 如果不希望该参数被传递到后台，请使用{@link Ignore}注解以忽略该字段。
+ * - 如果字段的名字与接口中参数的名字不同，可以使用{@link SerializedName}注解来指明接口中该参数的名称
  *
- * 默认情况下会将所有的字段当做请求参数传递到后台；如果
- * 如果不想最后的参数被当做请求参数传递到服务器，请使用{@link com.google.gson.annotations.Expose}注解指明
+ * 如果该参数最终需要被当做接口中的请求传递到后台，请使用{@link Header}注解说明
+ *
+ * </pre>
  *
  * @author leo
  */
 public class BaseRequest {
 
-    @Filter
+    @Ignore
     private boolean isParsing;
 
-    @Filter
+    @Ignore
     private Map<String, String> params = new ArrayMap<>();
 
-    @Filter
+    @Ignore
     private Map<String, String> headers = new ArrayMap<>();
 
 
@@ -77,8 +83,12 @@ public class BaseRequest {
                         params.put(name.value(), String.valueOf(field.get(this)));
                     }
                 } else {
-                    // Header
-                    headers.put(header.value(), String.valueOf(field.get(this)));
+                    // header
+                    if (TextUtils.isEmpty(header.value())) {
+                        headers.put(field.getName(), String.valueOf(field.get(this)));
+                    } else {
+                        headers.put(header.value(), String.valueOf(field.get(this)));
+                    }
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -106,7 +116,7 @@ public class BaseRequest {
         } else if (field.getName().contains("serialVersionUID")) {
             // 过滤掉serialVersionUID
             return true;
-        } else if (field.getAnnotation(Filter.class) != null) {
+        } else if (field.getAnnotation(Ignore.class) != null) {
             // 过滤掉有Filter注解的
             return true;
         } else if (field.getType() == String.class) {

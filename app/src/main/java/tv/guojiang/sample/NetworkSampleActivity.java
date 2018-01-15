@@ -39,7 +39,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(false)
             .cookie(true)
-            .joinParamsIntoUrl(false)
+            .joinParamsIntoUrl(true)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
@@ -103,10 +103,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         public int android;
 
-        @Header("business")
+        @Header
         public String business;
 
-        @Header("seven")
+        @Header("seven-leo")
         public int seven;
 
     }
