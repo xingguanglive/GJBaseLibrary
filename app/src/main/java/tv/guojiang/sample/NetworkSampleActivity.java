@@ -34,14 +34,14 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         Logger.addLogAdapter(new AndroidLogAdapter());
 
-        // 初始化
+        // 初始化全局配置
         ApiClient apiClient = new Builder(this)
             .baseUrl("http://www.baidu.com/")
             .httpLogEnable(true)
             .cookie(true)
             .joinParamsIntoUrl(false)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
-                        .header("user-agent", "android")
+            .header("user-agent", "android")
             //            .param("param-key", "param-value")
             .build();
 
