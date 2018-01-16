@@ -1,9 +1,8 @@
-package tv.guojiang.baselib.network;
+package tv.guojiang.baselib.network.exception;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import tv.guojiang.baselib.network.exception.NetworkExceptionWrapper;
 
 /**
  * 处理网络错误的Transformer.

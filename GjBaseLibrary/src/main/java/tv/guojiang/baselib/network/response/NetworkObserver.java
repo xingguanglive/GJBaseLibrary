@@ -1,4 +1,4 @@
-package tv.guojiang.baselib.network;
+package tv.guojiang.baselib.network.response;
 
 import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;

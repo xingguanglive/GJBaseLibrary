@@ -12,7 +12,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.NetworkObserver;
+import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.cache.CacheState;

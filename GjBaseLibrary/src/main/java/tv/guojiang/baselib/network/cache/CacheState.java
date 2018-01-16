@@ -10,7 +10,7 @@ import tv.guojiang.baselib.network.request.BaseRequest;
 public enum CacheState {
 
     /**
-     * 只要缓存未过期，就只读取缓存。
+     * 只要缓存未过期，就只读取缓存
      */
     FOCUS_CACHE,
 

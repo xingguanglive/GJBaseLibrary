@@ -13,6 +13,7 @@ import tv.guojiang.baselib.util.NetworkUtils;
  *
  * {@link okhttp3.Cache}中限制了{@link okhttp3.OkHttpClient}仅支持 GET 请求
  */
+@Deprecated
 public final class OfflineCacheInterceptor implements Interceptor {
 
     private Context mContext;

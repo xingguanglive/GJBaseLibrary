@@ -5,7 +5,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import java.lang.reflect.Type;
-import tv.guojiang.baselib.network.NetworkExceptionTransformer;
+import tv.guojiang.baselib.network.exception.NetworkExceptionTransformer;
 import tv.guojiang.baselib.util.JsonUtils;
 
 /**

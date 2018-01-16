@@ -1,11 +1,9 @@
-package tv.guojiang.baselib.network;
+package tv.guojiang.baselib.network.exception;
 
 import com.orhanobut.logger.Logger;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import java.util.concurrent.TimeUnit;
-import tv.guojiang.baselib.network.exception.NetworkException;
-import tv.guojiang.baselib.network.exception.NetworkExceptionWrapper;
 
 /**
  * 错误重试机制.
