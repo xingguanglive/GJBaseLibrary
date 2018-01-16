@@ -110,7 +110,10 @@ public class DiskLruCacheStore implements ICacheStore {
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
+                    sb.append("\n");
                 }
+                // 删除杜宇的换行符
+                sb.deleteCharAt(sb.length() - 1);
                 return sb.toString();
             }
         } catch (Exception e) {
