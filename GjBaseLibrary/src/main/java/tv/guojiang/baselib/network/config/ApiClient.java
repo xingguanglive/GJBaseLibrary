@@ -20,8 +20,8 @@ import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
  * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
  * <pre>
  * ApiClient apiClient = new Builder()
- *      .baseUrl("http://www.baidu.com/")
- *      .httpLogEnable(true)
+ *      .baseUrl("http://www.gj.com/")
+ *      .log(true)
  *      .joinParamsIntoUrl(false)
  *      .mockData(true)
  *      .header("header-key", "header.value")
@@ -99,7 +99,7 @@ public final class ApiClient {
         }
 
         // http 日志
-        if (mBuilder.httpLogEnable) {
+        if (mBuilder.log) {
             HttpLoggingInterceptor loggerInterceptor = new HttpLoggingInterceptor();
             loggerInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             okHttpBuilder.addInterceptor(loggerInterceptor);
@@ -139,7 +139,7 @@ public final class ApiClient {
         /**
          * 是否打印 Http Log
          */
-        private boolean httpLogEnable;
+        private boolean log;
 
         /**
          * 是否需要模拟数据. 测试的时候使用
@@ -174,8 +174,8 @@ public final class ApiClient {
         /**
          * 是否打印Http的日志信息
          */
-        public Builder httpLogEnable(boolean logEnable) {
-            this.httpLogEnable = logEnable;
+        public Builder log(boolean log) {
+            this.log = log;
             return this;
         }
 
