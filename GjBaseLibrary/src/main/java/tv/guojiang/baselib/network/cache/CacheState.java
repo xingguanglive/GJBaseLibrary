@@ -1,5 +1,7 @@
 package tv.guojiang.baselib.network.cache;
 
+import tv.guojiang.baselib.network.request.BaseRequest;
+
 /**
  * 缓存的几种状态
  *
@@ -23,7 +25,7 @@ public enum CacheState {
     FOCUS_NETWORK_UNTIL_OFFLINE,
 
     /**
-     * 除非手动下拉刷新，否则只读取缓存
+     * 除非手动下拉刷新，否则只读取缓存。需要配合{@link BaseRequest#refreshApi}使用
      */
     FOCUS_CACHE_UNTIL_REFRESH,
 

@@ -43,6 +43,7 @@ public class RxCache {
      */
     public <T extends BaseRequest> Observable<String> getCache(String url, T request) {
         return Observable.create(e -> {
+
             String realKey = getRealKey(url, request.getParams());
             Cache cache = getCacheAnnotation(request);
 

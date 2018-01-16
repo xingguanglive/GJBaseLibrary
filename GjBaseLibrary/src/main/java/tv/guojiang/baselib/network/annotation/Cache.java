@@ -19,7 +19,7 @@ public @interface Cache {
     /**
      * 缓存的有效期，单位：秒。默认永不过期
      */
-    long time() default Long.MAX_VALUE;
+    long time() default Integer.MAX_VALUE;
 
     /**
      * 有效期时间单位

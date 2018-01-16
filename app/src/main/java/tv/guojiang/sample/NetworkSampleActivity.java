@@ -145,15 +145,17 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ========================================================================================
     // ================================== 接口缓存测试 =========================================
 
-    @Cache(time = 20, state = CacheState.FOCUS_CACHE_AND_NETWORK)
+    @Cache(time = 20, state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
     private class TestRequest extends BaseRequest {
-
 
     }
 
     public void testCache(View view) {
 
-        ApiBiz.getInstance().get("http://www.baidu.com", new TestRequest())
+        TestRequest testRequest = new TestRequest();
+        testRequest.refreshApi = true;
+
+        ApiBiz.getInstance().get("http://www.baidu.com", testRequest)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override
