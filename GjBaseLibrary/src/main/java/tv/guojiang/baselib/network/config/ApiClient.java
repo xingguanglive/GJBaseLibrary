@@ -58,6 +58,10 @@ public final class ApiClient {
         return mParams;
     }
 
+    public Context getContext() {
+        return mBuilder.context;
+    }
+
     /**
      * 初始化Retrofit
      */

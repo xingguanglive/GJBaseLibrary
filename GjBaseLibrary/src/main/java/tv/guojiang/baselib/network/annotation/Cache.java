@@ -17,7 +17,7 @@ public @interface Cache {
     /**
      * 缓存的有效期，单位：秒
      */
-    long time() default 0L;
+    long time() default Long.MAX_VALUE;
 
     /**
      * 是否本机没有网络，再读取缓存

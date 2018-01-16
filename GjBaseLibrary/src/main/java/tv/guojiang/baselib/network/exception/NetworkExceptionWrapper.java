@@ -151,9 +151,9 @@ public class NetworkExceptionWrapper {
             return networkException;
         } else if (e instanceof ApiException) {
             // 业务错误
-            ApiException apiException = (ApiException) e;
-            networkException = new NetworkException(apiException, apiException.getCode());
-            networkException.setMessage(apiException.getMessage());
+            ApiException api = (ApiException) e;
+            networkException = new NetworkException(api, api.getCode());
+            networkException.setMessage(api.getMessage());
             return networkException;
         } else if (e instanceof JsonParseException
             || e instanceof JSONException

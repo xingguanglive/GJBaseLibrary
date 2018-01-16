@@ -11,7 +11,7 @@ import tv.guojiang.baselib.network.exception.ApiException;
  *
  * @author leo
  */
-public class ApiFilterFunction implements Function<String, String> {
+public class ApiExceptionFilterFunction implements Function<String, String> {
 
     @Override
     public String apply(String json) throws Exception {
