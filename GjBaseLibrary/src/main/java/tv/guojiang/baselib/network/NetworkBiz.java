@@ -7,6 +7,7 @@ import okhttp3.ResponseBody;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.BaseApi;
 import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.baselib.network.response.ApiFilterFunction;
 import tv.guojiang.baselib.network.response.DownloadFunction;
 
 /**
@@ -78,8 +79,8 @@ public class NetworkBiz {
         //@formatter:off
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.get(finalUrl, request.getHeaders(),joinParams(request.getParams())))
-            .map(ResponseBody::string);
-        //@formatter:on
+            .map(ResponseBody::string)//@formatter:on
+            .map(new ApiFilterFunction());
     }
 
 
@@ -89,13 +90,13 @@ public class NetworkBiz {
      * @param url 全路径接口地址
      * @param request 请求
      */
-    public <T extends BaseRequest> Observable<String> post(String url, BaseRequest request) {
+    public <T extends BaseRequest> Observable<String> post(String url, T request) {
         checkApiClient();
         //@formatter:off
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(), joinParams(request.getParams())))
-            .map(ResponseBody::string);
-        //@formatter:on
+            .map(ResponseBody::string)//@formatter:on
+            .map(new ApiFilterFunction());
     }
 
     /**

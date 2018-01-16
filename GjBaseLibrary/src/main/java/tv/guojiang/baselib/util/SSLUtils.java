@@ -1,12 +1,3 @@
-/*
- * SSLUtils.java
- * business
- *
- * Created by ChenTao on 2017/3/6.
- *
- * Copyright (c) 2017年 yidiandao. All rights reserved.
- */
-
 package tv.guojiang.baselib.util;
 
 import android.util.Base64;

@@ -94,6 +94,10 @@ public class FileUtils {
         StringBuilder sb = new StringBuilder();
         sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
         sb.append(File.separator);
+        sb.append("Android");
+        sb.append(File.separator);
+        sb.append("data");
+        sb.append(File.separator);
         sb.append(context.getPackageName());
         sb.append(File.separator);
         return sb.toString();

@@ -17,4 +17,17 @@
         android:onClick="home"
         android:text="首页"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="putCache"
+        android:textAllCaps="false"
+        android:text="设置缓存"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="getCache"
+        android:text="获得缓存"/>
+
 </LinearLayout>

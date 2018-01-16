@@ -1,12 +1,3 @@
-/*
- * GsonProvider.java
- * business
- *
- * Created by ChenTao on 2017/7/20.
- *
- * Copyright (c) 2017年 yidiandao. All rights reserved.
- */
-
 package tv.guojiang.baselib.util;
 
 import com.google.gson.ExclusionStrategy;

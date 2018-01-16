@@ -33,7 +33,7 @@ dependencies {
     compile rootProject.ext.dependencies.retrofit
     compile rootProject.ext.dependencies.logger
     compile rootProject.ext.dependencies.cookie
-    compile rootProject.ext.dependencies.lrucache
+    compile rootProject.ext.dependencies.diskLruCache
 
 
 //    compile rootProject.ext.dependencies.luban

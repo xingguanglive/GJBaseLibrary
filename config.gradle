@@ -63,7 +63,7 @@ projects.ext {
                 luban             : "top.zibin:Luban:1.1.2",
                 logger            : "com.orhanobut:logger:2.1.1",
                 cookie            : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
-                lrucache          : "com.jakewharton:disklrucache:2.0.2",
+                diskLruCache      : "com.jakewharton:disklrucache:2.0.2",
         ]
     }
 }

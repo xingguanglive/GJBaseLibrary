@@ -1,9 +1,11 @@
 package tv.guojiang.sample;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 import com.google.gson.annotations.SerializedName;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -11,6 +13,8 @@ import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.NetworkBiz;
 import tv.guojiang.baselib.network.NetworkObserver;
 import tv.guojiang.baselib.network.annotation.Header;
+import tv.guojiang.baselib.network.cache.FileStore;
+import tv.guojiang.baselib.network.cache.IStore;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
@@ -32,6 +36,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
+        if (mCache == null) {
+            mCache = new FileStore(this);
+        }
+
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         // 初始化全局接口通用配置
@@ -40,7 +48,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .httpLogEnable(false)
             .cookie(true)
             .joinParamsIntoUrl(true)
-            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
             .build();
@@ -74,6 +82,18 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 @Override
                 public void onNext(String s) {
                     Logger.w("变换后的结果:" + s);
+                }
+
+                @Override
+                protected boolean onError(int errorCode) {
+                    Toast.makeText(NetworkSampleActivity.this, "onError code : "+errorCode, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                @Override
+                protected boolean onFailed(int errorCode) {
+                    Toast.makeText(NetworkSampleActivity.this, "onFailed code : "+errorCode, Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
 
@@ -121,5 +141,31 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         @SerializedName("uid")
         public String uid;
+    }
+
+    // ============================================================
+
+    // 缓存测试
+    private IStore mCache;
+
+    private String key = "www.baidu.com";
+
+    public void putCache(View view) {
+        long start = System.currentTimeMillis();
+
+        String value = "大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow";
+        Logger.i("字节：" + value.getBytes().length);
+
+        mCache.put(key, value);
+        long end = System.currentTimeMillis();
+        Logger.d("存储的时间：" + (end - start) + " 毫秒");
+    }
+
+    public void getCache(View view) {
+        long start = SystemClock.currentThreadTimeMillis();
+        mCache.get(key);
+        long end = SystemClock.currentThreadTimeMillis();
+        Logger.d("读取的时间：" + (end - start) + " 毫秒");
+
     }
 }

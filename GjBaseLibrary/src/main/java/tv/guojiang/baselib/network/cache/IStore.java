@@ -5,7 +5,7 @@ package tv.guojiang.baselib.network.cache;
  *
  * @author leo
  */
-public interface ICache {
+public interface IStore {
 
     /**
      * 缓存接口数据

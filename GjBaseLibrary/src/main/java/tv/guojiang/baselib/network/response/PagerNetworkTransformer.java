@@ -5,10 +5,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import java.lang.reflect.Type;
-import org.json.JSONObject;
 import tv.guojiang.baselib.network.NetworkExceptionTransformer;
-import tv.guojiang.baselib.network.config.ServerCode;
-import tv.guojiang.baselib.network.exception.ApiException;
 import tv.guojiang.baselib.util.JsonUtils;
 
 /**
@@ -35,18 +32,6 @@ public class PagerNetworkTransformer<T> implements ObservableTransformer<String,
     public ObservableSource<PagerResponse<T>> apply(Observable<String> upstream) {
         return upstream
             .map(json -> {
-
-                // {"errno":0, "msg":"", "data":[]}
-                JSONObject jsonObject = new JSONObject(json);
-                int code = jsonObject.optInt("errno",ServerCode.SERVER_ERROR);
-
-                // 封装业务错误
-                // 避免后台给的 data 不是数组引发异常
-                if (code != ServerCode.SUCCESS) {
-                    String msg = jsonObject.optString("msg", "No error message from serve!");
-                    throw new ApiException(code, msg);
-                }
-
                 // 解析数据
                 Type type = TypeToken.getParameterized(PagerResponse.class, mItemClazz).getType();
                 return JsonUtils.getInstance().<PagerResponse<T>>fromJson(json, type);
