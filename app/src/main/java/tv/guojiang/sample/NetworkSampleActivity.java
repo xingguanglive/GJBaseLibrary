@@ -45,7 +45,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .httpLogEnable(false)
             .cookie(true)
             .joinParamsIntoUrl(true)
-//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
             .build();
@@ -145,7 +145,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ========================================================================================
     // ================================== 接口缓存测试 =========================================
 
-    @Cache( state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
+    @Cache(state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
     private class TestRequest extends BaseRequest {
 
     }
