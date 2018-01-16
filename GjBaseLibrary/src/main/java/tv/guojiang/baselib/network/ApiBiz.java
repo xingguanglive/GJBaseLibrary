@@ -67,7 +67,8 @@ public class ApiBiz {
         }
 
         Observable<String> cacheObservable = mRxCache.getCache(url, request);
-        Observable<String> networkObservable = mRxNetwork.get(url, request);
+        Observable<String> networkObservable = mRxNetwork.get(url, request)
+            .doOnNext(json -> mRxCache.saveCache(url, request, json));
 
         return concat(cacheObservable, networkObservable, cache.state(), request);
     }
@@ -86,7 +87,8 @@ public class ApiBiz {
         }
 
         Observable<String> cacheObservable = mRxCache.getCache(url, request);
-        Observable<String> networkObservable = mRxNetwork.post(url, request);
+        Observable<String> networkObservable = mRxNetwork.post(url, request)
+            .doOnNext(json -> mRxCache.saveCache(url, request, json));
 
         return concat(cacheObservable, networkObservable, cache.state(), request);
     }
@@ -96,16 +98,16 @@ public class ApiBiz {
         CacheState state, BaseRequest request) {
         // 使用缓存
         switch (state) {
-            case CACHE_UNLESS_REFRESH:
+            case FOCUS_CACHE_UNTIL_REFRESH:
                 if (request.refreshApi) {
                     return network;
                 } else {
                     return Observable.concat(cache, network)
                         .firstElement().toObservable();
                 }
-            case READ_CACHE_AND_NETWORK:
+            case FOCUS_CACHE_AND_NETWORK:
                 return Observable.concat(cache, network);
-            case ONLY_READ_CACHE_WHEN_OFFLINE:
+            case FOCUS_NETWORK_UNTIL_OFFLINE:
                 if (NetworkUtils.isNetworkAvailable(mContext)) {
                     // 有网络时
                     return network;
@@ -114,7 +116,7 @@ public class ApiBiz {
                     return Observable.concat(cache, network)
                         .firstElement().toObservable();
                 }
-            default: // FOCUS_CACHE_UNTIL_OVERDUE
+            default: // FOCUS_CACHE
                 return Observable.concat(cache, network)
                     .firstElement().toObservable();
         }
@@ -128,12 +130,5 @@ public class ApiBiz {
      */
     public Observable<File> download(String url, File file) {
         return mRxNetwork.download(url, file);
-    }
-
-    /**
-     * 获取接口缓存的状态
-     */
-    private <T extends BaseRequest> void getCacheState(T request) {
-        Cache cache = request.getClass().getAnnotation(Cache.class);
     }
 }

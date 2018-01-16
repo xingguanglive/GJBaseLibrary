@@ -1,8 +1,10 @@
 package tv.guojiang.baselib.network.cache;
 
 import android.content.Context;
+import com.orhanobut.logger.Logger;
 import io.reactivex.Observable;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.request.BaseRequest;
 
@@ -43,11 +45,18 @@ public class RxCache {
         return Observable.create(e -> {
             String realKey = getRealKey(url, request.getParams());
             Cache cache = getCacheAnnotation(request);
+
+            // 时间单位转换
+            long time = cache.time();
+            TimeUnit timeUnit = cache.timeUnit();
+            long realTime = timeUnit.toSeconds(time);
+
             // 读取缓存
-            String json = mStore.get(realKey, cache.time());
+            String json = mStore.get(realKey, realTime);
             // 缓存不为空时才触发下面的操作
             if (json != null) {
                 e.onNext(json);
+                Logger.i("====== 从缓存获取 =========");
             }
             e.onComplete();
         });
@@ -56,9 +65,10 @@ public class RxCache {
     /**
      * 缓存接口数据
      */
-    private <T extends BaseRequest> void saveCache(String url, T request, String json) {
+    public <T extends BaseRequest> void saveCache(String url, T request, String json) {
         String realKey = getRealKey(url, request.getParams());
         mStore.put(realKey, json);
+        Logger.i("--------> 存储数据到缓存中");
     }
 
 }

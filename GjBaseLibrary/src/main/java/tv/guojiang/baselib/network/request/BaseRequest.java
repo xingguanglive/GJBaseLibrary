@@ -37,7 +37,7 @@ public class BaseRequest {
     private Map<String, String> headers = new ArrayMap<>();
 
     /**
-     * 刷新标识，当缓存状态为{@link CacheState#CACHE_UNLESS_REFRESH}时，需要手动设置该字段为true，才会从网络获取数据；
+     * 刷新标识，当缓存状态为{@link CacheState#FOCUS_CACHE_UNTIL_REFRESH}时，需要手动设置该字段为true，才会从网络获取数据；
      * 否者，只会读取缓存数据
      */
     @Ignore

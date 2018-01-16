@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 import tv.guojiang.baselib.network.cache.CacheState;
 
 /**
@@ -19,6 +20,11 @@ public @interface Cache {
      * 缓存的有效期，单位：秒。默认永不过期
      */
     long time() default Long.MAX_VALUE;
+
+    /**
+     * 有效期时间单位
+     */
+    TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     /**
      * 缓存的状态

@@ -20,14 +20,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="putCache"
+        android:onClick="testCache"
         android:textAllCaps="false"
-        android:text="设置缓存"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="getCache"
-        android:text="获得缓存"/>
+        android:text="缓存测试"/>
 
 </LinearLayout>
