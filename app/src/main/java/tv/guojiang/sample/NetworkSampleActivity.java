@@ -45,7 +45,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .httpLogEnable(false)
             .cookie(true)
             .joinParamsIntoUrl(true)
-            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
             .build();
@@ -153,7 +153,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     public void testCache(View view) {
 
         TestRequest testRequest = new TestRequest();
-        testRequest.refreshApi = true;
+        testRequest.refreshApi = false;
 
         ApiBiz.getInstance().get("http://www.baidu.com", testRequest)
             .compose(new NormalSchedulerTransformer<>())

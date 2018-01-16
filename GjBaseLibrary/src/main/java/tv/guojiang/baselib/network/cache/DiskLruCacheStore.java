@@ -105,8 +105,13 @@ public class DiskLruCacheStore implements ICacheStore {
                 mDiskLruCache.remove(realKey);
                 return null;
             } else {
-                // 缓存未过期
-                return reader.readLine();
+                // 缓存未过期，可能有多行的情况
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                return sb.toString();
             }
         } catch (Exception e) {
             try {

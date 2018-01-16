@@ -16,6 +16,11 @@ public class ApiExceptionFilterFunction implements Function<String, String> {
     @Override
     public String apply(String json) throws Exception {
 
+        // todo 测试
+        if(true){
+            return json;
+        }
+
         // {"errno":0, "msg":"", "data":{}}
         // {"errno":0, "msg":"", "data":[]}
 
