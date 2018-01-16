@@ -5,8 +5,9 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
-import tv.guojiang.baselib.network.annotation.Ignore;
 import tv.guojiang.baselib.network.annotation.Header;
+import tv.guojiang.baselib.network.annotation.Ignore;
+import tv.guojiang.baselib.network.cache.CacheState;
 
 /**
  * Request基类。封装了单个请求的header和参数<br/>
@@ -35,6 +36,12 @@ public class BaseRequest {
     @Ignore
     private Map<String, String> headers = new ArrayMap<>();
 
+    /**
+     * 刷新标识，当缓存状态为{@link CacheState#CACHE_UNLESS_REFRESH}时，需要手动设置该字段为true，才会从网络获取数据；
+     * 否者，只会读取缓存数据
+     */
+    @Ignore
+    public boolean refreshApi;
 
     /**
      * 获取请求参数

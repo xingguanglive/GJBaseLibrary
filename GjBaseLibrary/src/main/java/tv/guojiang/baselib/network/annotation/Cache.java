@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import tv.guojiang.baselib.network.cache.CacheState;
 
 /**
  * 接口中使用缓存的注解
@@ -15,18 +16,13 @@ import java.lang.annotation.Target;
 public @interface Cache {
 
     /**
-     * 缓存的有效期，单位：秒
+     * 缓存的有效期，单位：秒。默认永不过期
      */
     long time() default Long.MAX_VALUE;
 
     /**
-     * 是否本机没有网络，再读取缓存
+     * 缓存的状态
      */
-    boolean focusOffline() default true;
-
-    /**
-     * 是否先读取缓存，再从接口获取
-     */
-    boolean focusCache() default false;
+    CacheState state();
 
 }

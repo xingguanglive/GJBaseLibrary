@@ -10,11 +10,11 @@ import com.google.gson.annotations.SerializedName;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import tv.guojiang.base.R;
-import tv.guojiang.baselib.network.NetworkBiz;
+import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.NetworkObserver;
 import tv.guojiang.baselib.network.annotation.Header;
-import tv.guojiang.baselib.network.cache.FileStore;
-import tv.guojiang.baselib.network.cache.IStore;
+import tv.guojiang.baselib.network.cache.DiskLruCacheStore;
+import tv.guojiang.baselib.network.cache.ICacheStore;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
@@ -37,7 +37,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_network_sample);
 
         if (mCache == null) {
-            mCache = new FileStore(this);
+            mCache = new DiskLruCacheStore(this);
         }
 
         Logger.addLogAdapter(new AndroidLogAdapter());
@@ -48,12 +48,12 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .httpLogEnable(false)
             .cookie(true)
             .joinParamsIntoUrl(true)
-//            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
+            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
             .build();
 
-        NetworkBiz.getInstance().setApiClient(apiClient);
+        ApiBiz.getInstance().setApiClient(apiClient);
     }
 
     public void login(View view) {
@@ -66,7 +66,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.business = "Seven-Android";
         request.seven = 77777;
 
-        NetworkBiz.getInstance().post(
+        ApiBiz.getInstance().post(
             "http://106.75.114.173/user/login?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
             request)
             .compose(new NetworkTransformer<>(Person.class))
@@ -86,13 +86,15 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 protected boolean onError(int errorCode) {
-                    Toast.makeText(NetworkSampleActivity.this, "onError code : "+errorCode, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NetworkSampleActivity.this, "onError code : " + errorCode,
+                        Toast.LENGTH_SHORT).show();
                     return true;
                 }
 
                 @Override
                 protected boolean onFailed(int errorCode) {
-                    Toast.makeText(NetworkSampleActivity.this, "onFailed code : "+errorCode, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NetworkSampleActivity.this, "onFailed code : " + errorCode,
+                        Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
@@ -102,7 +104,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     public void home(View view) {
         BaseRequest request = new BaseRequest();
 
-        NetworkBiz.getInstance().post(
+        ApiBiz.getInstance().post(
             "http://106.75.114.173/chat/getConfig?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
             request)
             .compose(new NetworkTransformer<>(Data.class))
@@ -146,14 +148,14 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ============================================================
 
     // 缓存测试
-    private IStore mCache;
+    private ICacheStore mCache;
 
     private String key = "www.baidu.com";
 
     public void putCache(View view) {
         long start = System.currentTimeMillis();
 
-        String value = "大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow";
+        String value = "222222222222222222222大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow大金粉世家监控电量撒娇发了多少离开.this is jon snow";
         Logger.i("字节：" + value.getBytes().length);
 
         mCache.put(key, value);
@@ -163,7 +165,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     public void getCache(View view) {
         long start = SystemClock.currentThreadTimeMillis();
-        mCache.get(key);
+        mCache.get(key, 1000);
         long end = SystemClock.currentThreadTimeMillis();
         Logger.d("读取的时间：" + (end - start) + " 毫秒");
 

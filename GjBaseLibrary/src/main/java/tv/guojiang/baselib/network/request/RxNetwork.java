@@ -10,6 +10,8 @@ import tv.guojiang.baselib.network.response.ApiExceptionFilterFunction;
 import tv.guojiang.baselib.network.response.DownloadFunction;
 
 /**
+ * 网络访问处理
+ *
  * @author leo
  */
 public class RxNetwork {
