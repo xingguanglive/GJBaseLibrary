@@ -22,7 +22,7 @@ public enum CacheState {
     /**
      * 没有网络的时候再读取缓存
      */
-    FOCUS_NETWORK_UNTIL_OFFLINE,
+    FOCUS_CACHE_UNTIL_ONLINE,
 
     /**
      * 除非手动下拉刷新，否则只读取缓存。需要配合{@link BaseRequest#refreshApi}使用

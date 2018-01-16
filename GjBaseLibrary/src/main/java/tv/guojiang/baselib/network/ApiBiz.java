@@ -107,7 +107,7 @@ public class ApiBiz {
                 }
             case FOCUS_CACHE_AND_NETWORK:
                 return Observable.concat(cache, network);
-            case FOCUS_NETWORK_UNTIL_OFFLINE:
+            case FOCUS_CACHE_UNTIL_ONLINE:
                 if (NetworkUtils.isNetworkAvailable(mContext)) {
                     // 有网络时
                     return network;
