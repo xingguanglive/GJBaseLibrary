@@ -48,12 +48,12 @@ public class RxCache {
             Cache cache = getCacheAnnotation(request);
 
             // 时间单位转换
-            long time = cache.time();
+            long maxAge = cache.maxAge();
             TimeUnit timeUnit = cache.timeUnit();
-            long realTime = timeUnit.toSeconds(time);
+            long realMaxAgeTime = timeUnit.toSeconds(maxAge);
 
             // 读取缓存
-            String json = mStore.get(realKey, realTime);
+            String json = mStore.get(realKey, realMaxAgeTime);
             // 缓存不为空时才触发下面的操作
             if (json != null) {
                 e.onNext(json);

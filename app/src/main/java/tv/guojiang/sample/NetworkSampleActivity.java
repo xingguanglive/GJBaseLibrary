@@ -146,7 +146,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ========================================================================================
     // ================================== 接口缓存测试 =========================================
 
-    @Cache(time = 30, timeUnit = TimeUnit.HOURS, state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
+    @Cache(maxAge = 30, timeUnit = TimeUnit.HOURS, state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
     private class TestRequest extends BaseRequest {
 
     }

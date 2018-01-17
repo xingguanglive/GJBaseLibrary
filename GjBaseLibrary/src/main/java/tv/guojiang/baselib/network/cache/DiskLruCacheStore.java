@@ -85,7 +85,7 @@ public class DiskLruCacheStore implements ICacheStore {
     }
 
     @Override
-    public String get(String key, long time) {
+    public String get(String key, long maxAge) {
         if (mDiskLruCache == null) {
             return null;
         }
@@ -100,7 +100,7 @@ public class DiskLruCacheStore implements ICacheStore {
             String timeStr = reader.readLine();
             long storeTime = Long.parseLong(timeStr);
 
-            if ((System.currentTimeMillis() / 1000 - storeTime) >= time) {
+            if ((System.currentTimeMillis() / 1000 - storeTime) >= maxAge) {
                 // 缓存已过期，删除缓存
                 mDiskLruCache.remove(realKey);
                 return null;
