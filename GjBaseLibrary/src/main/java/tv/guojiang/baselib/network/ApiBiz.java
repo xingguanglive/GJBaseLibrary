@@ -94,6 +94,16 @@ public class ApiBiz {
     }
 
 
+    /**
+     * 文件下载
+     *
+     * @param url 全路径文件地址
+     * @param file 下载之后的文件
+     */
+    public Observable<File> download(String url, File file) {
+        return mRxNetwork.download(url, file);
+    }
+
     private Observable<String> concat(Observable<String> cache, Observable<String> network,
         CacheState state, BaseRequest request) {
         // 使用缓存
@@ -121,15 +131,5 @@ public class ApiBiz {
                 return Observable.concat(cache, network)
                     .firstElement().toObservable();
         }
-    }
-
-    /**
-     * 文件下载
-     *
-     * @param url 全路径文件地址
-     * @param file 下载之后的文件
-     */
-    public Observable<File> download(String url, File file) {
-        return mRxNetwork.download(url, file);
     }
 }

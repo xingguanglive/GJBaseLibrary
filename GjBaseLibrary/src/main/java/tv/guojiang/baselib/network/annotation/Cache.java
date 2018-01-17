@@ -18,12 +18,12 @@ import tv.guojiang.baselib.network.request.BaseRequest;
 public @interface Cache {
 
     /**
-     * 缓存的有效期，单位：秒。默认永不过期
+     * 缓存的有效期。默认不过期
      */
-    long maxAge() default Integer.MAX_VALUE;
+    long maxAge() default Long.MAX_VALUE;
 
     /**
-     * 有效期时间单位
+     * 缓存有效期的时间单位
      */
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 

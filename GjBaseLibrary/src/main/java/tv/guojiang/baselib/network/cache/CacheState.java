@@ -3,29 +3,36 @@ package tv.guojiang.baselib.network.cache;
 import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
- * 缓存的几种状态
+ * 缓存的几种状态。<br/>
+ * <b>"缓存有效"："缓存存在且缓存未过期"</b><br/>
+ * <b>"缓存无效"："缓存已过期或者缓存不存在"</b>
  *
  * @author leo
  */
 public enum CacheState {
 
     /**
-     * 只要缓存未过期，就只读取缓存
+     * 缓存有效：只读取缓存<br/>
+     * 缓存无效：读取网络
      */
     FOCUS_CACHE,
 
     /**
-     * 先读取缓存，再读取网络，两者都会读取
+     * 缓存有效：先读取缓存、再读取网络，两者都会读取<br/>
+     * 缓存无效：只读取网络
      */
     FOCUS_CACHE_AND_NETWORK,
 
     /**
-     * 没有网络的时候再读取缓存
+     * 缓存有效：有网络时读取网络；无网络时只读取缓存<br/>
+     * 缓存无效：只读取网络
      */
     FOCUS_CACHE_UNTIL_ONLINE,
 
     /**
-     * 除非手动下拉刷新，否则只读取缓存。需要配合{@link BaseRequest#refreshApi}使用
+     * 需要配合{@link BaseRequest#refreshApi}使用<br/>
+     * 缓存有效：{@code refreshApi=true}时读取网络；{@code refreshApi=false}时读取缓存<br/>
+     * 缓存无效：只读取网络
      */
     FOCUS_CACHE_UNTIL_REFRESH,
 
