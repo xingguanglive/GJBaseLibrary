@@ -3,7 +3,7 @@ package tv.guojiang.baselib.network.cache;
 import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
- * 缓存的几种状态。<br/>
+ * 缓存策略<br/>
  * <b>"缓存有效"："缓存存在且缓存未过期"</b><br/>
  * <b>"缓存无效"："缓存已过期或者缓存不存在"</b>
  *

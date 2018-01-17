@@ -41,11 +41,10 @@ public class RxCache {
     /**
      * 获取缓存
      */
-    public <T extends BaseRequest> Observable<String> getCache(String url, T request) {
+    public <T extends BaseRequest> Observable<String> getCache(String url, T request, Cache cache) {
         return Observable.create(e -> {
 
             String realKey = getRealKey(url, request.getParams());
-            Cache cache = getCacheAnnotation(request);
 
             // 时间单位转换
             long maxAge = cache.maxAge();

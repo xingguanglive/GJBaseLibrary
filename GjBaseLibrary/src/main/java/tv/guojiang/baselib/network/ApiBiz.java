@@ -66,7 +66,7 @@ public class ApiBiz {
             return mRxNetwork.get(url, request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, request);
+        Observable<String> cacheObservable = mRxCache.getCache(url, request, cache);
         Observable<String> networkObservable = mRxNetwork.get(url, request)
             .doOnNext(json -> mRxCache.saveCache(url, request, json));
 
@@ -86,7 +86,7 @@ public class ApiBiz {
             return mRxNetwork.post(url, request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, request);
+        Observable<String> cacheObservable = mRxCache.getCache(url, request, cache);
         Observable<String> networkObservable = mRxNetwork.post(url, request)
             .doOnNext(json -> mRxCache.saveCache(url, request, json));
 
@@ -104,6 +104,9 @@ public class ApiBiz {
         return mRxNetwork.download(url, file);
     }
 
+    /**
+     * 网络请求与缓存的合并处理
+     */
     private Observable<String> concat(Observable<String> cache, Observable<String> network,
         CacheState state, BaseRequest request) {
         // 使用缓存
