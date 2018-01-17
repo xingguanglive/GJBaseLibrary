@@ -6,9 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.baselib.network.cache.CacheState;
+import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
- * 接口中使用缓存的注解
+ * 接口中使用缓存的注解。当一个接口请求{@link BaseRequest}需要缓存时，使用该注解说明
  *
  * @author leo
  */

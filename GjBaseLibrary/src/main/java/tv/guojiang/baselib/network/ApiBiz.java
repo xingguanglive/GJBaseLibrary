@@ -116,7 +116,8 @@ public class ApiBiz {
                     return Observable.concat(cache, network)
                         .firstElement().toObservable();
                 }
-            default: // FOCUS_CACHE
+            case FOCUS_CACHE:
+            default:
                 return Observable.concat(cache, network)
                     .firstElement().toObservable();
         }

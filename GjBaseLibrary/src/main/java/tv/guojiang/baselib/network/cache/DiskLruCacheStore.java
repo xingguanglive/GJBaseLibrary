@@ -112,13 +112,13 @@ public class DiskLruCacheStore implements ICacheStore {
                     sb.append(line);
                     sb.append("\n");
                 }
-                // 删除杜宇的换行符
+                // 删除最后的换行符
                 sb.deleteCharAt(sb.length() - 1);
                 return sb.toString();
             }
         } catch (Exception e) {
             try {
-                // 异常时删除删除
+                // 异常时删除缓存
                 mDiskLruCache.remove(realKey);
             } catch (IOException e1) {
                 e1.printStackTrace();

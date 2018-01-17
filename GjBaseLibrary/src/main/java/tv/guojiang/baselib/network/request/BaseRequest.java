@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
+import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.annotation.Ignore;
 import tv.guojiang.baselib.network.cache.CacheState;
@@ -12,13 +13,15 @@ import tv.guojiang.baselib.network.cache.CacheState;
 /**
  * Request基类。封装了单个请求的header和参数<br/>
  * <pre>
- * 默认情况下所有的字段都会当做请求参数
+ * 1. 默认情况下所有的字段都会当做请求参数
  * - 如果字段的名字与接口中参数的名字不同，可以使用{@link SerializedName}注解来指明该参数的名称
  *
- * 添加了{@link Header}注解的字段会被当做请求头传递到后台
+ * 2. 添加了{@link Header}注解的字段会被当做请求头传递到后台
  * - 如果字段的名字与接口中参数的名字不同，可以指定{@link Header}的属性值来指明请求头的名称
  *
- * 如果不希望该字段被传递到后台，请使用{@link Ignore}注解以忽略该字段
+ * 3. 如果不希望该字段被传递到后台，请使用{@link Ignore}注解以忽略该字段
+ *
+ * 4. 如果希望请求对应的接口被缓存，请使用{@link Cache}注解指明
  *
  * 注意：请求头和header只支持基本数据类型与{@link String}类型.
  * </pre>

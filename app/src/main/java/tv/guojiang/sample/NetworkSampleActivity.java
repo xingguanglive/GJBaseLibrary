@@ -10,6 +10,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.response.NetworkObserver;
@@ -145,7 +146,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ========================================================================================
     // ================================== 接口缓存测试 =========================================
 
-    @Cache(state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
+    @Cache(time = 30, timeUnit = TimeUnit.HOURS, state = CacheState.FOCUS_CACHE_UNTIL_REFRESH)
     private class TestRequest extends BaseRequest {
 
     }
@@ -153,7 +154,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     public void testCache(View view) {
 
         TestRequest testRequest = new TestRequest();
-        testRequest.refreshApi = false;
+        testRequest.refreshApi = true;
 
         ApiBiz.getInstance().get("http://www.baidu.com", testRequest)
             .compose(new NormalSchedulerTransformer<>())
