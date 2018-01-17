@@ -109,30 +109,24 @@ public class ApiBiz {
      */
     private Observable<String> concat(Observable<String> cache, Observable<String> network,
         CacheState state, BaseRequest request) {
-        // 使用缓存
         switch (state) {
             case FOCUS_CACHE_UNTIL_REFRESH:
                 if (request.refreshApi) {
                     return network;
                 } else {
-                    return Observable.concat(cache, network)
-                        .firstElement().toObservable();
+                    return Observable.concat(cache, network).firstElement().toObservable();
                 }
             case FOCUS_CACHE_AND_NETWORK:
                 return Observable.concat(cache, network);
             case FOCUS_CACHE_UNTIL_ONLINE:
                 if (NetworkUtils.isNetworkAvailable(mContext)) {
-                    // 有网络时
                     return network;
                 } else {
-                    // 没有网络时
-                    return Observable.concat(cache, network)
-                        .firstElement().toObservable();
+                    return Observable.concat(cache, network).firstElement().toObservable();
                 }
             case FOCUS_CACHE:
             default:
-                return Observable.concat(cache, network)
-                    .firstElement().toObservable();
+                return Observable.concat(cache, network).firstElement().toObservable();
         }
     }
 }
