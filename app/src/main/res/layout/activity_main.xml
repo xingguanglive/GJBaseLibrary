@@ -16,4 +16,11 @@
         android:onClick="network"
         android:text="网络加载"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="log"
+        android:textAllCaps="false"
+        android:text="log"/>
+
 </LinearLayout>
