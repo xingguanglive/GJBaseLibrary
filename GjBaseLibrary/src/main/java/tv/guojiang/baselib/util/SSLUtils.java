@@ -16,10 +16,7 @@ import javax.crypto.Cipher;
 public class SSLUtils {
 
     public static final String PASSWORD_PUBLIC_KEY =
-        "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzbDjrE7icKKvNX2y0Ua6VpIw7\r"
-            + "78XRz85ZEiN/gp2LyOv8pxo7cWLknFB4Y3QQxx3Sq5xIRdEyplISKgRKH50dIjyC\r"
-            + "vlQ3hXHGs4xUlAaJgs52oUYwL6GBm1K+EHYSCcDGaswK8qfp3QEiCjllA3exzVv8\r"
-            + "/GmUdIb9m3J4/UMdBQIDAQAB\r";
+        "public key";
 
     /**
      * 获取经过公钥、Base64加密后的字符串

@@ -63,9 +63,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.business = "Seven-Android";
         request.seven = 77777;
 
-        ApiBiz.getInstance().post(
-            "http://106.75.114.173/user/login?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
-            request)
+        ApiBiz.getInstance().post("www.baidu.com", request)
             .compose(new NetworkTransformer<>(Person.class))
             // 网络访问已经成功
             // 对成功后的数据进行处理
@@ -101,9 +99,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
     public void home(View view) {
         BaseRequest request = new BaseRequest();
 
-        ApiBiz.getInstance().post(
-            "http://106.75.114.173/chat/getConfig?version=4.2.0&platform=android&packageId=7&channel=developer-default&deviceName=Vivo+X7&androidVersion=5.1.1",
-            request)
+        ApiBiz.getInstance()
+            .post("www.baidu.com", request)
             .compose(new NetworkTransformer<>(Data.class))
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new NetworkObserver<BaseResponse<Data>>() {
