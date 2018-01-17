@@ -35,7 +35,7 @@ public class DiskLruCacheStore implements ICacheStore {
 
     public DiskLruCacheStore(Context context) {
         try {
-            File directory = new File(FileUtils.getCacheDir(context));
+            File directory = new File(FileUtils.getApiCacheDir(context));
             PackageManager packageManager = context.getPackageManager();
             int appVersion = packageManager.getPackageInfo(context.getPackageName(), 0).versionCode;
             mDiskLruCache = DiskLruCache.open(directory, appVersion, 1, MAX_SIZE);
@@ -128,6 +128,7 @@ public class DiskLruCacheStore implements ICacheStore {
                 // md5校验
                 if (!md5.equals(Md5Utils.getMD5(result))) {
                     mDiskLruCache.remove(key);
+                    return null;
                 }
 
                 return result;

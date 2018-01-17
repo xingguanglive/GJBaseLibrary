@@ -36,6 +36,8 @@ public class FileUtils {
 
     public static final String ICON_DIR = "icon";
 
+    public static final String API_CORE = "core";
+
     /**
      * 判断SD卡是否挂载
      */
@@ -51,6 +53,10 @@ public class FileUtils {
      */
     public static String getCacheDir(Context context) {
         return getDir(context, CACHE_DIR);
+    }
+
+    public static String getApiCacheDir(Context context) {
+        return getDir(context, API_CORE);
     }
 
     /**
