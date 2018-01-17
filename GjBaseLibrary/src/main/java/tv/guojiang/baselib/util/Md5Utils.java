@@ -41,7 +41,7 @@ public class Md5Utils {
                 return sb.toString();
             }
         }
-        return null;
+        return "";
     }
 
     private static String bufferToHex(byte[] bytes) {

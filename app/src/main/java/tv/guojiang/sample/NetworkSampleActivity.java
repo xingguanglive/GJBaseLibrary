@@ -10,10 +10,8 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.cache.CacheState;
@@ -21,6 +19,7 @@ import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
 import tv.guojiang.baselib.network.request.BaseRequest;
 import tv.guojiang.baselib.network.response.BaseResponse;
+import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
 import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
 import tv.guojiang.baselib.util.SSLUtils;
@@ -146,7 +145,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
     // ========================================================================================
     // ================================== 接口缓存测试 =========================================
 
-    @Cache(maxAge = 30, timeUnit = TimeUnit.HOURS, state = CacheState.FOCUS_CACHE)
+    @Cache(maxAge = 30,state = CacheState.FOCUS_CACHE)
     private class TestRequest extends BaseRequest {
 
     }

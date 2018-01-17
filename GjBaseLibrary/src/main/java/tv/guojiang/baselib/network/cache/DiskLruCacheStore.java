@@ -20,6 +20,7 @@ import tv.guojiang.baselib.util.Md5Utils;
  * 基于LRU算法的文件缓存.缓存格式为:
  * <pre>
  * 时间戳
+ * MD5
  * 接口数据
  * </pre>
  *
@@ -60,6 +61,10 @@ public class DiskLruCacheStore implements ICacheStore {
             long currentTimeSeconds = System.currentTimeMillis() / 1000;
             // 写入时间戳
             writer.write(currentTimeSeconds + "");
+            // 写入新行
+            writer.newLine();
+            // 写入缓存md5
+            writer.write(Md5Utils.getMD5(value));
             // 写入新行
             writer.newLine();
             // 写入接口数据
@@ -105,7 +110,10 @@ public class DiskLruCacheStore implements ICacheStore {
                 mDiskLruCache.remove(realKey);
                 return null;
             } else {
-                // 缓存未过期，可能有多行的情况
+                // 缓存未过期
+                String md5 = reader.readLine();
+
+                // 可能有多行的情况
                 StringBuilder sb = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {
@@ -114,7 +122,15 @@ public class DiskLruCacheStore implements ICacheStore {
                 }
                 // 删除最后的换行符
                 sb.deleteCharAt(sb.length() - 1);
-                return sb.toString();
+
+                String result = sb.toString();
+
+                // md5校验
+                if (!md5.equals(Md5Utils.getMD5(result))) {
+                    mDiskLruCache.remove(key);
+                }
+
+                return result;
             }
         } catch (Exception e) {
             try {
