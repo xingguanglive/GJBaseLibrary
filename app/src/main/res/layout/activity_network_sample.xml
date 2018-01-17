@@ -7,13 +7,21 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="imageLoader"
-        android:text="图片加载"/>
+        android:onClick="login"
+        android:textAllCaps="false"
+        android:text="登录login"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="network"
-        android:text="网络加载"/>
+        android:onClick="home"
+        android:text="首页"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="testCache"
+        android:textAllCaps="false"
+        android:text="缓存测试"/>
 
 </LinearLayout>
