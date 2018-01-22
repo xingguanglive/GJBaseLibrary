@@ -25,18 +25,12 @@ import tv.guojiang.baselib.network.response.DownloadFunction;
 public class RxNetwork {
 
     /**
-     * 接口通用配置
-     */
-    private ApiClient mApiClient;
-
-    /**
      * Retrofit Api
      */
     private BaseApi mBaseApi;
 
     public RxNetwork(ApiClient apiClient) {
-        mApiClient = apiClient;
-        mBaseApi = mApiClient.getApiService(BaseApi.class);
+        mBaseApi = apiClient.getApiService(BaseApi.class);
     }
 
     /**

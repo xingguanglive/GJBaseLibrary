@@ -29,10 +29,7 @@ public class ApiBiz {
      */
     private RxCache mRxCache;
 
-    /**
-     * 通用请求参数
-     */
-    private Map<String, String> mParams;
+    private ApiClient mApiClient;
 
     private ApiBiz() {
     }
@@ -53,10 +50,11 @@ public class ApiBiz {
         if (apiClient == null) {
             throw new NullPointerException("apiClient == null");
         }
+
+        mApiClient = apiClient;
         mContext = apiClient.getContext();
         mRxNetwork = new RxNetwork(apiClient);
         mRxCache = new RxCache(mContext);
-        mParams = apiClient.getParams();
     }
 
     /**
@@ -154,7 +152,7 @@ public class ApiBiz {
      * 合并通用的参数
      */
     private Map<String, String> concatParams(Map<String, String> source) {
-        Map<String, String> params = mParams;
+        Map<String, String> params = mApiClient.getParams();
         if (params != null && params.size() > 0) {
             source.putAll(params);
         }
