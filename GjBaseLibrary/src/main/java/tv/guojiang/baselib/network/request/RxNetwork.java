@@ -58,7 +58,7 @@ public class RxNetwork {
         return getFinalUrl(url)
             .flatMap(finalUrl->{
                                 Logger.i("******** 从network获取 ********");
-                return mBaseApi.get(finalUrl, request.getHeaders(),joinParams(request.getParams()));})
+                return mBaseApi.get(finalUrl, request.getHeaders(), request.getParams());})
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
     }
@@ -72,7 +72,7 @@ public class RxNetwork {
     public <T extends BaseRequest> Observable<String> post(String url, T request) {
         //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(), joinParams(request.getParams())))
+            .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(),  request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
     }
@@ -99,7 +99,7 @@ public class RxNetwork {
         Map<String, String> headers = request.getHeaders();
 
         // 额外的参数
-        Map<String, String> params = joinParams(request.getParams());
+        Map<String, String> params = request.getParams();
 
         Map<String, RequestBody> extra = new ArrayMap<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -146,13 +146,5 @@ public class RxNetwork {
         } else {
             throw new ClassCastException("@Upload supports only File or List<File> !!!");
         }
-    }
-
-    private Map<String, String> joinParams(Map<String, String> source) {
-        Map<String, String> params = mApiClient.getParams();
-        if (params != null && params.size() > 0) {
-            source.putAll(params);
-        }
-        return source;
     }
 }

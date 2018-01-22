@@ -56,7 +56,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .joinParamsIntoUrl(false)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
-            .param("copyright", "GJ-Platform")
+            .param("copyright", "AppLive")
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
@@ -116,7 +116,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.location = "ShenZhen";
 
         ApiBiz.getInstance()
-            .get("http://localhost:3000/post", request)
+            .post("http://localhost:3000/post", request)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override
@@ -200,8 +200,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
         mTakePhotoHelper = new TakePhotoHelper(this);
         mTakePhotoHelper.openGallery();
 
-//        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"store_v1.0.sql");
-//        uploadFile(file);
+        //        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"store_v1.0.sql");
+        //        uploadFile(file);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         List<File> files = new ArrayList<>();
         files.add(file);
-//        files.add(file);
+        //        files.add(file);
 
         request.file = files;
 

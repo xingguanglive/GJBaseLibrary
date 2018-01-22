@@ -3,6 +3,7 @@ package tv.guojiang.baselib.network;
 import android.content.Context;
 import io.reactivex.Observable;
 import java.io.File;
+import java.util.Map;
 import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.cache.CacheState;
 import tv.guojiang.baselib.network.cache.RxCache;
@@ -28,6 +29,11 @@ public class ApiBiz {
      */
     private RxCache mRxCache;
 
+    /**
+     * 通用请求参数
+     */
+    private Map<String, String> mParams;
+
     private ApiBiz() {
     }
 
@@ -50,6 +56,7 @@ public class ApiBiz {
         mContext = apiClient.getContext();
         mRxNetwork = new RxNetwork(apiClient);
         mRxCache = new RxCache(mContext);
+        mParams = apiClient.getParams();
     }
 
     /**
@@ -60,17 +67,19 @@ public class ApiBiz {
      */
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
 
+        Map<String, String> params = concatParams(request.getParams());
+
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
             // 不使用缓存
             return mRxNetwork.get(url, request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, request, cache);
+        Observable<String> cacheObservable = mRxCache.getCache(url, params, cache);
         Observable<String> networkObservable = mRxNetwork.get(url, request)
-            .doOnNext(json -> mRxCache.saveCache(url, request, json));
+            .doOnNext(json -> mRxCache.saveCache(url, params, json));
 
-        return concat(cacheObservable, networkObservable, cache.state(), request);
+        return concatObservable(cacheObservable, networkObservable, cache.state(), request);
     }
 
     /**
@@ -80,23 +89,27 @@ public class ApiBiz {
      * @param request 请求
      */
     public <T extends BaseRequest> Observable<String> post(String url, T request) {
+
+        Map<String, String> params = concatParams(request.getParams());
+
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
             // 不使用缓存
             return mRxNetwork.post(url, request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, request, cache);
+        Observable<String> cacheObservable = mRxCache.getCache(url, params, cache);
         Observable<String> networkObservable = mRxNetwork.post(url, request)
-            .doOnNext(json -> mRxCache.saveCache(url, request, json));
+            .doOnNext(json -> mRxCache.saveCache(url, params, json));
 
-        return concat(cacheObservable, networkObservable, cache.state(), request);
+        return concatObservable(cacheObservable, networkObservable, cache.state(), request);
     }
 
     /**
      * 文件上传
      */
     public <T extends BaseRequest> Observable<String> upload(String url, T request) {
+        concatParams(request.getParams());
         return mRxNetwork.uploadFile(url, request);
     }
 
@@ -113,7 +126,8 @@ public class ApiBiz {
     /**
      * 网络请求与缓存的合并处理
      */
-    private Observable<String> concat(Observable<String> cache, Observable<String> network,
+    private Observable<String> concatObservable(Observable<String> cache,
+        Observable<String> network,
         CacheState state, BaseRequest request) {
         switch (state) {
             case FOCUS_CACHE_UNTIL_REFRESH:
@@ -134,5 +148,16 @@ public class ApiBiz {
             default:
                 return Observable.concat(cache, network).firstElement().toObservable();
         }
+    }
+
+    /**
+     * 合并通用的参数
+     */
+    private Map<String, String> concatParams(Map<String, String> source) {
+        Map<String, String> params = mParams;
+        if (params != null && params.size() > 0) {
+            source.putAll(params);
+        }
+        return source;
     }
 }

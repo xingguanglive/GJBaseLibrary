@@ -6,7 +6,6 @@ import io.reactivex.Observable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.baselib.network.annotation.Cache;
-import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
  * 接口缓存处理
@@ -41,10 +40,10 @@ public class RxCache {
     /**
      * 获取缓存
      */
-    public <T extends BaseRequest> Observable<String> getCache(String url, T request, Cache cache) {
+    public Observable<String> getCache(String url, Map<String, String> params, Cache cache) {
         return Observable.create(e -> {
 
-            String realKey = getRealKey(url, request.getParams());
+            String realKey = getRealKey(url, params);
 
             // 时间单位转换
             long maxAge = cache.maxAge();
@@ -65,8 +64,8 @@ public class RxCache {
     /**
      * 缓存接口数据
      */
-    public <T extends BaseRequest> void saveCache(String url, T request, String json) {
-        String realKey = getRealKey(url, request.getParams());
+    public void saveCache(String url, Map<String, String> params, String json) {
+        String realKey = getRealKey(url, params);
         mStore.put(realKey, json);
         Logger.i("--------> 存储数据到缓存中");
     }
