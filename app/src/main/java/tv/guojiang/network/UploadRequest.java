@@ -1,6 +1,7 @@
 package tv.guojiang.network;
 
 import java.io.File;
+import java.util.List;
 import tv.guojiang.baselib.network.annotation.Upload;
 import tv.guojiang.baselib.network.request.BaseRequest;
 
@@ -14,6 +15,6 @@ public class UploadRequest extends BaseRequest {
     public String password;
 
     @Upload("picture")
-    public File file;
+    public List<File> file;
 
 }

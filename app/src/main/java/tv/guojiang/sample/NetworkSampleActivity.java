@@ -12,6 +12,7 @@ import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
@@ -197,8 +198,11 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
 
     public void upload(View view) {
-        mTakePhotoHelper = new TakePhotoHelper(this);
-        mTakePhotoHelper.openGallery();
+//        mTakePhotoHelper = new TakePhotoHelper(this);
+//        mTakePhotoHelper.openGallery();
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"store_v1.0.sql");
+        uploadFile(file);
     }
 
     @Override
@@ -215,7 +219,12 @@ public class NetworkSampleActivity extends AppCompatActivity {
         UploadRequest request = new UploadRequest();
         request.username = "JonSnow";
         request.password = "King in the north";
-        request.file = file;
+
+        List<File> files = new ArrayList<>();
+        files.add(file);
+        files.add(file);
+
+        request.file = files;
 
         ApiBiz.getInstance()
             .upload("http://api.nohttp.net/upload", request)
