@@ -1,9 +1,16 @@
 package tv.guojiang.baselib.network.request;
 
-import com.orhanobut.logger.Logger;
+import android.support.v4.util.ArrayMap;
 import io.reactivex.Observable;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.BaseApi;
@@ -18,18 +25,12 @@ import tv.guojiang.baselib.network.response.DownloadFunction;
 public class RxNetwork {
 
     /**
-     * 接口通用配置
-     */
-    private ApiClient mApiClient;
-
-    /**
      * Retrofit Api
      */
     private BaseApi mBaseApi;
 
     public RxNetwork(ApiClient apiClient) {
-        mApiClient = apiClient;
-        mBaseApi = mApiClient.getApiService(BaseApi.class);
+        mBaseApi = apiClient.getApiService(BaseApi.class);
     }
 
     /**
@@ -48,9 +49,7 @@ public class RxNetwork {
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
         //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl->{
-                                Logger.i("******** 从network获取 ********");
-                return mBaseApi.get(finalUrl, request.getHeaders(),joinParams(request.getParams()));})
+            .flatMap(finalUrl-> mBaseApi.get(finalUrl, request.getHeaders(), request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
     }
@@ -64,7 +63,7 @@ public class RxNetwork {
     public <T extends BaseRequest> Observable<String> post(String url, T request) {
         //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(), joinParams(request.getParams())))
+            .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(),  request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
     }
@@ -82,11 +81,64 @@ public class RxNetwork {
             .map(new DownloadFunction(file));
     }
 
-    private Map<String, String> joinParams(Map<String, String> source) {
-        Map<String, String> params = mApiClient.getParams();
-        if (params != null && params.size() > 0) {
-            source.putAll(params);
+    /**
+     * 单个文件上传
+     */
+    public <T extends BaseRequest> Observable<String> uploadFile(String url, T request) {
+
+        // header
+        Map<String, String> headers = request.getHeaders();
+
+        // 额外的参数
+        Map<String, String> params = request.getParams();
+
+        Map<String, RequestBody> extra = new ArrayMap<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            extra.put(entry.getKey(), RetrofitFormWrapper.param2RequestBody(entry.getValue()));
         }
-        return source;
+
+        // 文件
+        Map<String, Object> uploads = request.getUploads();
+
+        // 文件的类型
+        MediaType mediaType = MediaType.parse(request.contentType);
+
+        Iterator<Entry<String, Object>> iterator = uploads.entrySet().iterator();
+        if (!iterator.hasNext()) {
+            throw new NullPointerException("choose file first ！！");
+        }
+
+        Entry<String, Object> entry = iterator.next();
+
+        String key = entry.getKey();
+        Object value = entry.getValue();
+
+        if (value instanceof File) {
+            //@formatter:off
+                MultipartBody.Part filePart = RetrofitFormWrapper.file2Part(key, (File) value,mediaType );
+                return getFinalUrl(url)
+                    .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, extra, filePart))
+                    .map(ResponseBody::string)
+                    .map(new ApiExceptionFilterFunction());//@formatter:on
+
+        } else if (value instanceof List) {
+            try {
+                List<File> files = (List<File>) value;
+                List<MultipartBody.Part> fileParts = new ArrayList<>();
+                for (File file : files) {
+                    fileParts
+                        .add(RetrofitFormWrapper.file2Part(key, file, mediaType));
+                }
+                return getFinalUrl(url)
+                    .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, extra, fileParts))
+                    .map(ResponseBody::string)
+                    .map(new ApiExceptionFilterFunction());
+
+            } catch (ClassCastException e) {
+                throw new ClassCastException("@Upload supports only File or List<File> !!!");
+            }
+        } else {
+            throw new ClassCastException("@Upload supports only File or List<File> !!!");
+        }
     }
 }

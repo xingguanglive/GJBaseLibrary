@@ -6,8 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
 import tv.guojiang.baselib.network.annotation.Cache;
+import tv.guojiang.baselib.network.annotation.ContentType;
 import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.annotation.Ignore;
+import tv.guojiang.baselib.network.annotation.Upload;
 import tv.guojiang.baselib.network.cache.CacheState;
 
 /**
@@ -39,12 +41,18 @@ public class BaseRequest {
     @Ignore
     private Map<String, String> headers = new ArrayMap<>();
 
+    @Ignore
+    private Map<String, Object> uploads = new ArrayMap<>();
+
     /**
      * 刷新标识，当缓存状态为{@link CacheState#FOCUS_CACHE_UNTIL_REFRESH}时，需要手动设置该字段为true，才会从网络获取数据；
      * 否者，只会读取缓存数据
      */
     @Ignore
     public boolean refreshApi;
+
+    @Ignore
+    String contentType;
 
     /**
      * 获取请求参数
@@ -60,6 +68,14 @@ public class BaseRequest {
     public Map<String, String> getHeaders() {
         parseAnnotation();
         return headers;
+    }
+
+    /**
+     * 获取文件上传的参数
+     */
+    public Map<String, Object> getUploads() {
+        parseAnnotation();
+        return uploads;
     }
 
     private void parseAnnotation() {
@@ -86,23 +102,43 @@ public class BaseRequest {
                     continue;
                 }
 
-                SerializedName name = field.getAnnotation(SerializedName.class);
-                Header header = field.getAnnotation(Header.class);
-                if (header == null) {
-                    // 请求参数
-                    if (name == null) {
+                SerializedName nameTag = field.getAnnotation(SerializedName.class);
+                Header headerTag = field.getAnnotation(Header.class);
+                Upload uploadTag = field.getAnnotation(Upload.class);
+                if (uploadTag != null) {
+                    // 上传的单个文件
+                    ContentType fileType = field.getAnnotation(ContentType.class);
+                    if (fileType == null) {
+                        throw new IllegalArgumentException(
+                            "add annotation : ContentType for " + clazz.getCanonicalName()
+                                + "'s filed : " + field.getName() + " first!!!");
+                    }
+
+                    contentType = fileType.value();
+
+                    if (TextUtils.isEmpty(uploadTag.value())) {
+                        uploads.put(field.getName(), field.get(this));
+                    } else {
+                        uploads.put(uploadTag.value(), field.get(this));
+                    }
+                } else if (headerTag == null) {
+                    // 接口参数
+                    if (nameTag == null) {
+                        // 没写 SerializedName 注解默认就是接口参数
                         params.put(field.getName(), String.valueOf(field.get(this)));
                     } else {
-                        params.put(name.value(), String.valueOf(field.get(this)));
+                        params.put(nameTag.value(), String.valueOf(field.get(this)));
                     }
                 } else {
-                    // header
-                    if (TextUtils.isEmpty(header.value())) {
+                    // 接口header
+                    if (TextUtils.isEmpty(headerTag.value())) {
                         headers.put(field.getName(), String.valueOf(field.get(this)));
                     } else {
-                        headers.put(header.value(), String.valueOf(field.get(this)));
+                        headers.put(headerTag.value(), String.valueOf(field.get(this)));
                     }
                 }
+
+
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -133,13 +169,16 @@ public class BaseRequest {
             // 过滤掉有Filter注解的
             return true;
         } else if (field.getType() == String.class) {
-            // 非空字符串不过滤
+            // 字符串不过滤
             return false;
         } else if (value instanceof Number) {
             // 数字Byte,Short,Integer,Long,Float,Double 不过滤
             return false;
         } else if (value instanceof Boolean) {
             // Boolean 不过滤
+            return false;
+        } else if (field.getAnnotation(Upload.class) != null) {
+            // Upload注解不过滤
             return false;
         }
 
