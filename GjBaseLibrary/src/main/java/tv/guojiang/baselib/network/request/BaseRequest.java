@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Field;
 import java.util.Map;
 import tv.guojiang.baselib.network.annotation.Cache;
+import tv.guojiang.baselib.network.annotation.ContentType;
 import tv.guojiang.baselib.network.annotation.Header;
 import tv.guojiang.baselib.network.annotation.Ignore;
 import tv.guojiang.baselib.network.annotation.Upload;
@@ -49,6 +50,9 @@ public class BaseRequest {
      */
     @Ignore
     public boolean refreshApi;
+
+    @Ignore
+    String contentType;
 
     /**
      * 获取请求参数
@@ -103,6 +107,15 @@ public class BaseRequest {
                 Upload uploadTag = field.getAnnotation(Upload.class);
                 if (uploadTag != null) {
                     // 上传的单个文件
+                    ContentType fileType = field.getAnnotation(ContentType.class);
+                    if (fileType == null) {
+                        throw new IllegalArgumentException(
+                            "add annotation : ContentType for " + clazz.getCanonicalName()
+                                + "'s filed : " + field.getName() + " first!!!");
+                    }
+
+                    contentType = fileType.value();
+
                     if (TextUtils.isEmpty(uploadTag.value())) {
                         uploads.put(field.getName(), field.get(this));
                     } else {
