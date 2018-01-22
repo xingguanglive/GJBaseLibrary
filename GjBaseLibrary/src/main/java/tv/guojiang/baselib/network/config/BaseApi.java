@@ -13,6 +13,7 @@ import io.reactivex.Observable;
 import java.util.List;
 import java.util.Map;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -56,7 +57,7 @@ public interface BaseApi {
     Observable<ResponseBody> uploadFile(
         @Url String url,
         @HeaderMap Map<String, String> headers,
-        @PartMap Map<String, String> params,
+        @PartMap Map<String, RequestBody> params,
         @Part MultipartBody.Part file
     );
 
@@ -66,7 +67,7 @@ public interface BaseApi {
     Observable<ResponseBody> uploadFiles(
         @Url String url,
         @HeaderMap Map<String, String> headers,
-        @PartMap Map<String, String> params,
+        @PartMap Map<String, RequestBody> params,
         @Part List<MultipartBody.Part> files
     );
 }

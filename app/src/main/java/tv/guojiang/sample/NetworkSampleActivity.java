@@ -164,10 +164,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     // ================================== 接口缓存测试 =========================================
 
-    public void testCache(View view) {
+    public void cache(View view) {
 
         TestRequest testRequest = new TestRequest();
-        testRequest.refreshApi = true;
 
         ApiBiz.getInstance().get("http://www.baidu.com", testRequest)
             .compose(new NormalSchedulerTransformer<>())
@@ -198,11 +197,11 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
 
     public void upload(View view) {
-//        mTakePhotoHelper = new TakePhotoHelper(this);
-//        mTakePhotoHelper.openGallery();
+        mTakePhotoHelper = new TakePhotoHelper(this);
+        mTakePhotoHelper.openGallery();
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"store_v1.0.sql");
-        uploadFile(file);
+//        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"store_v1.0.sql");
+//        uploadFile(file);
     }
 
     @Override
@@ -222,7 +221,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         List<File> files = new ArrayList<>();
         files.add(file);
-        files.add(file);
+//        files.add(file);
 
         request.file = files;
 

@@ -99,7 +99,8 @@ public class RxNetwork {
         Map<String, String> headers = request.getHeaders();
 
         // 额外的参数
-        Map<String, String> params = request.getParams();
+        Map<String, String> params = joinParams(request.getParams());
+
         Map<String, RequestBody> extra = new ArrayMap<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             extra.put(entry.getKey(), RetrofitFormWrapper.param2RequestBody(entry.getValue()));
@@ -122,7 +123,7 @@ public class RxNetwork {
             //@formatter:off
                 MultipartBody.Part filePart = RetrofitFormWrapper.file2Part(key, (File) value, MediaType.parse("image/*"));
                 return getFinalUrl(url)
-                    .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, params, filePart))
+                    .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, extra, filePart))
                     .map(ResponseBody::string)
                     .map(new ApiExceptionFilterFunction());//@formatter:on
 
@@ -135,7 +136,7 @@ public class RxNetwork {
                         .add(RetrofitFormWrapper.file2Part(key, file, MediaType.parse("image/*")));
                 }
                 return getFinalUrl(url)
-                    .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, params, fileParts))
+                    .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, extra, fileParts))
                     .map(ResponseBody::string)
                     .map(new ApiExceptionFilterFunction());
 
