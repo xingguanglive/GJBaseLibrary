@@ -56,7 +56,7 @@ public class RxCache {
             String json = mStore.get(realKey, realMaxAgeTime);
             // 缓存不为空时才触发下面的操作
             if (json != null) {
-                Log.d(TAG, "get data from cache : " + realKey);
+                Log.i(TAG, "get data from cache : " + realKey);
                 e.onNext(json);
             }
             e.onComplete();
@@ -69,7 +69,7 @@ public class RxCache {
     public void saveCache(String url, Map<String, String> params, String json) {
         String realKey = getRealKey(url, params);
         mStore.put(realKey, json);
-        Log.d(TAG, "store cache : " + realKey);
+        Log.i(TAG, "store cache : " + realKey);
     }
 
 }
