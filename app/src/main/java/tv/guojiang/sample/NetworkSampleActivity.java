@@ -51,7 +51,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         // 初始化全局接口通用配置
         ApiClient apiClient = new Builder(this)
             .baseUrl("http://www.baidu.com/")
-            .log(true)
+            .log(false)
             .cookie(true)
             .joinParamsIntoUrl(false)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
