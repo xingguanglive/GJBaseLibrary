@@ -7,6 +7,8 @@ import tv.guojiang.baselib.network.annotation.Upload;
 import tv.guojiang.baselib.network.request.BaseRequest;
 
 /**
+ * 文件上传请求
+ *
  * @author leo
  */
 public class UploadRequest extends BaseRequest {
