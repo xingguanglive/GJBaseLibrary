@@ -93,6 +93,12 @@ public class ApiBiz {
         return concat(cacheObservable, networkObservable, cache.state(), request);
     }
 
+    /**
+     * 文件上传
+     */
+    public <T extends BaseRequest> Observable<String> upload(String url, T request) {
+        return mRxNetwork.uploadFile(url, request);
+    }
 
     /**
      * 文件下载

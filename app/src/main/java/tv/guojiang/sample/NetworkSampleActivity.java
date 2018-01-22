@@ -1,29 +1,34 @@
 package tv.guojiang.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-import com.google.gson.annotations.SerializedName;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.util.List;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.annotation.Cache;
-import tv.guojiang.baselib.network.annotation.Header;
-import tv.guojiang.baselib.network.cache.CacheState;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
-import tv.guojiang.baselib.network.request.BaseRequest;
-import tv.guojiang.baselib.network.response.BaseResponse;
+import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
+import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
+import tv.guojiang.baselib.network.response.PagerResponse;
 import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
-import tv.guojiang.baselib.util.SSLUtils;
+import tv.guojiang.helper.TakePhotoHelper;
+import tv.guojiang.network.LoginRequest;
+import tv.guojiang.network.Person;
+import tv.guojiang.network.PostRequest;
+import tv.guojiang.network.TestRequest;
+import tv.guojiang.network.UploadRequest;
 
 /**
  * @author leo
@@ -31,6 +36,7 @@ import tv.guojiang.baselib.util.SSLUtils;
 public class NetworkSampleActivity extends AppCompatActivity {
 
     private static final String TAG = "Network";
+    private TakePhotoHelper mTakePhotoHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,23 +60,23 @@ public class NetworkSampleActivity extends AppCompatActivity {
         ApiBiz.getInstance().setApiClient(apiClient);
     }
 
-    public void login(View view) {
+    public void get(View view) {
 
         LoginRequest request = new LoginRequest();
-        request.username = "18175140004";
-        request.password = SSLUtils.getEncryptPassword("123456");
+        request.username = "JonSnow";
+        request.password = "King in the north";
         request.remember = true;
         request.android = 999;
         request.business = "Seven-Android";
         request.seven = 77777;
 
-        ApiBiz.getInstance().post("www.baidu.com", request)
+        ApiBiz.getInstance().get("http://localhost:3000/login", request)
             .compose(new NetworkTransformer<>(Person.class))
             // 网络访问已经成功
             // 对成功后的数据进行处理
-            .map(personPagerResponse -> {
+            .map(response -> {
                 Logger.i("数据变换时的线程信息:" + Thread.currentThread().getName());
-                return personPagerResponse.data + "";
+                return response.data + "";
             })
             // 线程切换放到最后面
             .compose(new NormalSchedulerTransformer<>())
@@ -94,59 +100,63 @@ public class NetworkSampleActivity extends AppCompatActivity {
                     return true;
                 }
             });
+    }
+
+    public void post(View view) {
+
+        PostRequest request = new PostRequest();
+        request.age = 24;
+        request.name = "Snow";
+        request.location = "ShenZhen";
+
+        ApiBiz.getInstance()
+            .get("http://localhost:3000/post", request)
+            .compose(new NormalSchedulerTransformer<>())
+            .subscribe(new Observer<String>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(String s) {
+                    Logger.d(s);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Logger.e(e, e.getMessage());
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
 
     }
 
-    public void home(View view) {
-        BaseRequest request = new BaseRequest();
+    public void page(View view) {
+        PagerRequest request = new PagerRequest();
+
+        request.pager = 1;
+        request.pagerSize = 20;
 
         ApiBiz.getInstance()
-            .post("www.baidu.com", request)
-            .compose(new NetworkTransformer<>(Data.class))
+            .get("http://localhost:3000/users", request)
+            .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NormalSchedulerTransformer<>())
-            .subscribe(new NetworkObserver<BaseResponse<Data>>() {
+            .subscribe(new NetworkObserver<PagerResponse<Person>>() {
                 @Override
-                public void onNext(BaseResponse<Data> dataBaseResponse) {
-                    Logger.w(dataBaseResponse.data.serverIp);
+                public void onNext(PagerResponse<Person> response) {
+                    List<Person> data = response.data;
+                    Logger.d(data);
                 }
             });
     }
 
-    public static class LoginRequest extends BaseRequest {
-
-        public String username;
-        public String password;
-        public boolean remember;
-
-        public int android;
-
-        @Header
-        public String business;
-
-        @Header("seven-leo")
-        public int seven;
-
-    }
-
-    public static class Data {
-
-        public String serverIp;
-        public String serverPort;
-    }
-
-    public static class Person {
-
-        @SerializedName("uid")
-        public String uid;
-    }
-
-    // ========================================================================================
     // ================================== 接口缓存测试 =========================================
-
-    @Cache(maxAge = 30, timeUnit = TimeUnit.DAYS, state = CacheState.FOCUS_CACHE)
-    private class TestRequest extends BaseRequest {
-
-    }
 
     public void testCache(View view) {
 
@@ -177,4 +187,95 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 }
             });
     }
+
+    // ================================== 文件上传测试 =========================================
+
+
+    public void upload(View view) {
+        mTakePhotoHelper = new TakePhotoHelper(this);
+        mTakePhotoHelper.openGallery();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        File file = mTakePhotoHelper.onActivityResult(requestCode, resultCode, data);
+        if (file != null) {
+            uploadFile(file);
+        }
+    }
+
+    private void uploadFile(File file) {
+
+        UploadRequest request = new UploadRequest();
+        request.username = "JonSnow";
+        request.password = "King in the north";
+        request.file = file;
+
+        ApiBiz.getInstance()
+            .upload("http://api.nohttp.net/upload", request)
+            .compose(new NormalSchedulerTransformer<>())
+            .subscribe(new Observer<String>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(String s) {
+                    Logger.d(s);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Logger.e(e, e.getMessage());
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+    }
+
+    // ============================= 文件下载 ====================================
+
+    public void download(View view) {
+
+        String url = "http://static.simpledesktops.com/uploads/desktops/2017/10/02/polymagnet.png";
+
+        File download = new File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+            "download.png");
+
+        ApiBiz.getInstance()
+            .download(url, download)
+            .compose(new NormalSchedulerTransformer<>())
+            .subscribe(new Observer<File>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(File file) {
+                    Toast.makeText(NetworkSampleActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
+                    Logger.d("下载文件的路径 ---> " + file.getAbsolutePath());
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(NetworkSampleActivity.this, "文件下载失败", Toast.LENGTH_SHORT).show();
+                    Logger.e(e, "文件下载失败");
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+
+    }
+
 }

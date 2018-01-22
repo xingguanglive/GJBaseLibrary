@@ -9,9 +9,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PagerRequest extends BaseRequest {
 
-    @SerializedName("page")
+    @SerializedName("_page")
     public int pager;
 
-    @SerializedName("limit")
+    @SerializedName("_limit")
     public int pagerSize;
 }
