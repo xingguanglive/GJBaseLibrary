@@ -1,7 +1,6 @@
 package tv.guojiang.baselib.network.request;
 
 import android.support.v4.util.ArrayMap;
-import com.orhanobut.logger.Logger;
 import io.reactivex.Observable;
 import java.io.File;
 import java.util.ArrayList;
@@ -56,9 +55,7 @@ public class RxNetwork {
     public <T extends BaseRequest> Observable<String> get(String url, T request) {
         //@formatter:off
         return getFinalUrl(url)
-            .flatMap(finalUrl->{
-                                Logger.i("******** 从network获取 ********");
-                return mBaseApi.get(finalUrl, request.getHeaders(), request.getParams());})
+            .flatMap(finalUrl-> mBaseApi.get(finalUrl, request.getHeaders(), request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
     }

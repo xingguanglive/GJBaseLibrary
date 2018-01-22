@@ -1,7 +1,7 @@
 package tv.guojiang.baselib.network.cache;
 
 import android.content.Context;
-import com.orhanobut.logger.Logger;
+import android.util.Log;
 import io.reactivex.Observable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +13,8 @@ import tv.guojiang.baselib.network.annotation.Cache;
  * @author leo
  */
 public class RxCache {
+
+    public static final String TAG = "Cache";
 
     private ICacheStore mStore;
 
@@ -54,8 +56,8 @@ public class RxCache {
             String json = mStore.get(realKey, realMaxAgeTime);
             // 缓存不为空时才触发下面的操作
             if (json != null) {
+                Log.d(TAG, "get data from cache : " + realKey);
                 e.onNext(json);
-                Logger.i("====== 从缓存获取 =========");
             }
             e.onComplete();
         });
@@ -67,7 +69,7 @@ public class RxCache {
     public void saveCache(String url, Map<String, String> params, String json) {
         String realKey = getRealKey(url, params);
         mStore.put(realKey, json);
-        Logger.i("--------> 存储数据到缓存中");
+        Log.d(TAG, "store cache : " + realKey);
     }
 
 }
