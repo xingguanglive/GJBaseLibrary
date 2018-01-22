@@ -100,6 +100,9 @@ public class RxNetwork {
         // 文件
         Map<String, Object> uploads = request.getUploads();
 
+        // 文件的类型
+        MediaType mediaType = MediaType.parse(request.contentType);
+
         Iterator<Entry<String, Object>> iterator = uploads.entrySet().iterator();
         if (!iterator.hasNext()) {
             throw new NullPointerException("choose file first ！！");
@@ -112,7 +115,7 @@ public class RxNetwork {
 
         if (value instanceof File) {
             //@formatter:off
-                MultipartBody.Part filePart = RetrofitFormWrapper.file2Part(key, (File) value, MediaType.parse("image/*"));
+                MultipartBody.Part filePart = RetrofitFormWrapper.file2Part(key, (File) value,mediaType );
                 return getFinalUrl(url)
                     .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, extra, filePart))
                     .map(ResponseBody::string)
@@ -124,7 +127,7 @@ public class RxNetwork {
                 List<MultipartBody.Part> fileParts = new ArrayList<>();
                 for (File file : files) {
                     fileParts
-                        .add(RetrofitFormWrapper.file2Part(key, file, MediaType.parse("image/*")));
+                        .add(RetrofitFormWrapper.file2Part(key, file, mediaType));
                 }
                 return getFinalUrl(url)
                     .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, extra, fileParts))
