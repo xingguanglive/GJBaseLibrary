@@ -13,6 +13,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.config.ApiClient;
@@ -51,10 +52,14 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .baseUrl("http://www.baidu.com/")
             .log(false)
             .cookie(true)
-            .joinParamsIntoUrl(true)
+            .joinParamsIntoUrl(false)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "GJ-Platform")
+            .readTimeout(30)
+            .writeTimeout(30)
+            .connectTimeout(60)
+            .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
         ApiBiz.getInstance().setApiClient(apiClient);

@@ -7,6 +7,7 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -105,6 +106,17 @@ public final class ApiClient {
             okHttpBuilder.addInterceptor(loggerInterceptor);
         }
 
+        // timeout
+        if (mBuilder.readTimeout > 0) {
+            okHttpBuilder.readTimeout(mBuilder.readTimeout, mBuilder.timeoutUnit);
+        }
+        if (mBuilder.writeTimeout > 0) {
+            okHttpBuilder.writeTimeout(mBuilder.writeTimeout, mBuilder.timeoutUnit);
+        }
+        if (mBuilder.connectTimeout > 0) {
+            okHttpBuilder.connectTimeout(mBuilder.connectTimeout, mBuilder.timeoutUnit);
+        }
+
         // 模拟数据
         if (mBuilder.mockData) {
             okHttpBuilder.addInterceptor(new MockInterceptor());
@@ -164,6 +176,14 @@ public final class ApiClient {
          * 是否添加cookie管理
          */
         private boolean cookie;
+
+        private int readTimeout;
+
+        private int writeTimeout;
+
+        private int connectTimeout;
+
+        private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
         private Context context;
 
@@ -248,6 +268,38 @@ public final class ApiClient {
          */
         public Builder joinParamsIntoUrl(boolean joinParamIntoUrl) {
             this.joinParamIntoUrl = joinParamIntoUrl;
+            return this;
+        }
+
+        /**
+         * 设置readTimeOut
+         */
+        public Builder readTimeout(int readTimeout) {
+            this.readTimeout = readTimeout;
+            return this;
+        }
+
+        /**
+         * 设置writeTimeOut
+         */
+        public Builder writeTimeout(int writeTimeout) {
+            this.writeTimeout = writeTimeout;
+            return this;
+        }
+
+        /**
+         * 设置connectTimeOut
+         */
+        public Builder connectTimeout(int connectTimeout) {
+            this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        /**
+         * timeout 时间单位。默认是秒
+         */
+        public Builder timeoutUnit(TimeUnit timeoutUnit) {
+            this.timeoutUnit = timeoutUnit;
             return this;
         }
 
