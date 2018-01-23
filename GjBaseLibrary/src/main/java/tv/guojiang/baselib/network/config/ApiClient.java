@@ -22,13 +22,18 @@ import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 /**
  * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
  * <pre>
- * ApiClient apiClient = new Builder()
- *      .baseUrl("http://www.gj.com/")
+ * ApiClient apiClient = new Builder(this)
+ *      .baseUrl("http://www.baidu.com/")
  *      .log(true)
+ *      .cookie(true)
  *      .joinParamsIntoUrl(false)
- *      .mockData(true)
- *      .header("header-key", "header.value")
- *      .param("param-key", "param-value")
+ *      .header("user-agent", "android")
+ *      .param("copyright", "AppLive")
+ *      .readTimeout(30)
+ *      .writeTimeout(30)
+ *      .connectTimeout(60)
+ *      .addInterceptor(new MockInterceptor())
+ *      .timeoutUnit(TimeUnit.SECONDS)
  *      .build();
  *
  * NetworkBiz.getInstance().setApiClient(apiClient);

@@ -55,7 +55,6 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .log(true)
             .cookie(true)
             .joinParamsIntoUrl(false)
-            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "AppLive")
             .readTimeout(30)
