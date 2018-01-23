@@ -6,15 +6,17 @@ import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tv.guojiang.baselib.network.interceptor.HeaderInterceptor;
-import tv.guojiang.baselib.network.interceptor.MockInterceptor;
 import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
 /**
@@ -117,9 +119,16 @@ public final class ApiClient {
             okHttpBuilder.connectTimeout(mBuilder.connectTimeout, mBuilder.timeoutUnit);
         }
 
-        // 模拟数据
-        if (mBuilder.mockData) {
-            okHttpBuilder.addInterceptor(new MockInterceptor());
+        if (mBuilder.interceptors.size() != 0) {
+            for (Interceptor interceptor : mBuilder.interceptors) {
+                okHttpBuilder.addInterceptor(interceptor);
+            }
+        }
+
+        if (mBuilder.networkInterceptors.size() != 0) {
+            for (Interceptor interceptor : mBuilder.networkInterceptors) {
+                okHttpBuilder.addNetworkInterceptor(interceptor);
+            }
         }
 
         OkHttpClient okHttpClient = okHttpBuilder.build();
@@ -154,11 +163,6 @@ public final class ApiClient {
         private boolean log;
 
         /**
-         * 是否需要模拟数据. 测试的时候使用
-         */
-        private boolean mockData;
-
-        /**
          * 通用的参数
          */
         private Map<String, String> params;
@@ -185,6 +189,10 @@ public final class ApiClient {
 
         private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
+        private List<Interceptor> interceptors = new ArrayList<>();
+
+        private List<Interceptor> networkInterceptors = new ArrayList<>();
+
         private Context context;
 
         public Builder(Context context) {
@@ -196,14 +204,6 @@ public final class ApiClient {
          */
         public Builder log(boolean log) {
             this.log = log;
-            return this;
-        }
-
-        /**
-         * 用于测试。模拟数据参考 {@link MockInterceptor}
-         */
-        public Builder mockData(boolean mockData) {
-            this.mockData = mockData;
             return this;
         }
 
@@ -300,6 +300,22 @@ public final class ApiClient {
          */
         public Builder timeoutUnit(TimeUnit timeoutUnit) {
             this.timeoutUnit = timeoutUnit;
+            return this;
+        }
+
+        /**
+         * see {@link OkHttpClient.Builder#addInterceptor(Interceptor)}
+         */
+        public Builder addInterceptor(Interceptor interceptor) {
+            this.interceptors.add(interceptor);
+            return this;
+        }
+
+        /**
+         * see {@link OkHttpClient.Builder#addNetworkInterceptor(Interceptor)}
+         */
+        public Builder addNetworkInterceptor(Interceptor interceptor) {
+            this.networkInterceptors.add(interceptor);
             return this;
         }
 

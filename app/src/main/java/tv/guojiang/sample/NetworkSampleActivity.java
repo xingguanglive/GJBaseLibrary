@@ -19,6 +19,7 @@ import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.config.ApiClient.Builder;
+import tv.guojiang.network.MockInterceptor;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
@@ -51,7 +52,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         // 初始化全局接口通用配置
         ApiClient apiClient = new Builder(this)
             .baseUrl("http://www.baidu.com/")
-            .log(false)
+            .log(true)
             .cookie(true)
             .joinParamsIntoUrl(false)
             //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
@@ -60,6 +61,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
+            .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
