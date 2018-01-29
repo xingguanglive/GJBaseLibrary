@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import tv.guojiang.baselib.BaseLibConfig;
-import tv.guojiang.baselib.image.builder.ImageBuilder;
 import tv.guojiang.baselib.image.factory.GlideFactory;
 import tv.guojiang.baselib.image.factory.ImageFactory;
 
@@ -17,42 +16,43 @@ public class ImageDirector {
 
     private static ImageDirector imageDirector;
     private static ImageFactory mFactory = BaseLibConfig.mConfigBuilder.imageFactory;
-    private static ImageBuilder mImageBuilder;
+    private ImageBuilder mImageBuilder;
 
-    private ImageDirector(Context context) {
-        if (mImageBuilder == null) {
-            mImageBuilder = new ImageBuilder(context);
-        }
+    private ImageDirector() {
         if (mFactory == null) {
             mFactory = new GlideFactory();
         }
     }
 
-    public static ImageDirector getInstance(Context context) {
+    public static ImageDirector getInstance() {
         if (imageDirector == null) {
             synchronized (ImageDirector.class) {
                 if (imageDirector == null) {
-                    imageDirector = new ImageDirector(context);
+                    imageDirector = new ImageDirector();
                 }
             }
         }
         return imageDirector;
     }
 
-    public ImageBuilder imageBuilder() {
+    public ImageBuilder imageBuilder(Context context) {
+        mImageBuilder = new ImageBuilder(context);
         // 清除上一次的entity配置
-        mImageBuilder.clearEntity();
+        //        mImageBuilder.clearEntity();
         return mImageBuilder;
     }
 
-    public ImageDirector loadImage() {
+    /**
+     * 加载图片的方式仅限于 ImageBuilder直接调用，屏蔽掉其他类调用。在此跟builder防御同包下面
+     */
+    ImageDirector loadImage() {
         if (mImageBuilder != null) {
             mFactory.loadImage(mImageBuilder.getContext(), mImageBuilder.mImageEntity);
         }
         return this;
     }
 
-    public Object loadImageSyn() throws Exception {
+    Object loadImageSyn() throws Exception {
         if (mImageBuilder != null) {
             return mFactory.loadImageSyn(mImageBuilder.getContext(), mImageBuilder.mImageEntity);
         }
@@ -62,7 +62,7 @@ public class ImageDirector {
     /**
      * 加载显示图片
      */
-    public ImageDirector loadImage(@NonNull ImageBuilder imageBuilder) {
+    ImageDirector loadImage(@NonNull ImageBuilder imageBuilder) {
         mFactory.loadImage(mImageBuilder.getContext(), imageBuilder.mImageEntity);
         return this;
     }

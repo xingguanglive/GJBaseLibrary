@@ -16,8 +16,8 @@ projects.ext {
                 buildToolsVersion: "26.0.2",
                 minSdkVersion    : 15,
                 targetSdkVersion : 22,
-                versionCode      : 1041,
-                versionName      : "1.0.4.1"
+                versionCode      : 108,
+                versionName      : "1.0.8"
         ]
 
         dependencies = [
