@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -179,7 +180,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(String s) {
-                    Logger.d(s);
+                    Toast.makeText(NetworkSampleActivity.this, "哈哈哈，成功啦", Toast.LENGTH_SHORT)
+                        .show();
+                    Log.d("LEO", s);
                 }
 
                 @Override
