@@ -1,4 +1,4 @@
-package tv.guojiang.baselib.image.builder;
+package tv.guojiang.baselib.image;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -11,7 +11,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.transition.TransitionFactory;
 import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import tv.guojiang.baselib.image.ImageDirector;
 import tv.guojiang.baselib.image.annotation.ImageTransfor;
 import tv.guojiang.baselib.image.annotation.ImageType;
 import tv.guojiang.baselib.image.listener.ImageLoadingListener;
@@ -139,7 +138,7 @@ public class ImageBuilder {
      */
     public ImageBuilder into(ImageView imageView) {
         mImageEntity.imageView = imageView;
-        ImageDirector.getInstance(mContext).loadImage();
+        ImageDirector.getInstance().loadImage();
         return this;
     }
 
@@ -151,6 +150,6 @@ public class ImageBuilder {
      * 同步加载图片
      */
     public Object intoSyn() throws Exception {
-        return ImageDirector.getInstance(mContext).loadImageSyn();
+        return ImageDirector.getInstance().loadImageSyn();
     }
 }
