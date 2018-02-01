@@ -23,7 +23,7 @@ import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
  * ApiClient apiClient = new ApiClient.Builder(this)
  *      .baseUrl("http://www.baidu.com/")
  *      .log(true)
- *      .cookie(true)
+ *      .cookie(ApiCookie.getInstance(this))
  *      .joinParamsIntoUrl(false)
  *      .header("user-agent", "android")
  *      .param("copyright", "AppLive")
@@ -34,7 +34,7 @@ import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
  *      .timeoutUnit(TimeUnit.SECONDS)
  *      .build();
  *
- * NetworkBiz.getInstance().setApiClient(apiClient);
+ * ApiBiz.getInstance().setApiClient(apiClient);
  * </pre>
  *
  * - 接口业务状态码请在{@link ServerCode}中进行配置。
