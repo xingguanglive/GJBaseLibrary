@@ -20,7 +20,7 @@ import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 /**
  * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
  * <pre>
- * ApiClient apiClient = new Builder(this)
+ * ApiClient apiClient = new ApiClient.Builder(this)
  *      .baseUrl("http://www.baidu.com/")
  *      .log(true)
  *      .cookie(true)
@@ -46,6 +46,9 @@ public final class ApiClient {
     private Retrofit mRetrofit;
 
     private Map<String, String> mParams;
+
+    private ApiClient() {
+    }
 
     private void setBuilder(Builder builder) {
         mBuilder = builder;

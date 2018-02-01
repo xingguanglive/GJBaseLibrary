@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.ApiClient;
-import tv.guojiang.baselib.network.ApiClient.Builder;
 import tv.guojiang.baselib.network.cookie.ApiCookie;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
@@ -29,6 +28,7 @@ import tv.guojiang.baselib.network.response.PagerResponse;
 import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
 import tv.guojiang.helper.TakePhotoHelper;
 import tv.guojiang.network.LoginRequest;
+import tv.guojiang.network.MockInterceptor;
 import tv.guojiang.network.Person;
 import tv.guojiang.network.PostRequest;
 import tv.guojiang.network.TestRequest;
@@ -51,7 +51,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         // 初始化全局接口通用配置
-        ApiClient apiClient = new Builder(this)
+        ApiClient apiClient = new ApiClient.Builder(this)
             .baseUrl("http://www.baidu.com/")
             .log(true)
             .cookie(ApiCookie.getInstance(this))
@@ -61,7 +61,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
-//            .addInterceptor(new MockInterceptor())
+            .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
