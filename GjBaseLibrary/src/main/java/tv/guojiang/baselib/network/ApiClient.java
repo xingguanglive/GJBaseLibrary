@@ -1,21 +1,19 @@
-package tv.guojiang.baselib.network.config;
+package tv.guojiang.baselib.network;
 
 import android.content.Context;
 import android.support.v4.util.ArrayMap;
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.interceptor.HeaderInterceptor;
 import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
@@ -62,11 +60,11 @@ public final class ApiClient {
         return baseUrl;
     }
 
-    public Map<String, String> getParams() {
+    /* internal */ Map<String, String> getParams() {
         return mParams;
     }
 
-    public Context getContext() {
+    /* internal */ Context getContext() {
         return mBuilder.context;
     }
 
@@ -99,11 +97,8 @@ public final class ApiClient {
         }
 
         // cookie
-        if (mBuilder.cookie) {
-            ClearableCookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(),
-                    new SharedPrefsCookiePersistor(mBuilder.context));
-            okHttpBuilder.cookieJar(cookieJar);
+        if (mBuilder.cookie != null) {
+            okHttpBuilder.cookieJar(mBuilder.cookie);
         }
 
         // http 日志
@@ -184,7 +179,7 @@ public final class ApiClient {
         /**
          * 是否添加cookie管理
          */
-        private boolean cookie;
+        private CookieJar cookie;
 
         private int readTimeout;
 
@@ -261,7 +256,7 @@ public final class ApiClient {
         /**
          * 是否添加cookie
          */
-        public Builder cookie(boolean cookie) {
+        public Builder cookie(CookieJar cookie) {
             this.cookie = cookie;
             return this;
         }

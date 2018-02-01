@@ -18,8 +18,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.config.ApiClient;
-import tv.guojiang.baselib.network.config.ApiClient.Builder;
+import tv.guojiang.baselib.network.ApiClient;
+import tv.guojiang.baselib.network.ApiClient.Builder;
+import tv.guojiang.baselib.network.cookie.ApiCookie;
 import tv.guojiang.network.MockInterceptor;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
@@ -54,7 +55,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         ApiClient apiClient = new Builder(this)
             .baseUrl("http://www.baidu.com/")
             .log(true)
-            .cookie(true)
+            .cookie(ApiCookie.getInstance(this))
             .joinParamsIntoUrl(false)
             .header("user-agent", "android")
             .param("copyright", "AppLive")
