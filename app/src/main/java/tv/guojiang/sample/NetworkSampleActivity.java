@@ -21,7 +21,6 @@ import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.ApiClient;
 import tv.guojiang.baselib.network.ApiClient.Builder;
 import tv.guojiang.baselib.network.cookie.ApiCookie;
-import tv.guojiang.network.MockInterceptor;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
@@ -62,7 +61,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
-            .addInterceptor(new MockInterceptor())
+//            .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
@@ -184,11 +183,20 @@ public class NetworkSampleActivity extends AppCompatActivity {
                     Toast.makeText(NetworkSampleActivity.this, "哈哈哈，成功啦", Toast.LENGTH_SHORT)
                         .show();
                     Log.d("LEO", s);
+
+                    ApiCookie.getInstance(NetworkSampleActivity.this);
+
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Logger.e(e, e.getMessage());
+
+                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
+                        .getCookieValue("BAIDUID");
+
+                    Toast.makeText(NetworkSampleActivity.this, baiduid, Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
