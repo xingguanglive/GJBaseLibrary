@@ -18,7 +18,7 @@ import tv.guojiang.baselib.network.interceptor.HeaderInterceptor;
 import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
 /**
- * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
+ * OkHttp与Retrofit的配置信息。可通过{@link ApiClient.Builder}进行配置，例如
  * <pre>
  * ApiClient apiClient = new ApiClient.Builder(this)
  *      .baseUrl("http://www.baidu.com/")
