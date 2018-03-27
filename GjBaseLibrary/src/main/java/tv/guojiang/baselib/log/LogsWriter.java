@@ -19,8 +19,11 @@ import java.util.Date;
  */
 public class LogsWriter {
 
-    private static String DISK_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "guojiang/log/";
+    private static String DISK_BASE = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+    private static String DISK_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "/guojiang/log/";
+
     private static String FILE_NAME = "_logs.txt";
+    private static String DIRECTORY_NAME = "guojiang";
 
     private LogsWriterHandler mHandler;
 
@@ -29,6 +32,12 @@ public class LogsWriter {
         thread.start();
         mHandler = new LogsWriterHandler(thread.getLooper());
         deleteFile();
+
+    }
+
+    public LogsWriter(String path){
+        this();
+        DISK_PATH = DISK_BASE + "/"+ path +"/log/";
     }
 
     public void logs(String tag, String msg) {
