@@ -28,7 +28,6 @@ import tv.guojiang.baselib.network.response.PagerResponse;
 import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
 import tv.guojiang.helper.TakePhotoHelper;
 import tv.guojiang.network.LoginRequest;
-import tv.guojiang.network.MockInterceptor;
 import tv.guojiang.network.Person;
 import tv.guojiang.network.PostRequest;
 import tv.guojiang.network.TestRequest;
@@ -61,7 +60,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
-            .addInterceptor(new MockInterceptor())
+            //            .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
