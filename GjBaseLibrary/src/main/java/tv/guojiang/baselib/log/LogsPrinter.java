@@ -54,7 +54,11 @@ public class LogsPrinter implements IPrinter {
 
     private static StackTraceElement getCallerStackTraceElement() {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        return elements[6];
+        if (elements.length > 7){
+            return elements[7];
+        }else {
+            return elements[6];
+        }
     }
 
     private static String generateTag(StackTraceElement caller) {
