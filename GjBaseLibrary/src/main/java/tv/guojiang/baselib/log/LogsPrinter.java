@@ -16,6 +16,10 @@ public class LogsPrinter implements IPrinter {
         mLogsWriter = new LogsWriter();
     }
 
+    public LogsPrinter(String path){
+        mLogsWriter = new LogsWriter(path);
+    }
+
     @Override
     public void d(String tag, String msg, boolean isWrite) {
         print(Log.DEBUG, tag, msg, isWrite);
@@ -45,10 +49,12 @@ public class LogsPrinter implements IPrinter {
         //        Logger.log(type, tag, msg, null);
         StackTraceElement caller = getCallerStackTraceElement();
         String t = generateTag(caller);
-        Log.println(type, tag, t);
-        Log.println(type, tag, msg);
+        Log.println(type, tag, "-----------------------------------------------------------");
+        Log.println(type, tag, "|  "+t);
+        Log.println(type, tag, "|  "+msg);
+        Log.println(type, tag, "-----------------------------------------------------------");
         if (isWrite) {
-            mLogsWriter.logs(t+" ---- "+tag, msg);
+            mLogsWriter.logs(t+" \n---- "+tag, msg);
         }
     }
 
