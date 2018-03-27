@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import tv.guojiang.base.R;
-import tv.guojiang.baselib.log.Logs;
+import tv.guojiang.utils.ELog;
 
 /**
  * @author leo
@@ -31,7 +31,7 @@ public class LogSampleActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Logs.e("MainActivity", "thread  ----------- " + i, true);
+                    ELog.e("MainActivity", "thread  ----------- " + i);
                 }
             }
         }.start();
