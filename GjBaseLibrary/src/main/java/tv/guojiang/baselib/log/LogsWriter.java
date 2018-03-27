@@ -37,7 +37,7 @@ public class LogsWriter {
     }
 
     private Message creatMsg(String tag, String msg) {
-        return mHandler.obtainMessage(0, new Date() + " ------ " + tag + " ------------- " + msg + "\r");
+        return mHandler.obtainMessage(0, new Date() + " ------ " + tag + " ------ " + msg + "\r");
     }
 
     /**
