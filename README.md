@@ -1,12 +1,15 @@
-# GJBaseLibrary Version:1.0.6
-1. 描述
-----
-用于Android项目开发基础库：Utils、Widget、NetWork、Message、Database、Log、Image、Lib的基础封装
+# GJBaseLibrary
 
-2. 集成
+- 开发基础库
+- 包括网络、消息分发、图片加载
+
+
+
+##Setup
 ----
-(1) Project--build.gradle
-```
+
+In your project level build.gradle :
+```java
 allprojects {
   repositories {
     ...
@@ -14,22 +17,19 @@ allprojects {
   }
 }
 ```
-(2) module--build.gradle
+
+In your app level build.gradle :
 ```
 dependencies {
-  compile 'com.github.xingguanglive:GJBaseLibrary:1.0.6'
+  compile 'com.github.xingguanglive:GJBaseLibrary:1.1.0'
 }
 ```
-3. 功能使用
-----
-Utils:工具
-----
-  ToastUtils:Toast工具类
-```
-  ToastUtil.showToast(ApplicationContext,content);      // ApplicationContext+static 避免弹出多个toast
-```
-Image：图片加载
-----
+
+#### Feature
+
+网络加载
+
+ImageLoader
 ```
   // 在Application 配置图片加载工厂GlideFactory。如需要替换第三方库，自己实现ImageFactory并设置给BaselibConfig就OK。
   // 如果不配置默认为GlideFactory
@@ -64,5 +64,4 @@ Image：图片加载
                 })  //加载状态监听
                 .into((ImageView) findViewById(R.id.iv_main_corner));//显示控件，如果为空则只加载。intoSyn()同步加载图片
 ```
-Message：消息分发
-----
+
