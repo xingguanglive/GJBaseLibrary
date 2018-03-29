@@ -5,7 +5,7 @@
 
 
 
-##Setup
+## Setup
 ----
 
 In your project level build.gradle :
@@ -27,7 +27,7 @@ dependencies {
 
 #### Feature
 
-网络加载
+网络加载j
 
 ImageLoader
 ```
