@@ -28,12 +28,9 @@ dependencies {
 
 #### 网络
 - 支持Cookie
-- 支持磁盘缓存
+- 支持缓存
+  - [接口需要缓存时配置](https://github.com/chentao7v/GJBaseLibrary/blob/master/app/src/main/java/tv/guojiang/network/TestRequest.java)
+  - [多种缓存策略](https://github.com/chentao7v/GJBaseLibrary/blob/master/GjBaseLibrary/src/main/java/tv/guojiang/baselib/network/cache/CacheState.java)
 - 支持文件上传与下载
 
 [网络加载示例](https://github.com/chentao7v/GJBaseLibrary/blob/master/app/src/main/java/tv/guojiang/sample/NetworkSampleActivity.java)
-
-
-
-```
-
