@@ -30,7 +30,7 @@ dependencies {
 - 基于RxJava、Retrofit
 - 支持Cookie
 - 支持文件缓存，可配置实现数据库缓存等
-  - 使用注解的方式配置缓存。[示例](https://github.com/chentao7v/GJBaseLibrary/blob/master/app/src/main/java/tv/guojiang/network/TestRequest.java)
+  - 使用注解的方式配置缓存，可配置缓存的有效期与缓存策略。[示例](https://github.com/chentao7v/GJBaseLibrary/blob/master/app/src/main/java/tv/guojiang/network/TestRequest.java)
   - 多种缓存策略。[示例](https://github.com/chentao7v/GJBaseLibrary/blob/master/GjBaseLibrary/src/main/java/tv/guojiang/baselib/network/cache/CacheState.java)
 - 支持文件上传与下载
 
