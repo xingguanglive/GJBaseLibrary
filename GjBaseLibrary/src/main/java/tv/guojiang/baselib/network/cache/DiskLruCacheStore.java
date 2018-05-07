@@ -28,20 +28,31 @@ import tv.guojiang.baselib.util.Md5Utils;
  */
 public class DiskLruCacheStore implements ICacheStore {
 
-    // 缓存最大为20M
-    private static final int MAX_SIZE = 20 * 1024 * 1024;
+    /**
+     * 缓存最大为20M
+     */
+    public static final int DEFAULT_MAX_SIZE = 20 * 1024 * 1024;
 
     private DiskLruCache mDiskLruCache;
 
-    public DiskLruCacheStore(Context context) {
+    /**
+     * 构造一个{@link DiskLruCacheStore}
+     *
+     * @param directory 缓存保存的目录
+     * @param maxSize 缓存的最大容量
+     */
+    public DiskLruCacheStore(Context context, File directory, int maxSize) {
         try {
-            File directory = new File(FileUtils.getApiCacheDir(context));
             PackageManager packageManager = context.getPackageManager();
             int appVersion = packageManager.getPackageInfo(context.getPackageName(), 0).versionCode;
-            mDiskLruCache = DiskLruCache.open(directory, appVersion, 1, MAX_SIZE);
+            mDiskLruCache = DiskLruCache.open(directory, appVersion, 1, maxSize);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public DiskLruCacheStore(Context context) {
+        this(context, new File(FileUtils.getApiCacheDir(context)), DEFAULT_MAX_SIZE);
     }
 
     @Override

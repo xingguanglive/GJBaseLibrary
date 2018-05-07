@@ -3,6 +3,7 @@ package tv.guojiang.baselib.network.cache;
 import android.content.Context;
 import android.util.Log;
 import io.reactivex.Observable;
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.baselib.network.annotation.Cache;
@@ -20,6 +21,16 @@ public class RxCache {
 
     public RxCache(Context context) {
         mStore = new DiskLruCacheStore(context);
+    }
+
+    /**
+     * 构造一个{@link RxCache}
+     *
+     * @param directory 缓存保存的目录
+     * @param maxSize 缓存的最大容量
+     */
+    public RxCache(Context context, File directory, int maxSize) {
+        mStore = new DiskLruCacheStore(context, directory, maxSize);
     }
 
     /**

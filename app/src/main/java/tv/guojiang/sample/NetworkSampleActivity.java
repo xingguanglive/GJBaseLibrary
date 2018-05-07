@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
 import tv.guojiang.baselib.network.ApiClient;
-import tv.guojiang.baselib.network.cookie.ApiCookie;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
@@ -53,7 +52,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         ApiClient apiClient = new ApiClient.Builder(this)
             .baseUrl("http://www.baidu.com/")
             .log(true)
-            .cookie(ApiCookie.getInstance(this))
+//            .cookie(ApiCookie.getInstance(this))
             .joinParamsIntoUrl(false)
             .header("user-agent", "android")
             .param("copyright", "AppLive")
@@ -183,7 +182,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
                         .show();
                     Log.d("LEO", s);
 
-                    ApiCookie.getInstance(NetworkSampleActivity.this);
+                    //                    ApiCookie.getInstance(NetworkSampleActivity.this);
 
                 }
 
@@ -191,10 +190,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 public void onError(Throwable e) {
                     Logger.e(e, e.getMessage());
 
-                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
-                        .getCookieValue("BAIDUID");
+                    //                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
+                    //                        .getCookieValue("BAIDUID");
 
-                    Toast.makeText(NetworkSampleActivity.this, baiduid, Toast.LENGTH_SHORT).show();
+                    //                    Toast.makeText(NetworkSampleActivity.this, baiduid, Toast.LENGTH_SHORT).show();
 
                 }
 

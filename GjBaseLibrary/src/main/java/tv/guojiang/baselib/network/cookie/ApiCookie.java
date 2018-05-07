@@ -1,6 +1,7 @@
 package tv.guojiang.baselib.network.cookie;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.CookieCache;
@@ -18,8 +19,6 @@ import okhttp3.HttpUrl;
  */
 public class ApiCookie implements ClearableCookieJar, ICookie {
 
-    private static ApiCookie mApiCookie;
-
     /**
      * 有效Cookie
      */
@@ -31,20 +30,23 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     // 本地的Cookie
     private CookiePersistor mCookiePersistor;
 
-    public static ApiCookie getInstance(Context context) {
-        if (mApiCookie == null) {
-            synchronized (ApiCookie.class) {
-                if (mApiCookie == null) {
-                    mApiCookie = new ApiCookie(context.getApplicationContext());
-                }
-            }
-        }
-        return mApiCookie;
-    }
-
-    private ApiCookie(Context context) {
+    public ApiCookie(Context context) {
         mCookieCache = new SetCookieCache();
         mCookiePersistor = new SharedPrefsCookiePersistor(context);
+
+        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
+    }
+
+    public ApiCookie(SharedPreferences preferences) {
+        mCookieCache = new SetCookieCache();
+        mCookiePersistor = new SharedPrefsCookiePersistor(preferences);
+
+        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
+    }
+
+    public ApiCookie(CookiePersistor cookiePersistor) {
+        mCookieCache = new SetCookieCache();
+        mCookiePersistor = cookiePersistor;
 
         mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
     }
