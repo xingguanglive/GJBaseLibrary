@@ -7,20 +7,10 @@
 
 ## Setup
 
-In your project level build.gradle :
-```java
-allprojects {
-  repositories {
-    ...
-    maven { url 'https://www.jitpack.io' }
-  }
-}
-```
-
 In your app level build.gradle :
 ```
 dependencies {
-  compile 'com.github.xingguanglive:GJBaseLibrary:1.1.0'
+  compile 'tv.guojiang.core:GJBaseLibrary:1.2.0'
 }
 ```
 
