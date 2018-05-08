@@ -1,8 +1,8 @@
 package tv.guojiang.network;
 
 import com.google.gson.annotations.SerializedName;
-import tv.guojiang.baselib.network.annotation.Header;
-import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.core.network.annotation.Header;
+import tv.guojiang.core.network.request.BaseRequest;
 
 /**
  * @author leo

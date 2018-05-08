@@ -1,9 +1,9 @@
 package tv.guojiang.network;
 
 import java.util.concurrent.TimeUnit;
-import tv.guojiang.baselib.network.annotation.Cache;
-import tv.guojiang.baselib.network.cache.CacheState;
-import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.core.network.annotation.Cache;
+import tv.guojiang.core.network.cache.CacheState;
+import tv.guojiang.core.network.request.BaseRequest;
 
 /**
  * @author leo

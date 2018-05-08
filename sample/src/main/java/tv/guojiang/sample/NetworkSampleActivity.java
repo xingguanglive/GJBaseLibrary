@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
-import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.ApiClient;
-import tv.guojiang.baselib.network.request.PagerRequest;
-import tv.guojiang.baselib.network.response.NetworkObserver;
-import tv.guojiang.baselib.network.response.NetworkTransformer;
-import tv.guojiang.baselib.network.response.PagerNetworkTransformer;
-import tv.guojiang.baselib.network.response.PagerResponse;
-import tv.guojiang.baselib.rx.NormalSchedulerTransformer;
+import tv.guojiang.core.network.ApiBiz;
+import tv.guojiang.core.network.ApiClient;
+import tv.guojiang.core.network.request.PagerRequest;
+import tv.guojiang.core.network.response.NetworkObserver;
+import tv.guojiang.core.network.response.NetworkTransformer;
+import tv.guojiang.core.network.response.PagerNetworkTransformer;
+import tv.guojiang.core.network.response.PagerResponse;
+import tv.guojiang.core.rx.NormalSchedulerTransformer;
 import tv.guojiang.helper.TakePhotoHelper;
 import tv.guojiang.network.LoginRequest;
 import tv.guojiang.network.Person;
@@ -52,7 +52,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         ApiClient apiClient = new ApiClient.Builder(this)
             .baseUrl("http://www.baidu.com/")
             .log(true)
-//            .cookie(ApiCookie.getInstance(this))
+            //            .cookie(ApiCookie.getInstance(this))
             .joinParamsIntoUrl(false)
             .header("user-agent", "android")
             .param("copyright", "AppLive")

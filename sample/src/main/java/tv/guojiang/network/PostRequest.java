@@ -1,6 +1,6 @@
 package tv.guojiang.network;
 
-import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.core.network.request.BaseRequest;
 
 /**
  * post请求

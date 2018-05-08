@@ -2,9 +2,9 @@ package tv.guojiang.network;
 
 import java.io.File;
 import java.util.List;
-import tv.guojiang.baselib.network.annotation.ContentType;
-import tv.guojiang.baselib.network.annotation.Upload;
-import tv.guojiang.baselib.network.request.BaseRequest;
+import tv.guojiang.core.network.annotation.ContentType;
+import tv.guojiang.core.network.annotation.Upload;
+import tv.guojiang.core.network.request.BaseRequest;
 
 /**
  * 文件上传请求
