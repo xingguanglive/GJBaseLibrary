@@ -8,8 +8,15 @@ import tv.guojiang.baselib.log.impl.IPrinter;
  */
 public class Logs {
 
-    private static IPrinter printer = new LogsPrinter();
+    private static IPrinter printer;
 
+    public static void build(String path){
+        printer = new LogsPrinter(path);
+    }
+
+    public static void build(){
+        printer = new LogsPrinter();
+    }
     /**
      * 打印日志
      *

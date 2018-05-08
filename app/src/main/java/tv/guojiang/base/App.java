@@ -8,6 +8,7 @@ import com.bumptech.glide.module.AppGlideModule;
 import tv.guojiang.baselib.ConfigBuilder;
 import tv.guojiang.baselib.BaseLibConfig;
 import tv.guojiang.baselib.image.factory.GlideFactory;
+import tv.guojiang.baselib.log.Logs;
 
 /**
  * @author Elvis
@@ -20,6 +21,7 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		initImageConfig();
+		Logs.build("guojjjj");
 	}
 
 
