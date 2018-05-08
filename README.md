@@ -1,4 +1,4 @@
-# GJBaseLibrary
+# GJBaseLibrary [ ![Download](https://api.bintray.com/packages/xingguanglive/maven/GJBaseLibrary/images/download.svg) ](https://bintray.com/xingguanglive/maven/GJBaseLibrary/_latestVersion)
 
 - 开发基础库
 - 包括网络、消息分发、图片加载
@@ -10,7 +10,7 @@
 In your app level build.gradle :
 ```
 dependencies {
-  compile 'tv.guojiang.core:GJBaseLibrary:1.2.0'
+  compile 'tv.guojiang.core:GJBaseLibrary:latest_version'
 }
 ```
 
