@@ -14,7 +14,7 @@ android {
         release {
             keyAlias 'guojiangbase'
             keyPassword '123456'
-            storeFile file('../app/gjbase.jks')
+            storeFile file('../sample/gjbase.jks')
             storePassword '123456'
         }
     }
