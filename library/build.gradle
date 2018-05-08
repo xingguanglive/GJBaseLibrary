@@ -1,5 +1,25 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'GJBaseLibrary'
+
+    publishedGroupId = 'tv.guojiang.core'
+    libraryName = 'GJBaseLibrary'
+    artifact = 'GJBaseLibrary'
+
+    libraryDescription = 'GuoJiang Base Library'
+    libraryVersion = rootProject.ext.android.versionName
+
+    developerId = 'xingguanglive'
+    developerName = 'xingguanglive'
+    developerEmail = 'nana@guojiang.tv'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ['Apache-2.0']
+}
+
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
@@ -35,10 +55,12 @@ dependencies {
     compile rootProject.ext.dependencies.cookie
     compile rootProject.ext.dependencies.diskLruCache
 
-
 //    compile rootProject.ext.dependencies.luban
 //    compile rootProject.ext.dependencies.rxbinding
 //    compile(rootProject.ext.dependencies.multitype, {
 //        exclude group: 'com.android.support'
 //    })
 }
+
+apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/bintrayv1.gradle'
