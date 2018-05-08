@@ -1,4 +1,4 @@
-package tv.guojiang.base;
+package tv.guojiang;
 
 import android.app.Application;
 

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@android:color/background_dark"
-        tools:context="tv.guojiang.base.MainActivity">
+        tools:context="tv.guojiang.base.tv.guojiang.sample.MainActivity">
         <ImageView
             android:id="@+id/iv_main"
             android:layout_width="100dp"
