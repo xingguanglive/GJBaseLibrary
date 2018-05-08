@@ -1,4 +1,4 @@
-package tv.guojiang.baselib.network.interceptor;
+package tv.guojiang.network;
 
 import java.io.IOException;
 import okhttp3.Interceptor;

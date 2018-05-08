@@ -20,8 +20,8 @@ public class NetworkExceptionTransformer<T> implements ObservableTransformer<T, 
                 // 对错误进行封装处理
                 // 最终会触发Subscriber的onError方法
                 return Observable.error(NetworkExceptionWrapper.wrapException(throwable));
-            })
-            // 错误重试机制,放到租最后,错误已经封装
-            .retryWhen(new RetryFunction());
+            });
+            // 错误重试机制,放到最后,错误已经封装
+//            .retryWhen(new RetryFunction());
     }
 }

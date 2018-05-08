@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.base.R;
 import tv.guojiang.baselib.network.ApiBiz;
-import tv.guojiang.baselib.network.config.ApiClient;
-import tv.guojiang.baselib.network.config.ApiClient.Builder;
+import tv.guojiang.baselib.network.ApiClient;
 import tv.guojiang.baselib.network.request.PagerRequest;
 import tv.guojiang.baselib.network.response.NetworkObserver;
 import tv.guojiang.baselib.network.response.NetworkTransformer;
@@ -49,17 +49,17 @@ public class NetworkSampleActivity extends AppCompatActivity {
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         // 初始化全局接口通用配置
-        ApiClient apiClient = new Builder(this)
+        ApiClient apiClient = new ApiClient.Builder(this)
             .baseUrl("http://www.baidu.com/")
-            .log(false)
-            .cookie(true)
+            .log(true)
+//            .cookie(ApiCookie.getInstance(this))
             .joinParamsIntoUrl(false)
-            //            .mockData(true) // 模拟数据会直接跳过外网的访问，直接成功
             .header("user-agent", "android")
             .param("copyright", "AppLive")
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
+            //            .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
@@ -178,12 +178,23 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(String s) {
-                    Logger.d(s);
+                    Toast.makeText(NetworkSampleActivity.this, "哈哈哈，成功啦", Toast.LENGTH_SHORT)
+                        .show();
+                    Log.d("LEO", s);
+
+                    //                    ApiCookie.getInstance(NetworkSampleActivity.this);
+
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Logger.e(e, e.getMessage());
+
+                    //                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
+                    //                        .getCookieValue("BAIDUID");
+
+                    //                    Toast.makeText(NetworkSampleActivity.this, baiduid, Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override

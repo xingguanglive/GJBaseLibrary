@@ -1,35 +1,40 @@
-package tv.guojiang.baselib.network.config;
+package tv.guojiang.baselib.network;
 
 import android.content.Context;
 import android.support.v4.util.ArrayMap;
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
-import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import okhttp3.CookieJar;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import tv.guojiang.baselib.network.config.ServerCode;
 import tv.guojiang.baselib.network.interceptor.HeaderInterceptor;
-import tv.guojiang.baselib.network.interceptor.MockInterceptor;
 import tv.guojiang.baselib.network.interceptor.UrlParamsInterceptor;
 
 /**
- * OkHttp与Retrofit的配置信息。可通过{@link Builder}进行配置，例如
+ * OkHttp与Retrofit的配置信息。可通过{@link ApiClient.Builder}进行配置，例如
  * <pre>
- * ApiClient apiClient = new Builder()
- *      .baseUrl("http://www.gj.com/")
+ * ApiClient apiClient = new ApiClient.Builder(this)
+ *      .baseUrl("http://www.baidu.com/")
  *      .log(true)
+ *      .cookie(ApiCookie.getInstance(this))
  *      .joinParamsIntoUrl(false)
- *      .mockData(true)
- *      .header("header-key", "header.value")
- *      .param("param-key", "param-value")
+ *      .header("user-agent", "android")
+ *      .param("copyright", "AppLive")
+ *      .readTimeout(30)
+ *      .writeTimeout(30)
+ *      .connectTimeout(60)
+ *      .addInterceptor(new MockInterceptor())
+ *      .timeoutUnit(TimeUnit.SECONDS)
  *      .build();
  *
- * NetworkBiz.getInstance().setApiClient(apiClient);
+ * ApiBiz.getInstance().setApiClient(apiClient);
  * </pre>
  *
  * - 接口业务状态码请在{@link ServerCode}中进行配置。
@@ -41,6 +46,9 @@ public final class ApiClient {
     private Retrofit mRetrofit;
 
     private Map<String, String> mParams;
+
+    private ApiClient() {
+    }
 
     private void setBuilder(Builder builder) {
         mBuilder = builder;
@@ -55,11 +63,11 @@ public final class ApiClient {
         return baseUrl;
     }
 
-    public Map<String, String> getParams() {
+    /* internal */ Map<String, String> getParams() {
         return mParams;
     }
 
-    public Context getContext() {
+    /* internal */ Context getContext() {
         return mBuilder.context;
     }
 
@@ -92,11 +100,8 @@ public final class ApiClient {
         }
 
         // cookie
-        if (mBuilder.cookie) {
-            ClearableCookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(),
-                    new SharedPrefsCookiePersistor(mBuilder.context));
-            okHttpBuilder.cookieJar(cookieJar);
+        if (mBuilder.cookie != null) {
+            okHttpBuilder.cookieJar(mBuilder.cookie);
         }
 
         // http 日志
@@ -117,9 +122,16 @@ public final class ApiClient {
             okHttpBuilder.connectTimeout(mBuilder.connectTimeout, mBuilder.timeoutUnit);
         }
 
-        // 模拟数据
-        if (mBuilder.mockData) {
-            okHttpBuilder.addInterceptor(new MockInterceptor());
+        if (mBuilder.interceptors.size() != 0) {
+            for (Interceptor interceptor : mBuilder.interceptors) {
+                okHttpBuilder.addInterceptor(interceptor);
+            }
+        }
+
+        if (mBuilder.networkInterceptors.size() != 0) {
+            for (Interceptor interceptor : mBuilder.networkInterceptors) {
+                okHttpBuilder.addNetworkInterceptor(interceptor);
+            }
         }
 
         OkHttpClient okHttpClient = okHttpBuilder.build();
@@ -154,11 +166,6 @@ public final class ApiClient {
         private boolean log;
 
         /**
-         * 是否需要模拟数据. 测试的时候使用
-         */
-        private boolean mockData;
-
-        /**
          * 通用的参数
          */
         private Map<String, String> params;
@@ -175,7 +182,7 @@ public final class ApiClient {
         /**
          * 是否添加cookie管理
          */
-        private boolean cookie;
+        private CookieJar cookie;
 
         private int readTimeout;
 
@@ -184,6 +191,10 @@ public final class ApiClient {
         private int connectTimeout;
 
         private TimeUnit timeoutUnit = TimeUnit.SECONDS;
+
+        private List<Interceptor> interceptors = new ArrayList<>();
+
+        private List<Interceptor> networkInterceptors = new ArrayList<>();
 
         private Context context;
 
@@ -196,14 +207,6 @@ public final class ApiClient {
          */
         public Builder log(boolean log) {
             this.log = log;
-            return this;
-        }
-
-        /**
-         * 用于测试。模拟数据参考 {@link MockInterceptor}
-         */
-        public Builder mockData(boolean mockData) {
-            this.mockData = mockData;
             return this;
         }
 
@@ -256,7 +259,7 @@ public final class ApiClient {
         /**
          * 是否添加cookie
          */
-        public Builder cookie(boolean cookie) {
+        public Builder cookie(CookieJar cookie) {
             this.cookie = cookie;
             return this;
         }
@@ -300,6 +303,22 @@ public final class ApiClient {
          */
         public Builder timeoutUnit(TimeUnit timeoutUnit) {
             this.timeoutUnit = timeoutUnit;
+            return this;
+        }
+
+        /**
+         * see {@link OkHttpClient.Builder#addInterceptor(Interceptor)}
+         */
+        public Builder addInterceptor(Interceptor interceptor) {
+            this.interceptors.add(interceptor);
+            return this;
+        }
+
+        /**
+         * see {@link OkHttpClient.Builder#addNetworkInterceptor(Interceptor)}
+         */
+        public Builder addNetworkInterceptor(Interceptor interceptor) {
+            this.networkInterceptors.add(interceptor);
             return this;
         }
 

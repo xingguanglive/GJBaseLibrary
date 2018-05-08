@@ -7,7 +7,6 @@ import java.util.Map;
 import tv.guojiang.baselib.network.annotation.Cache;
 import tv.guojiang.baselib.network.cache.CacheState;
 import tv.guojiang.baselib.network.cache.RxCache;
-import tv.guojiang.baselib.network.config.ApiClient;
 import tv.guojiang.baselib.network.request.BaseRequest;
 import tv.guojiang.baselib.network.request.RxNetwork;
 import tv.guojiang.baselib.util.NetworkUtils;
