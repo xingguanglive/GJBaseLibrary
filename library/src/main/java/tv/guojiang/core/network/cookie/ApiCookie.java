@@ -44,13 +44,6 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
         mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
     }
 
-    public ApiCookie(CookiePersistor cookiePersistor) {
-        mCookieCache = new SetCookieCache();
-        mCookiePersistor = cookiePersistor;
-
-        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
-    }
-
     /**
      * 保存Response header中的Cookie.(先保存到内存中，再将未过期的Cookie保存到本地)
      */
