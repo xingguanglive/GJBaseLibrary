@@ -42,7 +42,7 @@ dependencies {
     api rootProject.ext.dependencies.retrofit
     api rootProject.ext.dependencies.cookie
     api rootProject.ext.dependencies.diskLruCache
-//    api rootProject.ext.dependencies.rxbinding
+    api rootProject.ext.dependencies.rxbinding
 
 //    api rootProject.ext.dependencies.logger
 //    api rootProject.ext.dependencies.luban
