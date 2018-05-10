@@ -8,8 +8,10 @@ import com.franmontiel.persistentcookiejar.cache.CookieCache;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.CookiePersistor;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Cookie;
+import okhttp3.Cookie.Builder;
 import okhttp3.HttpUrl;
 
 /**
@@ -40,13 +42,6 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     public ApiCookie(SharedPreferences preferences) {
         mCookieCache = new SetCookieCache();
         mCookiePersistor = new SharedPrefsCookiePersistor(preferences);
-
-        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
-    }
-
-    public ApiCookie(CookiePersistor cookiePersistor) {
-        mCookieCache = new SetCookieCache();
-        mCookiePersistor = cookiePersistor;
 
         mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
     }
@@ -86,7 +81,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     @Override
     public Cookie getCookie(String key) {
 
-        // 从内存中获取
+        // 从内存中获取，每次都会加载Cookie到内存中
         for (Cookie cookie : mCookieCache) {
             if (cookie.name().equals(key)) {
                 return cookie;
@@ -108,5 +103,45 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     public String getCookieValue(String key) {
         Cookie cookie = getCookie(key);
         return cookie == null ? null : cookie.value();
+    }
+
+    @Override
+    public List<Cookie> getCookies() {
+        // 获取本地的Cookie
+        return mCookiePersistor.loadAll();
+    }
+
+    /**
+     * 更新旧的Cookie的domain
+     */
+    public void updateCookieDomain(String domain) {
+
+        // 获取老的Cookie
+        List<Cookie> oldCookies = getCookies();
+        List<Cookie> newCookies = new ArrayList<>();
+
+        // 替换老的Cookie的domain
+        for (Cookie oldCookie : oldCookies) {
+            Cookie newCookie = getNewCookie(oldCookie, domain);
+            newCookies.add(newCookie);
+        }
+
+        // 清除旧的cookie
+        clear();
+
+        saveFromResponse(null, newCookies);
+    }
+
+    /**
+     * 获取更新的domain的Cookie
+     */
+    private Cookie getNewCookie(Cookie oldCookie, String domain) {
+        return new Builder()
+            .name(oldCookie.name())
+            .value(oldCookie.value())
+            .expiresAt(oldCookie.expiresAt())
+            .domain(domain)
+            .path(oldCookie.path())
+            .build();
     }
 }
