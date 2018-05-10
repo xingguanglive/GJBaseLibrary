@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.format.DateFormat;
 import android.util.Log;
-import com.orhanobut.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 
@@ -115,8 +114,8 @@ public class TakePhotoHelper {
             }
             openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoURI);
             mActivity.startActivityForResult(openCameraIntent, REQUEST_TAKE_CAMERA);
-        } catch (Exception ex) {
-            Logger.e(ex, ex.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -171,8 +170,8 @@ public class TakePhotoHelper {
                         break;
                 }
             }
-        } catch (Exception ex) {
-            Logger.e(ex.getMessage(), ex);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         }
 
         Log.d(TAG, "inner --> " + ((file == null || file.length() == 0) ? "null"
@@ -232,8 +231,8 @@ public class TakePhotoHelper {
                 picturePath = cursor.getString(columnIndex);
             }
             return new File(picturePath);
-        } catch (Exception ex) {
-            Logger.e(ex.getMessage(), ex);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
             return null;
         } finally {
             if (cursor != null) {

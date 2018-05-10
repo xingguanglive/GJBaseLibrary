@@ -1,11 +1,11 @@
 def supportVersion = "26.1.0"
 def retrofitVersion = "2.3.0"
-def rxBindingVersion = "2.0.0"
+def rxBindingVersion = "2.1.1"
 def butterKnifeVersion = "8.6.0"
 def rxJavaVersion = "2.1.1"
 def rxAndroidVersion = "2.0.1"
-def okHttpVersion = "3.8.1"
-def roomVersion = "1.0.0-alpha9"
+def okHttpVersion = "3.10.0"
+def roomVersion = "1.1.0"
 
 projects.ext {
 

@@ -1,10 +1,10 @@
 package tv.guojiang.core.network.response;
 
-import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import tv.guojiang.core.network.exception.ApiException;
 import tv.guojiang.core.network.exception.NetworkException;
+import tv.guojiang.core.util.UIUtils;
 
 /**
  * 网络访问结果处理的{@link Observer}
@@ -34,17 +34,11 @@ public abstract class NetworkObserver<T> implements Observer<T> {
 
             if (cause instanceof ApiException && onFailed(networkException.getCode())) {
                 // 业务错误
-                //todo toast 显示
-                //                UIUtils.showToast(e.getMessage());
+                UIUtils.showToast(e.getMessage());
             } else if (onError(networkException.getCode())) {
                 // 网络错误
-                //                UIUtils.showToast(e.getMessage());
+                UIUtils.showToast(e.getMessage());
             }
-
-            // 打印错误信息
-            Logger.e(cause, cause.getMessage());
-        } else {
-            Logger.e(e, e.getMessage());
         }
     }
 
