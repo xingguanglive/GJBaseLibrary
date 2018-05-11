@@ -5,20 +5,20 @@ publish {
     userOrg = 'xingguanglive'
     groupId = 'tv.guojiang.core'
     artifactId = 'GJBaseLibrary'
-    publishVersion = rootProject.ext.android.versionName
+    publishVersion = gradle.versionName
     desc = 'GuoJiang Base Library'
     website = 'https://github.com/xingguanglive/GJBaseLibrary'
 }
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion gradle.compileSdkVersion
+    buildToolsVersion gradle.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        minSdkVersion gradle.minSdkVersion
+        targetSdkVersion gradle.targetSdkVersion
+        versionCode gradle.versionCode
+        versionName gradle.versionName
     }
     buildTypes {
         release {
@@ -33,22 +33,33 @@ android {
     }
 }
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    api rootProject.ext.dependencies.support
-    api rootProject.ext.dependencies.rxjava
-    api rootProject.ext.dependencies.okhttp
-    api rootProject.ext.dependencies.glide
-    api rootProject.ext.dependencies.retrofit
-    api rootProject.ext.dependencies.cookie
-    api rootProject.ext.dependencies.diskLruCache
-//    api rootProject.ext.dependencies.rxbinding
+    api 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
+    api 'com.android.support:design:' + gradle.supportLibraryVersion
 
-//    api rootProject.ext.dependencies.logger
-//    api rootProject.ext.dependencies.luban
-//    api(rootProject.ext.dependencies.multitype, {
-//        exclude group: 'com.android.support'
-//    })
+    api 'io.reactivex.rxjava2:rxjava:2.1.9'
+    api('io.reactivex.rxjava2:rxandroid:2.0.2') {
+        exclude group: 'io.reactivex.rxjava2:rxjava'
+    }
+
+    api 'com.google.code.gson:gson:2.8.1'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api('com.squareup.okhttp3:logging-interceptor:3.10.0') {
+        exclude group: 'com.squareup.okhttp3:okhttp'
+    }
+
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    api 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    api 'com.github.bumptech.glide:glide:4.5.0'
+    api 'jp.wasabeef:glide-transformations:3.1.0'
+
+    implementation('com.github.franmontiel:PersistentCookieJar:v1.0.1') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation 'com.jakewharton:disklrucache:2.0.2'
 
 }
 
