@@ -1,19 +1,19 @@
-def supportVersion = "26.1.0"
-def retrofitVersion = "2.3.0"
-def rxBindingVersion = "2.0.0"
+def supportVersion = "27.0.2"
+def retrofitVersion = "2.4.0"
+def rxBindingVersion = "2.1.1"
 def butterKnifeVersion = "8.6.0"
-def rxJavaVersion = "2.1.1"
-def rxAndroidVersion = "2.0.1"
-def okHttpVersion = "3.8.1"
-def roomVersion = "1.0.0-alpha9"
+def rxJavaVersion = "2.1.9"
+def rxAndroidVersion = "2.0.2"
+def okHttpVersion = "3.10.0"
+def roomVersion = "1.1.0"
 
 projects.ext {
 
     ext {
 
         android = [
-                compileSdkVersion: 26,
-                buildToolsVersion: "26.0.2",
+                compileSdkVersion: 27,
+                buildToolsVersion: "27.0.3",
                 minSdkVersion    : 15,
                 targetSdkVersion : 22,
                 versionCode      : 121,
@@ -44,17 +44,16 @@ projects.ext {
                         "com.squareup.retrofit2:retrofit:${retrofitVersion}",
                         "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
                         "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-                        "com.google.code.gson:gson:2.8.1"
                 ],
 
                 glide             : [
-                        'com.github.bumptech.glide:glide:4.3.0',
-                        'jp.wasabeef:glide-transformations:3.0.1'
+                        'com.github.bumptech.glide:glide:4.5.0',
+                        'jp.wasabeef:glide-transformations:3.1.0'
                 ],
 
                 okhttp            : [
                         "com.squareup.okhttp3:okhttp:${okHttpVersion}",
-                        "com.squareup.okhttp3:logging-interceptor:3.6.0"],
+                        "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"],
 
                 butterKnife       : "com.jakewharton:butterknife:${butterKnifeVersion}",
                 butterknifeCompile: "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
@@ -64,6 +63,7 @@ projects.ext {
                 logger            : "com.orhanobut:logger:2.1.1",
                 cookie            : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
                 diskLruCache      : "com.jakewharton:disklrucache:2.0.2",
+                gson              : "com.google.code.gson:gson:2.8.1"
         ]
     }
 }

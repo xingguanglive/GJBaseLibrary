@@ -1,6 +1,5 @@
 package tv.guojiang.core.network.exception;
 
-import com.orhanobut.logger.Logger;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +47,6 @@ public class RetryFunction implements Function<Observable<Throwable>, Observable
 
                 // 重试
                 if (++mRetryCount <= mMaxRetryCount) {
-                    Logger.i("正在重试中......");
                     return Observable.timer(mRetryDelay, TimeUnit.MILLISECONDS);
                 }
                 // 不重试

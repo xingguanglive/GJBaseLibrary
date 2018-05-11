@@ -5,20 +5,20 @@ publish {
     userOrg = 'xingguanglive'
     groupId = 'tv.guojiang.core'
     artifactId = 'GJBaseLibrary'
-    publishVersion = rootProject.ext.android.versionName
+    publishVersion = gradle.versionName
     desc = 'GuoJiang Base Library'
     website = 'https://github.com/xingguanglive/GJBaseLibrary'
 }
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion gradle.compileSdkVersion
+    buildToolsVersion gradle.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        minSdkVersion gradle.minSdkVersion
+        targetSdkVersion gradle.targetSdkVersion
+        versionCode gradle.versionCode
+        versionName gradle.versionName
     }
     buildTypes {
         release {
@@ -32,26 +32,49 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile rootProject.ext.dependencies.support
-    compile rootProject.ext.dependencies.rxjava
-    compile rootProject.ext.dependencies.okhttp
-    compile rootProject.ext.dependencies.glide
-    compile rootProject.ext.dependencies.retrofit
-    compile rootProject.ext.dependencies.logger
-    compile rootProject.ext.dependencies.cookie
-    compile rootProject.ext.dependencies.diskLruCache
+    api 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
+    api 'com.android.support:design:' + gradle.supportLibraryVersion
 
-//    compile rootProject.ext.dependencies.luban
-//    compile rootProject.ext.dependencies.rxbinding
-//    compile(rootProject.ext.dependencies.multitype, {
-//        exclude group: 'com.android.support'
-//    })
+    api 'io.reactivex.rxjava2:rxjava:2.1.9'
+    api('io.reactivex.rxjava2:rxandroid:2.0.2') {
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+    }
+
+    api 'com.google.code.gson:gson:2.8.2'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api('com.squareup.okhttp3:logging-interceptor:3.10.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+
+    api('com.squareup.retrofit2:retrofit:2.4.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+    api('com.squareup.retrofit2:adapter-rxjava2:2.4.0') {
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+    }
+    api('com.squareup.retrofit2:converter-gson:2.4.0') {
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+        exclude group: 'com.google.code.gson'
+    }
+
+    api('com.github.bumptech.glide:glide:4.5.0') {
+        exclude group: 'com.android.support'
+    }
+    api('jp.wasabeef:glide-transformations:3.1.0') {
+        exclude group: 'com.github.bumptech.glide'
+    }
+
+    implementation('com.github.franmontiel:PersistentCookieJar:v1.0.1') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation 'com.jakewharton:disklrucache:2.0.2'
 
 }
+
 
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')

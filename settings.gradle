@@ -1,1 +1,13 @@
-include ':sample', ':library'
+include ':sample'
+include ':library'
+
+
+gradle.ext.compileSdkVersion = 27
+gradle.ext.buildToolsVersion = '27.0.3'
+gradle.ext.minSdkVersion = 15
+gradle.ext.targetSdkVersion = 22
+gradle.ext.versionCode = 121
+gradle.ext.versionName = "1.2.1"
+
+gradle.ext.supportLibraryVersion = '27.0.2'
+

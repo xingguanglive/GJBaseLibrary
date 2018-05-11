@@ -1,6 +1,6 @@
 package tv.guojiang.core.util;
 
-import com.orhanobut.logger.Logger;
+import android.util.Log;
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class IOUtils {
             try {
                 io.close();
             } catch (IOException e) {
-                Logger.e(e, e.getMessage());
+                Log.e("IOUtils", e.getMessage(), e);
             }
         }
         return true;

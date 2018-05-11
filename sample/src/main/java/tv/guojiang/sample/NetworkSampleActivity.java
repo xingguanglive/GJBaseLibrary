@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import java.io.File;
@@ -46,8 +44,6 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_network_sample);
 
-        Logger.addLogAdapter(new AndroidLogAdapter());
-
         // 初始化全局接口通用配置
         ApiClient apiClient = new ApiClient.Builder(this)
             .baseUrl("http://www.baidu.com/")
@@ -81,7 +77,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             // 网络访问已经成功
             // 对成功后的数据进行处理
             .map(response -> {
-                Logger.i("数据变换时的线程信息:" + Thread.currentThread().getName());
+                Log.i(TAG, "数据变换时的线程信息:" + Thread.currentThread().getName());
                 return response.data + "";
             })
             // 线程切换放到最后面
@@ -89,7 +85,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .subscribe(new NetworkObserver<String>() {
                 @Override
                 public void onNext(String s) {
-                    Logger.w("变换后的结果:" + s);
+                    Log.i(TAG, "变换后的结果:" + s);
                 }
 
                 @Override
@@ -126,12 +122,12 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(String s) {
-                    Logger.d(s);
+                    Log.i(TAG, s);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    Logger.e(e, e.getMessage());
+                    Log.e(TAG, e.getMessage(),e);
                 }
 
                 @Override
@@ -157,7 +153,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 @Override
                 public void onNext(PagerResponse<Person> response) {
                     List<Person> data = response.data;
-                    Logger.d(data);
+                    Log.i(TAG, data.toString());
                 }
             });
     }
@@ -188,7 +184,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    Logger.e(e, e.getMessage());
+                    Log.e(TAG, e.getMessage(),e);
 
                     //                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
                     //                        .getCookieValue("BAIDUID");
@@ -247,12 +243,12 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(String s) {
-                    Logger.d(s);
+                    Log.d(TAG, s);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    Logger.e(e, e.getMessage());
+                    Log.e(TAG, e.getMessage(), e);
                 }
 
                 @Override
@@ -284,13 +280,13 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 @Override
                 public void onNext(File file) {
                     Toast.makeText(NetworkSampleActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
-                    Logger.d("下载文件的路径 ---> " + file.getAbsolutePath());
+                    Log.d(TAG, "下载文件的路径 ---> " + file.getAbsolutePath());
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Toast.makeText(NetworkSampleActivity.this, "文件下载失败", Toast.LENGTH_SHORT).show();
-                    Logger.e(e, "文件下载失败");
+                    Log.e(TAG, "文件下载失败");
                 }
 
                 @Override

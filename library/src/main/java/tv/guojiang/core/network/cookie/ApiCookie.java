@@ -128,7 +128,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
 
         // 清除旧的cookie
         clear();
-
+        // 保存新的Cookie
         saveFromResponse(null, newCookies);
     }
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.text.format.Formatter;
-import com.orhanobut.logger.Logger;
+import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,6 +31,8 @@ import java.util.Properties;
  * </pre>
  */
 public class FileUtils {
+
+    private static final String TAG = "FileUtils";
 
     public static final String CACHE_DIR = "cache";
 
@@ -187,7 +189,7 @@ public class FileUtils {
                 srcFile.delete();
             }
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return false;
         } finally {
             IOUtils.close(out);
@@ -207,7 +209,7 @@ public class FileUtils {
             File f = new File(path);
             return f.exists() && f.canWrite();
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return false;
         }
     }
@@ -221,7 +223,7 @@ public class FileUtils {
             Runtime runtime = Runtime.getRuntime();
             runtime.exec(command);
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -253,7 +255,7 @@ public class FileUtils {
                 res = true;
             }
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(fos);
             IOUtils.close(is);
@@ -289,7 +291,7 @@ public class FileUtils {
                 res = true;
             }
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(raf);
         }
@@ -330,7 +332,7 @@ public class FileUtils {
             writer.write(content);
             writer.flush();
         } catch (IOException e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(writer);
             IOUtils.close(fileWriter);
@@ -363,7 +365,7 @@ public class FileUtils {
             fos = new FileOutputStream(f);
             p.store(fos, comment);
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(fis);
             IOUtils.close(fos);
@@ -389,7 +391,7 @@ public class FileUtils {
             p.load(fis);
             value = p.getProperty(key, defaultValue);
         } catch (IOException e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(fis);
         }
@@ -420,7 +422,7 @@ public class FileUtils {
             fos = new FileOutputStream(f);
             p.store(fos, comment);
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(fis);
             IOUtils.close(fos);
@@ -446,7 +448,7 @@ public class FileUtils {
             p.load(fis);
             map = new HashMap<>((Map) p); // 因为properties继承了map，所以直接通过p来构造一个map
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             IOUtils.close(fis);
         }
@@ -474,7 +476,7 @@ public class FileUtils {
                 out.flush();
             }
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return false;
         } finally {
             IOUtils.close(in);
@@ -507,7 +509,7 @@ public class FileUtils {
             reader = new BufferedReader(fileReader);
             return reader.readLine();
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return "";
         } finally {
             IOUtils.close(fileReader);
@@ -586,7 +588,7 @@ public class FileUtils {
             byte[] md5Bytes = digest.digest(); // Complete the hash computing
             return convertHashToString(md5Bytes); // Call the function to convert to hex digits
         } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             return null;
         } finally {
             IOUtils.close(inputStream);
