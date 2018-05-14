@@ -35,8 +35,10 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    api 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
-    api 'com.android.support:design:' + gradle.supportLibraryVersion
+//    implementation 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
+//    implementation 'com.android.support:design:' + gradle.supportLibraryVersion
+
+    implementation 'com.android.support:support-fragment:'+gradle.supportLibraryVersion
 
     api 'io.reactivex.rxjava2:rxjava:2.1.9'
     api('io.reactivex.rxjava2:rxandroid:2.0.2') {
@@ -45,18 +47,18 @@ dependencies {
 
     api 'com.google.code.gson:gson:2.8.2'
     api 'com.squareup.okhttp3:okhttp:3.10.0'
-    api('com.squareup.okhttp3:logging-interceptor:3.10.0') {
+    implementation('com.squareup.okhttp3:logging-interceptor:3.10.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
-    api('com.squareup.retrofit2:retrofit:2.4.0') {
+    implementation('com.squareup.retrofit2:retrofit:2.4.0') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    api('com.squareup.retrofit2:adapter-rxjava2:2.4.0') {
+    implementation('com.squareup.retrofit2:adapter-rxjava2:2.4.0') {
         exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
         exclude group: 'com.squareup.retrofit2', module: 'retrofit'
     }
-    api('com.squareup.retrofit2:converter-gson:2.4.0') {
+    implementation('com.squareup.retrofit2:converter-gson:2.4.0') {
         exclude group: 'com.squareup.retrofit2', module: 'retrofit'
         exclude group: 'com.google.code.gson'
     }
