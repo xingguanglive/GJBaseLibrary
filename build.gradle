@@ -1,4 +1,4 @@
-apply from: 'config.gradle'
+//apply from: 'config.gradle'
 
 buildscript {
     repositories {
@@ -6,7 +6,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
@@ -21,4 +22,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
 }

@@ -1,0 +1,85 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'xingguanglive'
+    groupId = 'tv.guojiang.core'
+    artifactId = 'GJBaseLibrary'
+    publishVersion = gradle.versionName
+    desc = 'GuoJiang Base Library'
+    website = 'https://github.com/xingguanglive/GJBaseLibrary'
+}
+
+android {
+    compileSdkVersion gradle.compileSdkVersion
+    buildToolsVersion gradle.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion gradle.minSdkVersion
+        targetSdkVersion gradle.targetSdkVersion
+        versionCode gradle.versionCode
+        versionName gradle.versionName
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+//    implementation 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
+//    implementation 'com.android.support:design:' + gradle.supportLibraryVersion
+
+    implementation 'com.android.support:support-fragment:'+gradle.supportLibraryVersion
+
+    api 'io.reactivex.rxjava2:rxjava:2.1.9'
+    api('io.reactivex.rxjava2:rxandroid:2.0.2') {
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+    }
+
+    api 'com.google.code.gson:gson:2.8.2'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation('com.squareup.okhttp3:logging-interceptor:3.10.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+
+    implementation('com.squareup.retrofit2:retrofit:2.4.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+    implementation('com.squareup.retrofit2:adapter-rxjava2:2.4.0') {
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+    }
+    implementation('com.squareup.retrofit2:converter-gson:2.4.0') {
+        exclude group: 'com.squareup.retrofit2', module: 'retrofit'
+        exclude group: 'com.google.code.gson'
+    }
+
+    api('com.github.bumptech.glide:glide:4.5.0') {
+        exclude group: 'com.android.support'
+    }
+    api('jp.wasabeef:glide-transformations:3.1.0') {
+        exclude group: 'com.github.bumptech.glide'
+    }
+
+    implementation('com.github.franmontiel:PersistentCookieJar:v1.0.1') {
+        exclude group: 'com.squareup.okhttp3'
+    }
+    implementation 'com.jakewharton:disklrucache:2.0.2'
+
+}
+
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
