@@ -5,8 +5,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,13 +31,18 @@ public class LogsWriter {
     private static String DIRECTORY_NAME = "guojiang";
 
     private LogsWriterHandler mHandler;
+    private static final long DELETE_TIME = 7 * 24 * 60 * 60 * 1000;
+    private StringBuffer mStringBuffer = new StringBuffer(1024);
+
+    private static String FILE_FIRST_NAME;
+    private static long FILE_LENGH = 1024 * 1024;
 
     public LogsWriter() {
         HandlerThread thread = new HandlerThread("LogsWriterHandler");
         thread.start();
         mHandler = new LogsWriterHandler(thread.getLooper());
         deleteFile();
-
+        FILE_FIRST_NAME = System.currentTimeMillis() + "";
     }
 
     public LogsWriter(String path) {
@@ -69,7 +76,7 @@ public class LogsWriter {
             try {
                 Date fdate = new SimpleDateFormat("yyyy-MM-dd").parse(fileTime);
                 Date nowDate = new Date();
-                if (nowDate.getTime() - fdate.getTime() > 7 * 24 * 60 * 60 * 1000) {
+                if (nowDate.getTime() - fdate.getTime() > DELETE_TIME) {
                     f.delete();
                 }
             } catch (ParseException e) {
@@ -80,7 +87,8 @@ public class LogsWriter {
 
     class LogsWriterHandler extends Handler {
 
-        FileWriter fileWriter;
+        FileWriter fw;
+        BufferedWriter bw;
 
         public LogsWriterHandler(Looper looper) {
             super(looper);
@@ -91,23 +99,24 @@ public class LogsWriter {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             write(msg.obj.toString());
+
         }
 
         private void write(String msg) {
             try {
-                fileWriter = new FileWriter(getFile(), true);
-                fileWriter.append(msg);
-                fileWriter.flush();
-                fileWriter.close();
-                fileWriter = null;
+                fw = new FileWriter(getFile(), true);
+                bw = new BufferedWriter(fw);
+                bw.write(msg);
+                bw.close();
+                fw.close();
+                fw = null;
             } catch (IOException e) {
                 e.printStackTrace();
-                if (fileWriter != null) {
+                if (bw != null) {
                     try {
-                        fileWriter.flush();
-                        fileWriter.close();
-                        fileWriter = null;
+                        bw.close();
                     } catch (IOException e1) {
+                        e1.printStackTrace();
                     }
                 }
             }
@@ -115,14 +124,34 @@ public class LogsWriter {
 
         private File getFile() {
             String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String name = time + FILE_NAME;
+            String name = time + "_" + FILE_FIRST_NAME + FILE_NAME;
             String path = DISK_PATH + name;
             File fileMkd = new File(DISK_PATH);
             if (!fileMkd.exists()) {
                 fileMkd.mkdirs();
             }
             File file = new File(path);
+            if (getFileSize(file) > FILE_LENGH) {
+                FILE_FIRST_NAME = System.currentTimeMillis() + "";
+            }
             return file;
+        }
+
+        public long getFileSize(File file) {
+            long size = 0;
+            if (file.exists()) {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(file);
+                    size = fis.available();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            return size;
         }
 
     }
