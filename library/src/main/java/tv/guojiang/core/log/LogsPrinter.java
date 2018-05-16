@@ -11,6 +11,7 @@ import tv.guojiang.core.log.impl.IPrinter;
 public class LogsPrinter implements IPrinter {
 
     private LogsWriter mLogsWriter;
+    private boolean isDebug = true;
 
     public LogsPrinter() {
         mLogsWriter = new LogsWriter();
@@ -18,6 +19,11 @@ public class LogsPrinter implements IPrinter {
 
     public LogsPrinter(String path) {
         mLogsWriter = new LogsWriter(path);
+    }
+
+    @Override
+    public void setDebug(boolean isDebug) {
+        this.isDebug = isDebug;
     }
 
     @Override
@@ -49,13 +55,23 @@ public class LogsPrinter implements IPrinter {
         //        Logger.log(type, tag, msg, null);
         StackTraceElement caller = getCallerStackTraceElement();
         String t = generateTag(caller);
-        Log.println(type, tag, "-----------------------------------------------------------");
-        Log.println(type, tag, "|  " + t);
-        Log.println(type, tag, "|  " + msg);
-        Log.println(type, tag, "-----------------------------------------------------------");
+        if (isDebug) {
+            Log.println(type, tag, "-----------------------------------------------------------");
+            Log.println(type, tag, "|  " + t);
+            Log.println(type, tag, "|  " + formatLogToString(tag, msg));
+            Log.println(type, tag, "-----------------------------------------------------------");
+        }
         if (isWrite) {
             mLogsWriter.logs(t + " \n---- " + tag, msg);
         }
+    }
+
+
+    static String formatLogToString(String tag, String msg) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("[" + tag + "]");
+        sb.append("[" + msg + "]");
+        return sb.toString();
     }
 
     private static StackTraceElement getCallerStackTraceElement() {
