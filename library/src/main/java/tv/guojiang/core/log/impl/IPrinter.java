@@ -6,6 +6,7 @@ package tv.guojiang.core.log.impl;
  */
 public interface IPrinter {
 
+    void setDebug(boolean isDebug);
 
     void d(String tag, String msg, boolean isWrite);
 

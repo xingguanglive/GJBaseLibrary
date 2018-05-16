@@ -1,5 +1,6 @@
 package tv.guojiang.core.log;
 
+
 import tv.guojiang.core.log.impl.IPrinter;
 
 /**
@@ -10,16 +11,22 @@ public class Logs {
 
     private static IPrinter printer;
 
-    public static void build(String path) {
+    public static void build(String path){
         printer = new LogsPrinter(path);
     }
 
-    public static void build() {
+    public static void build(){
         printer = new LogsPrinter();
     }
 
+    public static void setDebug(boolean isDebug){
+        printer.setDebug(isDebug);
+    }
     /**
      * 打印日志
+     *
+     * @param tag
+     * @param msg
      */
     public static void d(String tag, String msg) {
         printer.d(tag, msg, false);
@@ -27,6 +34,9 @@ public class Logs {
 
     /**
      * 打印日志
+     *
+     * @param tag
+     * @param msg
      */
     public static void e(String tag, String msg) {
         printer.e(tag, msg, false);
@@ -34,6 +44,9 @@ public class Logs {
 
     /**
      * 打印日志
+     *
+     * @param tag
+     * @param msg
      */
     public static void w(String tag, String msg) {
         printer.w(tag, msg, false);
@@ -41,6 +54,9 @@ public class Logs {
 
     /**
      * 打印日志
+     *
+     * @param tag
+     * @param msg
      */
     public static void i(String tag, String msg) {
         printer.i(tag, msg, false);
@@ -48,6 +64,9 @@ public class Logs {
 
     /**
      * 打印日志
+     *
+     * @param tag
+     * @param msg
      */
     public static void v(String tag, String msg) {
         printer.v(tag, msg, false);
@@ -56,6 +75,8 @@ public class Logs {
     /**
      * 打印日志，并写到本地
      *
+     * @param tag
+     * @param msg
      * @param isWrite true:写到本地日子
      */
     public static void d(String tag, String msg, boolean isWrite) {
@@ -65,6 +86,8 @@ public class Logs {
     /**
      * 打印日志，并写到本地
      *
+     * @param tag
+     * @param msg
      * @param isWrite true:写到本地日子
      */
     public static void e(String tag, String msg, boolean isWrite) {
@@ -74,6 +97,8 @@ public class Logs {
     /**
      * 打印日志，并写到本地
      *
+     * @param tag
+     * @param msg
      * @param isWrite true:写到本地日子
      */
     public static void w(String tag, String msg, boolean isWrite) {
@@ -83,6 +108,8 @@ public class Logs {
     /**
      * 打印日志，并写到本地
      *
+     * @param tag
+     * @param msg
      * @param isWrite true:写到本地日子
      */
     public static void i(String tag, String msg, boolean isWrite) {
@@ -92,6 +119,8 @@ public class Logs {
     /**
      * 打印日志，并写到本地
      *
+     * @param tag
+     * @param msg
      * @param isWrite true:写到本地日子
      */
     public static void v(String tag, String msg, boolean isWrite) {
