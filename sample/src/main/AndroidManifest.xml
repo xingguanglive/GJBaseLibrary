@@ -27,8 +27,6 @@
 
         <activity android:name="tv.guojiang.sample.ImageLoadSampleActivity"/>
 
-        <activity android:name="tv.guojiang.sample.NetworkSampleActivity"/>
-
     </application>
 
 </manifest>
