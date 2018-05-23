@@ -70,10 +70,10 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    implementation('com.github.franmontiel:PersistentCookieJar:v1.0.1') {
-        exclude group: 'com.squareup.okhttp3'
-    }
-    implementation 'com.jakewharton:disklrucache:2.0.2'
+//    implementation('com.github.franmontiel:PersistentCookieJar:v1.0.1') {
+//        exclude group: 'com.squareup.okhttp3'
+//    }
+//    implementation 'com.jakewharton:disklrucache:2.0.2'
 
 }
 
