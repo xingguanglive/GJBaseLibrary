@@ -78,37 +78,28 @@ public class FileUtils {
      * package/cache/
      */
     public static String getDir(Context context, String name) {
-        StringBuilder sb = new StringBuilder();
+        File dir;
         if (isSDCardAvailable()) {
-            sb.append(getExternalStoragePath(context));
+            File externalStorageFile = getExternalStorageFile(context);
+            dir = new File(externalStorageFile, name);
         } else {
-            sb.append(getCachePath(context));
+            dir = new File(getInnerCacheDir(context), name);
         }
-        sb.append(name);
-        sb.append(File.separator);
-        String path = sb.toString();
-        if (createDirs(path)) {
-            return path;
-        } else {
-            return null;
-        }
+        dir.mkdirs();
+        return dir.getAbsolutePath();
     }
 
     /**
      * @return /sdcard/Android/data/application package/
      */
-    public static String getExternalStoragePath(Context context) {
+    public static File getExternalStorageFile(Context context) {
+        File externalCacheDir = context.getExternalCacheDir();
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(File.separator);
-        sb.append("Android");
-        sb.append(File.separator);
-        sb.append("data");
-        sb.append(File.separator);
-        sb.append(context.getPackageName());
-        sb.append(File.separator);
-        return sb.toString();
+        if (externalCacheDir == null) {
+            return null;
+        }
+
+        return externalCacheDir.getParentFile();
     }
 
     /**
@@ -138,13 +129,8 @@ public class FileUtils {
     /**
      * @return /data/data/application package/cache/
      */
-    public static String getCachePath(Context context) {
-        File f = context.getCacheDir();
-        if (null == f) {
-            return null;
-        } else {
-            return f.getAbsolutePath() + File.separator;
-        }
+    public static File getInnerCacheDir(Context context) {
+        return context.getCacheDir();
     }
 
     /**
