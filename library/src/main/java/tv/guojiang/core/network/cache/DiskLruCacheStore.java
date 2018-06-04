@@ -41,19 +41,18 @@ public class DiskLruCacheStore implements ICacheStore {
      * @param directory 缓存保存的目录
      * @param maxSize 缓存的最大容量
      */
-    public DiskLruCacheStore(Context context, String directory, int maxSize) {
+    public DiskLruCacheStore(Context context, File directory, int maxSize) {
         try {
-            File file = new File(directory);
             PackageManager packageManager = context.getPackageManager();
             int appVersion = packageManager.getPackageInfo(context.getPackageName(), 0).versionCode;
-            mDiskLruCache = DiskLruCache.open(file, appVersion, 1, maxSize);
+            mDiskLruCache = DiskLruCache.open(directory, appVersion, 1, maxSize);
         } catch (Exception e) {
-            e.printStackTrace();
+            // ignore
         }
     }
 
     public DiskLruCacheStore(Context context) {
-        this(context, FileUtils.getApiCacheDir(context), DEFAULT_MAX_SIZE);
+        this(context, FileUtils.getNetworkCacheDir(context), DEFAULT_MAX_SIZE);
     }
 
     @Override
