@@ -34,7 +34,7 @@ public class FileUtils {
 
     private static final String TAG = "FileUtils";
 
-    public static final String NETWORK_CACHE_DIR = "core";
+    private static final String NETWORK_CACHE_DIR = "core";
 
     /**
      * 判断SD卡是否挂载
@@ -85,8 +85,8 @@ public class FileUtils {
     /**
      * 获取应用存储目录
      *
-     * @return 若sdcard存在，返回 /sdcard/Android/data/application package/ <p>若sdcard不存在，返回/data/data/application
-     * package/
+     * @return 若sdcard存在，返回 /sdcard/Android/data/application package/
+     * <p>若sdcard不存在，返回/data/data/application package/package/
      */
     public static File getStorageDir(Context context, String name) {
         File parent;
