@@ -10,7 +10,7 @@
 In your app level build.gradle :
 ```
 dependencies {
-  compile 'tv.guojiang.core:GJBaseLibrary:latest_version'
+  implementation 'tv.guojiang.core:GJBaseLibrary:latest_version'
 }
 ```
 

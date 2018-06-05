@@ -34,11 +34,7 @@ public class FileUtils {
 
     private static final String TAG = "FileUtils";
 
-    public static final String CACHE_DIR = "cache";
-
-    public static final String ICON_DIR = "icon";
-
-    public static final String API_CORE = "core";
+    private static final String NETWORK_CACHE_DIR = "core";
 
     /**
      * 判断SD卡是否挂载
@@ -48,103 +44,73 @@ public class FileUtils {
     }
 
     /**
+     * 获取App的sdcard文件存储路径
+     *
+     * @return /sdcard/Android/data/application package/
+     */
+    private static File getAppExternalStorageDir(Context context) {
+        return context.getExternalCacheDir().getParentFile();
+    }
+
+    /**
+     * 获取App的内存文件存储路径
+     */
+    private static File getAppInternalStoreDir(Context context) {
+        return context.getCacheDir().getParentFile();
+    }
+
+    /**
+     * 获取接口缓存路径
+     */
+    public static File getNetworkCacheDir(Context context) {
+        return getStorageDir(context, NETWORK_CACHE_DIR);
+    }
+
+    /**
      * 获取缓存目录
      *
      * @return 若sdcard存在，返回 /sdcard/Android/data/application package/cache/ <p>
      * 若sdcard不存在，返回/data/data/application package/cache/cache/
      */
-    public static String getCacheDir(Context context) {
-        return getDir(context, CACHE_DIR);
-    }
-
-    public static String getApiCacheDir(Context context) {
-        return getDir(context, API_CORE);
-    }
-
-    /**
-     * 获取icon目录
-     *
-     * @return 若sdcard存在，返回 /sdcard/Android/data/application package/icon/
-     * <p>若sdcard不存在，返回/data/data/application package/cache/icon/
-     */
-    public static String getIconDir(Context context) {
-        return getDir(context, ICON_DIR);
+    public static File getAppCacheDir(Context context) {
+        if (!isSDCardAvailable()) {
+            // 内存缓存目录
+            return context.getCacheDir();
+        } else {
+            // 外部缓存目录
+            return context.getExternalCacheDir();
+        }
     }
 
     /**
-     * 获取应用目录
+     * 获取应用存储目录
      *
-     * @return 若sdcard存在，返回 /sdcard/Android/data/application package/ <p>若sdcard不存在，返回/data/data/application
-     * package/cache/
+     * @return 若sdcard存在，返回 /sdcard/Android/data/application package/
+     * <p>若sdcard不存在，返回/data/data/application package/package/
      */
-    public static String getDir(Context context, String name) {
-        StringBuilder sb = new StringBuilder();
+    public static File getStorageDir(Context context, String name) {
+        File parent;
         if (isSDCardAvailable()) {
-            sb.append(getExternalStoragePath(context));
+            parent = getAppExternalStorageDir(context);
         } else {
-            sb.append(getCachePath(context));
+            parent = getAppInternalStoreDir(context);
         }
-        sb.append(name);
-        sb.append(File.separator);
-        String path = sb.toString();
-        if (createDirs(path)) {
-            return path;
-        } else {
-            return null;
-        }
-    }
 
-    /**
-     * @return /sdcard/Android/data/application package/
-     */
-    public static String getExternalStoragePath(Context context) {
+        File dir = new File(parent, name);
+        createDirs(dir.getAbsolutePath());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(File.separator);
-        sb.append("Android");
-        sb.append(File.separator);
-        sb.append("data");
-        sb.append(File.separator);
-        sb.append(context.getPackageName());
-        sb.append(File.separator);
-        return sb.toString();
+        return dir;
     }
 
     /**
      * 返回 /sdcard/DCIM/<app name>/
      * <p>一般用来存储图片等，此处存储的图片或者视频在相册中可以看到
      *
-     * @return /sdcard/DCIM/<app name>/
+     * @return /sdcard/DCIM/dir_name/
      */
-    public static String getAndroidOpenDir(Context context) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(File.separator);
-        sb.append("DCIM");
-        sb.append(File.separator);
-        sb.append(context.getApplicationInfo().name);
-        sb.append(File.separator);
-
-        File file = new File(sb.toString());
-
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * @return /data/data/application package/cache/
-     */
-    public static String getCachePath(Context context) {
-        File f = context.getCacheDir();
-        if (null == f) {
-            return null;
-        } else {
-            return f.getAbsolutePath() + File.separator;
-        }
+    public static File getExternalPublicPicturesDir(String dirName) {
+        String externalStorageState = Environment.getExternalStorageState();
+        return new File(externalStorageState, dirName);
     }
 
     /**
