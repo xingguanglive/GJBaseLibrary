@@ -23,25 +23,25 @@ public class ImageLoadSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_load_sample);
 
-        ImageDirector.getInstance().imageBuilder(this).imageUrl(
+        ImageDirector.getInstance().imageBuilder().imageUrl(
             "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
-            .into((ImageView) findViewById(R.id.iv_main));
+            .into(this,(ImageView) findViewById(R.id.iv_main));
 
         ImageDirector.getInstance()
-            .imageBuilder(this)
+            .imageBuilder()
             .imageUrl(
                 "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
             .imageTransformation(ImageConstants.IMAGE_TRANSFOR_CROP_CIRCLE)
-            .into((ImageView) findViewById(R.id.iv_main_circle));
+            .into(this,(ImageView) findViewById(R.id.iv_main_circle));
 
-        ImageDirector.getInstance().imageBuilder(this).imageUrl(
+        ImageDirector.getInstance().imageBuilder().imageUrl(
             "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
             .imageTransformation(ImageConstants.IMAGE_TRANSFOR_CROP_CORNER)
             .cornerType(RoundedCornersTransformation.CornerType.ALL).radius(10)
-            .into((ImageView) findViewById(R.id.iv_main_corner));
+            .into(this,(ImageView) findViewById(R.id.iv_main_corner));
         sync();
     }
 
@@ -53,10 +53,10 @@ public class ImageLoadSampleActivity extends AppCompatActivity {
                     try {
                         Thread.sleep(500);
                         bitmap = (Drawable) ImageDirector.getInstance()
-                            .imageBuilder(ImageLoadSampleActivity.this.getApplicationContext())
+                            .imageBuilder()
                             .imageUrl(
                                 "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
-                            .intoSyn();
+                            .intoSyn(ImageLoadSampleActivity.this);
                         Message msg = Message.obtain();
                         msg.obj = bitmap;
                         handler.sendMessage(msg);
