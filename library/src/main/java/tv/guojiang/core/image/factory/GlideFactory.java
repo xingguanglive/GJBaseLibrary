@@ -35,11 +35,8 @@ import tv.guojiang.core.image.model.ImageEntity;
 
 public class GlideFactory implements ImageFactory {
 
-    public Context mContext;
-
     @Override
     public void loadImage(@NonNull Context context, @NonNull final ImageEntity entity) {
-        mContext = context;
         RequestManager requestManager = Glide.with(context);
         imageType(requestManager, entity.imageType);
         RequestBuilder requestBuilder = requestManager.load(entity.imageUrl);
@@ -89,7 +86,6 @@ public class GlideFactory implements ImageFactory {
      * 同步加载图片
      */
     public Object loadImageSyn(Context context, ImageEntity entity) throws Exception {
-        mContext = context;
         RequestManager requestManager = Glide.with(context);
         imageType(requestManager, entity.imageType);
         RequestBuilder requestBuilder = requestManager.load(entity.imageUrl);
@@ -208,8 +204,6 @@ public class GlideFactory implements ImageFactory {
                 transformations.toArray(new Transformation[]{}));
             options.transform(multiTransformation);
         }
-        multiTransformation = null;
-        transformations = null;
         return options;
     }
 }
