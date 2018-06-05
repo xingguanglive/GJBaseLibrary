@@ -204,8 +204,6 @@ public class GlideFactory implements ImageFactory {
                 transformations.toArray(new Transformation[]{}));
             options.transform(multiTransformation);
         }
-        multiTransformation = null;
-        transformations = null;
         return options;
     }
 }
