@@ -6,8 +6,8 @@ gradle.ext.compileSdkVersion = 27
 gradle.ext.buildToolsVersion = '27.0.3'
 gradle.ext.minSdkVersion = 15
 gradle.ext.targetSdkVersion = 22
-gradle.ext.versionCode = 128
-gradle.ext.versionName = "1.2.8"
+gradle.ext.versionCode = 129
+gradle.ext.versionName = "1.2.9"
 
 gradle.ext.supportLibraryVersion = '27.0.2'
 
