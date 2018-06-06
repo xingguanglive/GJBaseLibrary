@@ -70,7 +70,6 @@ public class SevenAdapter extends BaseAdapter {
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
             .into(mContext, holder.imageView);
 
-
         return convertView;
     }
 

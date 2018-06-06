@@ -24,6 +24,7 @@ public class ApiImageLoader {
         if (factory == null) {
             throw new NullPointerException("factory == null");
         }
+
         mFactory = factory;
     }
 
@@ -32,15 +33,22 @@ public class ApiImageLoader {
     }
 
     Object loadImageSyn(Context context, ImageBuilder builder) throws Exception {
+        if (mFactory == null) {
+            throw new NullPointerException("factory == null");
+        }
+
         return mFactory.loadImageSyn(context, builder.getImageEntity());
     }
 
     /**
      * 加载显示图片
      */
-    ApiImageLoader loadImage(Context context, ImageBuilder builder) {
+    void loadImage(Context context, ImageBuilder builder) {
+        if (mFactory == null) {
+            throw new NullPointerException("factory == null");
+        }
+
         mFactory.loadImage(context, builder.getImageEntity());
-        return this;
     }
 
 }
