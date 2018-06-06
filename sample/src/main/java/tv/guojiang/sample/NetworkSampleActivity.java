@@ -71,8 +71,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.android = 999;
         request.business = "Seven-Android";
         request.seven = 77777;
+        request.url = "http://localhost:3000/login";
 
-        ApiBiz.getInstance().get("http://localhost:3000/login", request)
+        ApiBiz.getInstance().get(request)
             .compose(new NetworkTransformer<>(Person.class))
             // 网络访问已经成功
             // 对成功后的数据进行处理
@@ -110,9 +111,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.age = 24;
         request.name = "Snow";
         request.location = "ShenZhen";
+        request.url = "http://localhost:3000/post";
 
         ApiBiz.getInstance()
-            .post("http://localhost:3000/post", request)
+            .post(request)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override
@@ -127,7 +129,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(),e);
+                    Log.e(TAG, e.getMessage(), e);
                 }
 
                 @Override
@@ -144,9 +146,10 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         request.pager = 1;
         request.pagerSize = 20;
+        request.url = "http://localhost:3000/users";
 
         ApiBiz.getInstance()
-            .get("http://localhost:3000/users", request)
+            .get(request)
             .compose(new PagerNetworkTransformer<>(Person.class))
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new NetworkObserver<PagerResponse<Person>>() {
@@ -163,8 +166,9 @@ public class NetworkSampleActivity extends AppCompatActivity {
     public void cache(View view) {
 
         TestRequest testRequest = new TestRequest();
+        testRequest.url = "http://www.baidu.com";
 
-        ApiBiz.getInstance().get("http://www.baidu.com", testRequest)
+        ApiBiz.getInstance().get(testRequest)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override
@@ -184,7 +188,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(),e);
+                    Log.e(TAG, e.getMessage(), e);
 
                     //                    String baiduid = ApiCookie.getInstance(NetworkSampleActivity.this)
                     //                        .getCookieValue("BAIDUID");
@@ -225,6 +229,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         UploadRequest request = new UploadRequest();
         request.username = "JonSnow";
         request.password = "King in the north";
+        request.url = "http://api.nohttp.net/upload";
 
         List<File> files = new ArrayList<>();
         files.add(file);
@@ -233,7 +238,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
         request.file = files;
 
         ApiBiz.getInstance()
-            .upload("http://api.nohttp.net/upload", request)
+            .upload(request)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override

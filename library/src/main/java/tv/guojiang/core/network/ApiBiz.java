@@ -59,22 +59,21 @@ public class ApiBiz {
     /**
      * 发送 GET 请求
      *
-     * @param url 全路径接口地址
      * @param request 请求
      */
-    public <T extends BaseRequest> Observable<String> get(String url, T request) {
+    public <T extends BaseRequest> Observable<String> get(T request) {
 
         Map<String, String> params = concatParams(request.getParams());
 
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
             // 不使用缓存
-            return mRxNetwork.get(url, request);
+            return mRxNetwork.get(request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, params, cache);
-        Observable<String> networkObservable = mRxNetwork.get(url, request)
-            .doOnNext(json -> mRxCache.saveCache(url, params, json));
+        Observable<String> cacheObservable = mRxCache.getCache(request.url, params, cache);
+        Observable<String> networkObservable = mRxNetwork.get(request)
+            .doOnNext(json -> mRxCache.saveCache(request.url, params, json));
 
         return concatObservable(cacheObservable, networkObservable, cache.state(), request);
     }
@@ -82,22 +81,21 @@ public class ApiBiz {
     /**
      * 发送 POST 请求
      *
-     * @param url 全路径接口地址
      * @param request 请求
      */
-    public <T extends BaseRequest> Observable<String> post(String url, T request) {
+    public <T extends BaseRequest> Observable<String> post(T request) {
 
         Map<String, String> params = concatParams(request.getParams());
 
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
             // 不使用缓存
-            return mRxNetwork.post(url, request);
+            return mRxNetwork.post(request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(url, params, cache);
-        Observable<String> networkObservable = mRxNetwork.post(url, request)
-            .doOnNext(json -> mRxCache.saveCache(url, params, json));
+        Observable<String> cacheObservable = mRxCache.getCache(request.url, params, cache);
+        Observable<String> networkObservable = mRxNetwork.post(request)
+            .doOnNext(json -> mRxCache.saveCache(request.url, params, json));
 
         return concatObservable(cacheObservable, networkObservable, cache.state(), request);
     }
@@ -105,9 +103,9 @@ public class ApiBiz {
     /**
      * 文件上传
      */
-    public <T extends BaseRequest> Observable<String> upload(String url, T request) {
+    public <T extends BaseRequest> Observable<String> upload(T request) {
         concatParams(request.getParams());
-        return mRxNetwork.uploadFile(url, request);
+        return mRxNetwork.uploadFile(request);
     }
 
     /**
