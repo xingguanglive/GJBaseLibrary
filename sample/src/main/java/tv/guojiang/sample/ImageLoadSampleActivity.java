@@ -8,7 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import tv.guojiang.base.R;
-import tv.guojiang.core.image.ImageDirector;
+import tv.guojiang.core.image.ApiImageLoader;
+import tv.guojiang.core.image.factory.GlideFactory;
 import tv.guojiang.core.image.model.ImageConstants;
 
 /**
@@ -21,27 +22,30 @@ public class ImageLoadSampleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ApiImageLoader.getInstance().setFactory(new GlideFactory());
+
         setContentView(R.layout.activity_image_load_sample);
 
-        ImageDirector.getInstance().imageBuilder(this).imageUrl(
+        ApiImageLoader.getInstance().newBuilder().imageUrl(
             "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
-            .into((ImageView) findViewById(R.id.iv_main));
+            .into(this, (ImageView) findViewById(R.id.iv_main));
 
-        ImageDirector.getInstance()
-            .imageBuilder(this)
+        ApiImageLoader.getInstance()
+            .newBuilder()
             .imageUrl(
                 "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
             .imageTransformation(ImageConstants.IMAGE_TRANSFOR_CROP_CIRCLE)
-            .into((ImageView) findViewById(R.id.iv_main_circle));
+            .into(this, (ImageView) findViewById(R.id.iv_main_circle));
 
-        ImageDirector.getInstance().imageBuilder(this).imageUrl(
+        ApiImageLoader.getInstance().newBuilder().imageUrl(
             "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
             .errorImage(R.mipmap.ic_launcher).loadingImage(R.mipmap.ic_launcher)
             .imageTransformation(ImageConstants.IMAGE_TRANSFOR_CROP_CORNER)
             .cornerType(RoundedCornersTransformation.CornerType.ALL).radius(10)
-            .into((ImageView) findViewById(R.id.iv_main_corner));
+            .into(this, (ImageView) findViewById(R.id.iv_main_corner));
         sync();
     }
 
@@ -52,11 +56,11 @@ public class ImageLoadSampleActivity extends AppCompatActivity {
                 public void run() {
                     try {
                         Thread.sleep(500);
-                        bitmap = (Drawable) ImageDirector.getInstance()
-                            .imageBuilder(ImageLoadSampleActivity.this.getApplicationContext())
+                        bitmap = (Drawable) ApiImageLoader.getInstance()
+                            .newBuilder()
                             .imageUrl(
                                 "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png")
-                            .intoSyn();
+                            .intoSyn(ImageLoadSampleActivity.this);
                         Message msg = Message.obtain();
                         msg.obj = bitmap;
                         handler.sendMessage(msg);
@@ -75,7 +79,7 @@ public class ImageLoadSampleActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            ImageView ivMain = findViewById(R.id.iv_main);
+            ImageView ivMain = findViewById(R.id.iv_main_new);
             ivMain.setImageDrawable(bitmap);
         }
     };

@@ -23,11 +23,9 @@ import tv.guojiang.core.image.model.ImageSize;
 
 public class ImageBuilder {
 
-    private Context mContext;
-    public ImageEntity mImageEntity;
+    private ImageEntity mImageEntity;
 
-    public ImageBuilder(Context context) {
-        this.mContext = context;
+    public ImageBuilder() {
         this.mImageEntity = new ImageEntity();
     }
 
@@ -128,28 +126,22 @@ public class ImageBuilder {
         return this;
     }
 
-    public void clearEntity() {
-        mImageEntity = null;
-        mImageEntity = new ImageEntity();
+    public ImageEntity getImageEntity() {
+        return mImageEntity;
     }
 
     /**
      * 图片显示
      */
-    public ImageBuilder into(ImageView imageView) {
+    public void into(Context context, ImageView imageView) {
         mImageEntity.imageView = imageView;
-        ImageDirector.getInstance().loadImage();
-        return this;
-    }
-
-    public Context getContext() {
-        return mContext;
+        ApiImageLoader.getInstance().loadImage(context, this);
     }
 
     /**
      * 同步加载图片
      */
-    public Object intoSyn() throws Exception {
-        return ImageDirector.getInstance().loadImageSyn();
+    public Object intoSyn(Context context) throws Exception {
+        return ApiImageLoader.getInstance().loadImageSyn(context, this);
     }
 }

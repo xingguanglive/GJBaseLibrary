@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="7dp"
+        android:orientation="vertical"
+        android:horizontalSpacing="7dp"
+        android:verticalSpacing="7dp"
+        android:listSelector="@null"
+        android:numColumns="2"/>
+
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -29,6 +29,10 @@
 
         <activity android:name="tv.guojiang.sample.NetworkSampleActivity"/>
 
+        <activity android:name="tv.guojiang.sample.glide.GlideGridActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

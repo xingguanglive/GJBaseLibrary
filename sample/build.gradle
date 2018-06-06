@@ -50,4 +50,6 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:' + gradle.supportLibraryVersion
     implementation 'com.android.support:design:' + gradle.supportLibraryVersion
     implementation project(':library')
+    implementation('com.scwang.smartrefresh:SmartRefreshLayout:1.0.3')
+    implementation 'com.android.support:recyclerview-v7:' + gradle.supportLibraryVersion
 }
