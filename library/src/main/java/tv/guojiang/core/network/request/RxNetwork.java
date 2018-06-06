@@ -43,12 +43,11 @@ public class RxNetwork {
     /**
      * 发送 GET 请求
      *
-     * @param url 全路径接口地址
      * @param request 请求
      */
-    public <T extends BaseRequest> Observable<String> get(String url, T request) {
+    public <T extends BaseRequest> Observable<String> get(T request) {
         //@formatter:off
-        return getFinalUrl(url)
+        return getFinalUrl(request.url)
             .flatMap(finalUrl-> mBaseApi.get(finalUrl, request.getHeaders(), request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
@@ -57,12 +56,11 @@ public class RxNetwork {
     /**
      * 发送 POST 请求
      *
-     * @param url 全路径接口地址
      * @param request 请求
      */
-    public <T extends BaseRequest> Observable<String> post(String url, T request) {
+    public <T extends BaseRequest> Observable<String> post(T request) {
         //@formatter:off
-        return getFinalUrl(url)
+        return getFinalUrl(request.url)
             .flatMap(finalUrl -> mBaseApi.post(finalUrl,request.getHeaders(),  request.getParams()))
             .map(ResponseBody::string)//@formatter:on
             .map(new ApiExceptionFilterFunction());
@@ -84,7 +82,7 @@ public class RxNetwork {
     /**
      * 单个文件上传
      */
-    public <T extends BaseRequest> Observable<String> uploadFile(String url, T request) {
+    public <T extends BaseRequest> Observable<String> uploadFile(T request) {
 
         // header
         Map<String, String> headers = request.getHeaders();
@@ -116,7 +114,7 @@ public class RxNetwork {
         if (value instanceof File) {
             //@formatter:off
                 MultipartBody.Part filePart = RetrofitFormWrapper.file2Part(key, (File) value,mediaType );
-                return getFinalUrl(url)
+                return getFinalUrl(request.url)
                     .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, extra, filePart))
                     .map(ResponseBody::string)
                     .map(new ApiExceptionFilterFunction());//@formatter:on
@@ -129,7 +127,7 @@ public class RxNetwork {
                     fileParts
                         .add(RetrofitFormWrapper.file2Part(key, file, mediaType));
                 }
-                return getFinalUrl(url)
+                return getFinalUrl(request.url)
                     .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, extra, fileParts))
                     .map(ResponseBody::string)
                     .map(new ApiExceptionFilterFunction());
