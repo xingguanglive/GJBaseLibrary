@@ -55,6 +55,12 @@ public class BaseRequest {
     String contentType;
 
     /**
+     * 接口全路径
+     */
+    @Ignore
+    public String url;
+
+    /**
      * 获取请求参数
      */
     public Map<String, String> getParams() {
