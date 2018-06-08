@@ -16,12 +16,12 @@ import tv.guojiang.core.util.JsonUtils;
  *
  * @author leo
  */
-public class MiniNetworkTransformer implements ObservableTransformer<String, BaseResponse> {
+public class MiniNetworkTransformer implements ObservableTransformer<String, Response> {
 
     @Override
-    public ObservableSource<BaseResponse> apply(Observable<String> upstream) {
+    public ObservableSource<Response> apply(Observable<String> upstream) {
         return upstream
-            .map(json -> JsonUtils.getInstance().fromJson(json, BaseResponse.class))
+            .map(json -> JsonUtils.getInstance().fromJson(json, Response.class))
             .compose(new NetworkExceptionTransformer<>());
     }
 }
