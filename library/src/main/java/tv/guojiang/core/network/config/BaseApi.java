@@ -15,6 +15,7 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -46,6 +47,12 @@ public interface BaseApi {
         @HeaderMap Map<String, String> headers,
         @FieldMap Map<String, String> params
     );
+
+    @POST
+    Observable<ResponseBody> post(
+        @Url String url,
+        @HeaderMap Map<String, String> headers,
+        @Body RequestBody body);
 
     @GET
     @Streaming

@@ -8,6 +8,7 @@ import tv.guojiang.core.network.annotation.Cache;
 import tv.guojiang.core.network.cache.CacheState;
 import tv.guojiang.core.network.cache.RxCache;
 import tv.guojiang.core.network.request.BaseRequest;
+import tv.guojiang.core.network.request.PostBodyRequest;
 import tv.guojiang.core.network.request.RxNetwork;
 import tv.guojiang.core.util.NetworkUtils;
 
@@ -101,6 +102,25 @@ public class ApiBiz {
     }
 
     /**
+     * post Json 请求
+     */
+    public Observable<String> postJson(PostBodyRequest request) {
+        Map<String, String> params = concatParams(request.getParams());
+
+        Cache cache = RxCache.getCacheAnnotation(request);
+        if (cache == null) {
+            // 不使用缓存
+            return mRxNetwork.postJson(request);
+        }
+
+        Observable<String> cacheObservable = mRxCache.getCache(request.url, params, cache);
+        Observable<String> networkObservable = mRxNetwork.postJson(request)
+            .doOnNext(json -> mRxCache.saveCache(request.url, params, json));
+
+        return concatObservable(cacheObservable, networkObservable, cache.state(), request);
+    }
+
+    /**
      * 文件上传
      */
     public <T extends BaseRequest> Observable<String> upload(T request) {
@@ -122,8 +142,8 @@ public class ApiBiz {
      * 网络请求与缓存的合并处理
      */
     private Observable<String> concatObservable(Observable<String> cache,
-        Observable<String> network,
-        CacheState state, BaseRequest request) {
+                                                Observable<String> network,
+                                                CacheState state, BaseRequest request) {
         switch (state) {
             case FOCUS_CACHE_UNTIL_REFRESH:
                 if (request.refreshApi) {

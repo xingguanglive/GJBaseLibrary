@@ -66,7 +66,7 @@ public class RetrofitFormWrapper {
      * @param mediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
     public static List<MultipartBody.Part> files2Parts(String key, List<File> files,
-        MediaType mediaType) {
+                                                       MediaType mediaType) {
 
         if (files == null || files.size() == 0) {
             throw new NullPointerException("Can not upload without files");
@@ -97,7 +97,7 @@ public class RetrofitFormWrapper {
      * @param fileMediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
     public static MultipartBody getParamsFormData(Map<String, String> params, String fileKey,
-        List<File> files, MediaType fileMediaType) {
+                                                  List<File> files, MediaType fileMediaType) {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
 
@@ -137,7 +137,7 @@ public class RetrofitFormWrapper {
      * @param fileMediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
     public static MultipartBody getFormData(Map<String, String> params, String fileKey, File file,
-        MediaType fileMediaType) {
+                                            MediaType fileMediaType) {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
 
@@ -191,5 +191,12 @@ public class RetrofitFormWrapper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), value);
         MultipartBody.Part part = MultipartBody.Part.createFormData(key, null, requestBody);
         return part;
+    }
+
+    /**
+     * 生成一个json Body
+     */
+    public static RequestBody getJsonBody(String json) {
+        return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
     }
 }
