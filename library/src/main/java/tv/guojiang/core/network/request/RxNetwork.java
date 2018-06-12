@@ -16,6 +16,7 @@ import tv.guojiang.core.network.ApiClient;
 import tv.guojiang.core.network.config.BaseApi;
 import tv.guojiang.core.network.exception.ApiExceptionFilterFunction;
 import tv.guojiang.core.network.response.DownloadFunction;
+import tv.guojiang.core.util.JsonUtils;
 
 /**
  * 网络访问处理
@@ -66,6 +67,25 @@ public class RxNetwork {
             .map(new ApiExceptionFilterFunction());
     }
 
+    public Observable<String> postBody(PostBodyRequest request) {
+        return getFinalUrl(request.url)
+            .flatMap(finalUrl -> {
+
+                Object body = request.body;
+                RequestBody requestBody;
+
+                if (body instanceof String) {
+                    requestBody = RetrofitFormWrapper.getStringBody((String)body);
+                } else {
+                    String json = JsonUtils.getInstance().toJson(request.body);
+                    requestBody = RetrofitFormWrapper.getJsonBody(json);
+                }
+
+                return mBaseApi.post(finalUrl, request.getHeaders(), requestBody);
+            })
+            .map(ResponseBody::string)
+            .map(new ApiExceptionFilterFunction());
+    }
 
     /**
      * 文件下载

@@ -52,4 +52,8 @@ dependencies {
     implementation project(':library')
     implementation('com.scwang.smartrefresh:SmartRefreshLayout:1.0.3')
     implementation 'com.android.support:recyclerview-v7:' + gradle.supportLibraryVersion
+
+    implementation('com.uber.autodispose:autodispose-android-archcomponents:0.8.0') {
+        exclude group: 'io.reactivex.rxjava2', module: 'rxjava'
+    }
 }

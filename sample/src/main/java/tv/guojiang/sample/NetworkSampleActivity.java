@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,7 @@ import tv.guojiang.base.R;
 import tv.guojiang.core.network.ApiBiz;
 import tv.guojiang.core.network.ApiClient;
 import tv.guojiang.core.network.request.PagerRequest;
+import tv.guojiang.core.network.request.PostBodyRequest;
 import tv.guojiang.core.network.response.NetworkObserver;
 import tv.guojiang.core.network.response.NetworkTransformer;
 import tv.guojiang.core.network.response.PagerNetworkTransformer;
@@ -27,7 +31,6 @@ import tv.guojiang.helper.TakePhotoHelper;
 import tv.guojiang.network.LoginRequest;
 import tv.guojiang.network.Person;
 import tv.guojiang.network.PostRequest;
-import tv.guojiang.network.TestRequest;
 import tv.guojiang.network.UploadRequest;
 
 /**
@@ -36,6 +39,7 @@ import tv.guojiang.network.UploadRequest;
 public class NetworkSampleActivity extends AppCompatActivity {
 
     private static final String TAG = "Network";
+
     private TakePhotoHelper mTakePhotoHelper;
 
     @Override
@@ -138,7 +142,6 @@ public class NetworkSampleActivity extends AppCompatActivity {
                 }
             });
 
-
     }
 
     public void page(View view) {
@@ -163,12 +166,18 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     // ================================== 接口缓存测试 =========================================
 
+
     public void cache(View view) {
 
-        TestRequest testRequest = new TestRequest();
+        PostBodyRequest<String> testRequest = new PostBodyRequest<>();
         testRequest.url = "http://www.baidu.com";
 
-        ApiBiz.getInstance().get(testRequest)
+        Person person = new Person();
+        person.uid = "12345";
+        person.username = "Seven";
+        testRequest.body = "1,2,3,4,5,";
+
+        ApiBiz.getInstance().postBody(testRequest)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override
@@ -205,7 +214,6 @@ public class NetworkSampleActivity extends AppCompatActivity {
     }
 
     // ================================== 文件上传测试 =========================================
-
 
     public void upload(View view) {
         mTakePhotoHelper = new TakePhotoHelper(this);
@@ -299,8 +307,53 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
                 }
             });
-
-
     }
 
+    public void test(View view) {
+
+        new Thread("--> Seven") {
+            @Override
+            public void run() {
+
+                Observable
+                    .fromCallable(() -> {
+                        Log.i(TAG, "fromCallable -> " + Thread.currentThread().getName());
+                        return "";
+                    })
+                    // .subscribeOn(Schedulers.io())
+                    // .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+                            Log.i(TAG, "doOnSubscribe -> " + Thread.currentThread().getName());
+                        }
+                    })
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    // .as(autoDisposable(from(NetworkSampleActivity.this, Lifecycle.Event.ON_DESTROY)))
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            Log.i(TAG, "onSubscribe -> " + Thread.currentThread().getName());
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, e.getMessage(), e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.w(TAG, "onComplete -> " + Thread.currentThread().getName());
+                        }
+                    });
+
+            }
+        }.start();
+
+    }
 }
