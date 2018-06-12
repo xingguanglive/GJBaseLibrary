@@ -9,10 +9,13 @@ public class ApiException extends Exception {
 
     private String message;
 
-    public ApiException(int code, String message) {
+    private Object data;
+
+    public ApiException(int code, String message, Object data) {
         super(message);
         this.code = code;
         this.message = message;
+        this.data = data;
     }
 
     public int getCode() {
@@ -30,5 +33,9 @@ public class ApiException extends Exception {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Object getData() {
+        return data;
     }
 }

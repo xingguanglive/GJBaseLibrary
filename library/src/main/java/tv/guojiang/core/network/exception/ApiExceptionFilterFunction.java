@@ -1,9 +1,8 @@
 package tv.guojiang.core.network.exception;
 
-
 import io.reactivex.functions.Function;
 import tv.guojiang.core.network.config.ServerCode;
-import tv.guojiang.core.network.response.Response;
+import tv.guojiang.core.network.response.BaseResponse;
 import tv.guojiang.core.util.JsonUtils;
 
 /**
@@ -19,12 +18,14 @@ public class ApiExceptionFilterFunction implements Function<String, String> {
         // {"errno":0, "msg":"", "data":{}}
         // {"errno":0, "msg":"", "data":[]}
 
-        Response response = JsonUtils.getInstance().fromJson(json, Response.class);
+        BaseResponse response = JsonUtils.getInstance().fromJson(json, BaseResponse.class);
+
+        // JSONObject jsonObject = new JSONObject(json);
 
         // 封装业务错误
         // 避免后台给的 data 不是json-object/json-array 引发异常
         if (response.code != ServerCode.SUCCESS) {
-            throw new ApiException(response.code, response.msg);
+            throw new ApiException(response.code, response.msg, response.data);
         }
 
         return json;
