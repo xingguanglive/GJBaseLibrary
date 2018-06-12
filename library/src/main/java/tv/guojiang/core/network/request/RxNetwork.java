@@ -104,6 +104,13 @@ public class RxNetwork {
      */
     public <T extends BaseRequest> Observable<String> uploadFile(T request) {
 
+        // 文件
+        Map<String, Object> uploads = request.getUploads();
+
+        if (uploads == null || uploads.isEmpty()) {
+            return post(request);
+        }
+
         // header
         Map<String, String> headers = request.getHeaders();
 
@@ -115,16 +122,10 @@ public class RxNetwork {
             extra.put(entry.getKey(), RetrofitFormWrapper.param2RequestBody(entry.getValue()));
         }
 
-        // 文件
-        Map<String, Object> uploads = request.getUploads();
-
         // 文件的类型
         MediaType mediaType = MediaType.parse(request.contentType);
 
         Iterator<Entry<String, Object>> iterator = uploads.entrySet().iterator();
-        if (!iterator.hasNext()) {
-            throw new NullPointerException("choose file first ！！");
-        }
 
         Entry<String, Object> entry = iterator.next();
 
