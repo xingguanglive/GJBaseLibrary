@@ -104,17 +104,17 @@ public class ApiBiz {
     /**
      * post Json 请求
      */
-    public Observable<String> postJson(PostBodyRequest request) {
+    public Observable<String> postBody(PostBodyRequest request) {
         Map<String, String> params = concatParams(request.getParams());
 
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
             // 不使用缓存
-            return mRxNetwork.postJson(request);
+            return mRxNetwork.postBody(request);
         }
 
         Observable<String> cacheObservable = mRxCache.getCache(request.url, params, cache);
-        Observable<String> networkObservable = mRxNetwork.postJson(request)
+        Observable<String> networkObservable = mRxNetwork.postBody(request)
             .doOnNext(json -> mRxCache.saveCache(request.url, params, json));
 
         return concatObservable(cacheObservable, networkObservable, cache.state(), request);

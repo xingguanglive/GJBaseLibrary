@@ -169,15 +169,15 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     public void cache(View view) {
 
-        PostBodyRequest<Person> testRequest = new PostBodyRequest<>();
+        PostBodyRequest<String> testRequest = new PostBodyRequest<>();
         testRequest.url = "http://www.baidu.com";
 
         Person person = new Person();
         person.uid = "12345";
         person.username = "Seven";
-        testRequest.body = person;
+        testRequest.body = "1,2,3,4,5,";
 
-        ApiBiz.getInstance().postJson(testRequest)
+        ApiBiz.getInstance().postBody(testRequest)
             .compose(new NormalSchedulerTransformer<>())
             .subscribe(new Observer<String>() {
                 @Override

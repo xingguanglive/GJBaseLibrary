@@ -199,4 +199,11 @@ public class RetrofitFormWrapper {
     public static RequestBody getJsonBody(String json) {
         return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
     }
+
+    /**
+     * 生成一个string body
+     */
+    public static RequestBody getStringBody(String body) {
+        return RequestBody.create(MediaType.parse("application/text; charset=utf-8"), body);
+    }
 }

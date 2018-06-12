@@ -67,12 +67,21 @@ public class RxNetwork {
             .map(new ApiExceptionFilterFunction());
     }
 
-    public Observable<String> postJson(PostBodyRequest request) {
+    public Observable<String> postBody(PostBodyRequest request) {
         return getFinalUrl(request.url)
             .flatMap(finalUrl -> {
-                String json = JsonUtils.getInstance().toJson(request.body);
-                RequestBody jsonBody = RetrofitFormWrapper.getJsonBody(json);
-                return mBaseApi.post(finalUrl, request.getHeaders(), jsonBody);
+
+                Object body = request.body;
+                RequestBody requestBody;
+
+                if (body instanceof String) {
+                    requestBody = RetrofitFormWrapper.getStringBody((String)body);
+                } else {
+                    String json = JsonUtils.getInstance().toJson(request.body);
+                    requestBody = RetrofitFormWrapper.getJsonBody(json);
+                }
+
+                return mBaseApi.post(finalUrl, request.getHeaders(), requestBody);
             })
             .map(ResponseBody::string)
             .map(new ApiExceptionFilterFunction());
