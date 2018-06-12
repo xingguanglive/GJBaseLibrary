@@ -102,7 +102,9 @@ public class ApiBiz {
     }
 
     /**
-     * post Json 请求
+     * post body。<p>
+     * - 若{@link PostBodyRequest#body}是{@link String}类型，则body是一个字符串;<p>
+     * - 若{@link PostBodyRequest#body}是{@link Object}类型，则其会被转换成一个json
      */
     public Observable<String> postBody(PostBodyRequest request) {
         Map<String, String> params = concatParams(request.getParams());
