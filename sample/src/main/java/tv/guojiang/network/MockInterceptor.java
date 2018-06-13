@@ -19,7 +19,7 @@ public class MockInterceptor implements Interceptor {
 
 
 
-        String json = "{\"errno\":100, \"msg\":\"\", \"data\":{\"name\":\"arya\",\"age\":27}}";
+        String json = "{\"errno\":100, \"msg\":\"error by code : 100\", \"data\":{\"name\":\"arya\",\"age\":27}}";
         String pagerJson = "{\"errno\":0, \"msg\":\"\", \"data\":[{\"name\":\"snow\",\"age\":24}]}";
 
         ResponseBody body = ResponseBody.create(MediaType.parse("json"), json);
