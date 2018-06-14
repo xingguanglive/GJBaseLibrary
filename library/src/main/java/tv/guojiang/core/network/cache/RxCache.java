@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import tv.guojiang.core.network.annotation.Cache;
+import tv.guojiang.core.network.request.PostBodyRequest;
+import tv.guojiang.core.util.JsonUtils;
 
 /**
  * 接口缓存处理
@@ -39,11 +41,12 @@ public class RxCache {
      * @param url 接口地址
      * @param params 当前接口的参数。
      */
-    private static String getRealKey(String url, Map<String, String> params) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(url);
-        sb.append(params.toString());
-        return sb.toString();
+    private static String getCacheKey(String url, Map<String, String> params) {
+        return url + params.toString();
+    }
+
+    private static String getCacheKey(String url, String body) {
+        return url + body;
     }
 
     public static Cache getCacheAnnotation(Object obj) {
@@ -54,9 +57,20 @@ public class RxCache {
      * 获取缓存
      */
     public Observable<String> getCache(String url, Map<String, String> params, Cache cache) {
-        return Observable.create(e -> {
+        return getCache(getCacheKey(url, params), cache);
+    }
 
-            String realKey = getRealKey(url, params);
+    public Observable<String> getCache(String url, PostBodyRequest request, Cache cache) {
+        if (request.body instanceof String) {
+            return getCache(getCacheKey(url, (String) request.body), cache);
+        }
+
+        return getCache(getCacheKey(url, JsonUtils.getInstance().toJson(request.body)), cache);
+    }
+
+    public Observable<String> getCache(String cacheKey, Cache cache) {
+
+        return Observable.create(e -> {
 
             // 时间单位转换
             long maxAge = cache.maxAge();
@@ -64,23 +78,35 @@ public class RxCache {
             long realMaxAgeTime = timeUnit.toSeconds(maxAge);
 
             // 读取缓存
-            String json = mStore.get(realKey, realMaxAgeTime);
+            String json = mStore.get(cacheKey, realMaxAgeTime);
             // 缓存不为空时才触发下面的操作
             if (json != null) {
-                Log.i(TAG, "get data from cache : " + realKey);
+                Log.i(TAG, "get data from cache : " + cacheKey);
                 e.onNext(json);
             }
             e.onComplete();
         });
     }
 
+    public void saveCache(String url, PostBodyRequest request, String json) {
+        if (request.body instanceof String) {
+            saveCache(getCacheKey(url, (String) request.body), json);
+            return;
+        }
+
+        saveCache(getCacheKey(url, JsonUtils.getInstance().toJson(request.body)), json);
+    }
+
     /**
      * 缓存接口数据
      */
     public void saveCache(String url, Map<String, String> params, String json) {
-        String realKey = getRealKey(url, params);
-        mStore.put(realKey, json);
-        Log.i(TAG, "store cache : " + realKey);
+        saveCache(getCacheKey(url, params), json);
+    }
+
+    public void saveCache(String key, String value) {
+        mStore.put(key, value);
+        Log.i(TAG, "store cache : " + key);
     }
 
 }
