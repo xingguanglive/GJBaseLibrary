@@ -79,11 +79,11 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public Cookie getCookie(String key) {
+    public Cookie getCookie(String host, String key) {
 
         // 从内存中获取，每次都会加载Cookie到内存中
         for (Cookie cookie : mCookieCache) {
-            if (cookie.name().equals(key)) {
+            if (cookie.domain().equals(host) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
@@ -91,7 +91,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
         // 从本地获取
         List<Cookie> cookies = mCookiePersistor.loadAll();
         for (Cookie cookie : cookies) {
-            if (cookie.name().equals(key)) {
+            if (cookie.domain().equals(host) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
@@ -100,36 +100,29 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public String getCookieValue(String key) {
-        Cookie cookie = getCookie(key);
+    public String getCookieValue(String host, String key) {
+        Cookie cookie = getCookie(host, key);
         return cookie == null ? null : cookie.value();
     }
 
     @Override
-    public List<Cookie> getCookies() {
+    public List<Cookie> getCookies(String host) {
         // 获取本地的Cookie
-        return mCookiePersistor.loadAll();
-    }
+        List<Cookie> cookies = mCookiePersistor.loadAll();
 
-    /**
-     * 更新旧的Cookie的domain
-     */
-    public void updateCookieDomain(String domain) {
-
-        // 获取老的Cookie
-        List<Cookie> oldCookies = getCookies();
-        List<Cookie> newCookies = new ArrayList<>();
-
-        // 替换老的Cookie的domain
-        for (Cookie oldCookie : oldCookies) {
-            Cookie newCookie = getNewCookie(oldCookie, domain);
-            newCookies.add(newCookie);
+        if (cookies == null) {
+            return null;
         }
 
-        // 清除旧的cookie
-        clear();
-        // 保存新的Cookie
-        saveFromResponse(null, newCookies);
+        List<Cookie> filterCookies = new ArrayList<>();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.domain().equals(host)) {
+                filterCookies.add(cookie);
+            }
+        }
+
+        return filterCookies;
     }
 
     /**
