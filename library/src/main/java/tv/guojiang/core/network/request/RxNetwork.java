@@ -2,7 +2,9 @@ package tv.guojiang.core.network.request;
 
 import android.support.v4.util.ArrayMap;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +14,11 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okio.BufferedSink;
+import okio.Okio;
 import tv.guojiang.core.network.ApiClient;
 import tv.guojiang.core.network.config.BaseApi;
 import tv.guojiang.core.network.exception.ApiExceptionFilterFunction;
-import tv.guojiang.core.network.response.DownloadFunction;
 import tv.guojiang.core.util.JsonUtils;
 
 /**
@@ -75,7 +78,7 @@ public class RxNetwork {
                 RequestBody requestBody;
 
                 if (body instanceof String) {
-                    requestBody = RetrofitFormWrapper.getStringBody((String)body);
+                    requestBody = RetrofitFormWrapper.getStringBody((String) body);
                 } else {
                     String json = JsonUtils.getInstance().toJson(request.body);
                     requestBody = RetrofitFormWrapper.getJsonBody(json);
@@ -96,7 +99,20 @@ public class RxNetwork {
     public Observable<File> download(String url, File file) {
         return getFinalUrl(url)
             .flatMap(finalUrl -> mBaseApi.download(url))
-            .map(new DownloadFunction(file));
+            .flatMap(responseBody -> Observable.create((ObservableOnSubscribe<File>) emitter -> {
+                    try {
+                        BufferedSink sink = Okio.buffer(Okio.sink(file));
+                        sink.writeAll(responseBody.source());
+                        sink.flush();
+                        sink.close();
+                        emitter.onNext(file);
+                        emitter.onComplete();
+                    } catch (IOException e) {
+                        emitter.onError(e);
+                    }
+                })
+            );
+        // .map(new DownloadFunction(file));
     }
 
     /**

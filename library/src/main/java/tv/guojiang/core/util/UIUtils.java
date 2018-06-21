@@ -225,6 +225,20 @@ public class UIUtils {
             return;
         }
 
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            // 切换到主线程
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    showUIToast(message);
+                }
+            });
+        } else {
+            showUIToast(message);
+        }
+    }
+
+    private static void showUIToast(String message) {
         if (mToast == null) {
             mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
         } else {
