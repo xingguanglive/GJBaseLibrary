@@ -1,5 +1,6 @@
 package tv.guojiang.sample;
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,12 +34,15 @@ import tv.guojiang.network.Person;
 import tv.guojiang.network.PostRequest;
 import tv.guojiang.network.UploadRequest;
 
+import static com.uber.autodispose.AutoDispose.autoDisposable;
+import static com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider.from;
+
 /**
  * @author leo
  */
 public class NetworkSampleActivity extends AppCompatActivity {
 
-    private static final String TAG = "Network";
+    private static final String TAG = "Seven";
 
     private TakePhotoHelper mTakePhotoHelper;
 
@@ -54,8 +58,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .log(true)
             //            .cookie(ApiCookie.getInstance(this))
             .joinParamsIntoUrl(false)
-            .header("user-agent", "android")
-            .param("copyright", "AppLive")
+            // .header("user-agent", "android")
+            // .param("copyright", "AppLive")
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
@@ -274,19 +278,28 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     public void download(View view) {
 
-        String url = "http://static.simpledesktops.com/uploads/desktops/2017/10/02/polymagnet.png";
+        String url = "http://10.0.5.205:9999/abc.apk";
 
-        File download = new File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "download.png");
+        File file = new File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            "abc.apk");
 
-        ApiBiz.getInstance()
-            .download(url, download)
+        Observable.just(file.getAbsolutePath())
+            .map(path -> {
+                File file1 = new File(path);
+                file1.delete();
+                return file1;
+            })
+            .flatMap(abc -> ApiBiz.getInstance().download(url, file))
+            .doOnNext(abc -> {
+                Log.d(TAG, "doOnNext ： 下载成功了");
+            })
             .compose(new NormalSchedulerTransformer<>())
+            .as(autoDisposable(from(this, Lifecycle.Event.ON_DESTROY)))
             .subscribe(new Observer<File>() {
                 @Override
                 public void onSubscribe(Disposable d) {
-
+                    Log.d(TAG, "开始了");
                 }
 
                 @Override
@@ -310,7 +323,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
     public void test(View view) {
 
-        if(true){
+        if (true) {
 
             LoginRequest request = new LoginRequest();
             request.username = "JonSnow";
@@ -337,10 +350,8 @@ public class NetworkSampleActivity extends AppCompatActivity {
                     }
                 });
 
-
             return;
         }
-
 
         new Thread("--> Seven") {
             @Override
