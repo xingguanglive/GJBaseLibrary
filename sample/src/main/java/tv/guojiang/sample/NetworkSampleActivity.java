@@ -59,7 +59,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .readTimeout(30)
             .writeTimeout(30)
             .connectTimeout(60)
-            //            .addInterceptor(new MockInterceptor())
+            // .addInterceptor(new MockInterceptor())
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
@@ -165,7 +165,6 @@ public class NetworkSampleActivity extends AppCompatActivity {
     }
 
     // ================================== 接口缓存测试 =========================================
-
 
     public void cache(View view) {
 
@@ -310,6 +309,38 @@ public class NetworkSampleActivity extends AppCompatActivity {
     }
 
     public void test(View view) {
+
+        if(true){
+
+            LoginRequest request = new LoginRequest();
+            request.username = "JonSnow";
+            request.password = "King in the north";
+            request.remember = true;
+            request.android = 999;
+            request.business = "Seven-Android";
+            request.seven = 77777;
+            request.url = "http://localhost:3000/login";
+
+            ApiBiz.getInstance().get(request)
+                .compose(new NetworkTransformer<>(Person.class))
+                .map(response -> response.data)
+                .compose(new NormalSchedulerTransformer<>())
+                .subscribe(new NetworkObserver<Person>() {
+                    @Override
+                    public void onNext(Person person) {
+
+                    }
+
+                    @Override
+                    protected boolean onFailed(int errorCode) {
+                        return super.onFailed(errorCode);
+                    }
+                });
+
+
+            return;
+        }
+
 
         new Thread("--> Seven") {
             @Override

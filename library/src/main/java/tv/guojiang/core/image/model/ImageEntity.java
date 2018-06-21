@@ -51,4 +51,5 @@ public class ImageEntity {
     public DiskCacheStrategy diskCacheStrategy = DiskCacheStrategy.ALL;
     // 绑定的控件
     public ImageView imageView;
+    public boolean animator;
 }

@@ -51,7 +51,10 @@ public class GlideFactory implements ImageFactory {
         }
 
         requestBuilder.apply(requestOptions);
-        requestBuilder.transition(DrawableTransitionOptions.withCrossFade());
+
+        if (entity.animator) {
+            requestBuilder.transition(DrawableTransitionOptions.withCrossFade());
+        }
         if (entity.imageLoadingListener == null) {
             if (entity.imageView == null) {
                 requestBuilder.preload(entity.imageSize.getWidth(), entity.imageSize.getHeigth());
@@ -95,7 +98,10 @@ public class GlideFactory implements ImageFactory {
         requestOptions = addOptions(requestOptions, entity);
         requestOptions.diskCacheStrategy(entity.diskCacheStrategy);
         requestBuilder.apply(requestOptions);
-        requestBuilder.transition(DrawableTransitionOptions.withCrossFade());
+
+        if (entity.animator) {
+            requestBuilder.transition(DrawableTransitionOptions.withCrossFade());
+        }
         return requestBuilder.into(entity.imageSize.getWidth(), entity.imageSize.getHeigth()).get();
     }
 

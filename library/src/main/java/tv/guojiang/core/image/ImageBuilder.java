@@ -126,6 +126,11 @@ public class ImageBuilder {
         return this;
     }
 
+    public ImageBuilder animator(boolean animator){
+        mImageEntity.animator = animator;
+        return this;
+    }
+
     public ImageEntity getImageEntity() {
         return mImageEntity;
     }

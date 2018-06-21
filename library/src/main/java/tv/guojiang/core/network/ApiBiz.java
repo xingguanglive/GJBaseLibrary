@@ -107,7 +107,9 @@ public class ApiBiz {
      * - 若{@link PostBodyRequest#body}是{@link Object}类型，则其会被转换成一个json
      */
     public Observable<String> postBody(PostBodyRequest request) {
-        Map<String, String> params = concatParams(request.getParams());
+        if (request.getParams().size() > 0) {
+            throw new IllegalArgumentException("can not add params when post a body to server!!!");
+        }
 
         Cache cache = RxCache.getCacheAnnotation(request);
         if (cache == null) {
@@ -115,9 +117,9 @@ public class ApiBiz {
             return mRxNetwork.postBody(request);
         }
 
-        Observable<String> cacheObservable = mRxCache.getCache(request.url, params, cache);
+        Observable<String> cacheObservable = mRxCache.getCache(request.url, request, cache);
         Observable<String> networkObservable = mRxNetwork.postBody(request)
-            .doOnNext(json -> mRxCache.saveCache(request.url, params, json));
+            .doOnNext(json -> mRxCache.saveCache(request.url, request, json));
 
         return concatObservable(cacheObservable, networkObservable, cache.state(), request);
     }

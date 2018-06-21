@@ -17,7 +17,9 @@ public class MockInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
 
-        String json = "{\"errno\":0, \"msg\":\"\", \"data\":{\"name\":\"arya\",\"age\":27}}";
+
+
+        String json = "{\"errno\":100, \"msg\":\"error by code : 100\", \"data\":{\"name\":\"arya\",\"age\":27}}";
         String pagerJson = "{\"errno\":0, \"msg\":\"\", \"data\":[{\"name\":\"snow\",\"age\":24}]}";
 
         ResponseBody body = ResponseBody.create(MediaType.parse("json"), json);

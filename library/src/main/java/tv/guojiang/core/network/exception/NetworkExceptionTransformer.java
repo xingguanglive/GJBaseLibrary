@@ -23,5 +23,7 @@ public class NetworkExceptionTransformer<T> implements ObservableTransformer<T, 
             });
         // 错误重试机制,放到最后,错误已经封装
         //            .retryWhen(new RetryFunction());
+        // 暂时不做处理
+        // return upstream;
     }
 }
