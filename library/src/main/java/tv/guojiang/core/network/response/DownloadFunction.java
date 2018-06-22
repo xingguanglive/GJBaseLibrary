@@ -25,8 +25,7 @@ public class DownloadFunction implements Function<ResponseBody, File> {
 
     @Override
     public File apply(ResponseBody responseBody) {
-        boolean result = FileUtils
-            .writeFile(responseBody.byteStream(), mFile.getAbsolutePath(), true);
+        boolean result = FileUtils.writeFile(responseBody.byteStream(), mFile.getAbsolutePath(), true);
         if (!result) {
             // 文件保存失败
             throw new IllegalArgumentException(

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -28,6 +28,7 @@ import tv.guojiang.core.network.response.NetworkTransformer;
 import tv.guojiang.core.network.response.PagerNetworkTransformer;
 import tv.guojiang.core.network.response.PagerResponse;
 import tv.guojiang.core.rx.NormalSchedulerTransformer;
+import tv.guojiang.core.util.UIUtils;
 import tv.guojiang.helper.TakePhotoHelper;
 import tv.guojiang.network.LoginRequest;
 import tv.guojiang.network.Person;
@@ -40,7 +41,7 @@ import static com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvid
 /**
  * @author leo
  */
-public class NetworkSampleActivity extends AppCompatActivity {
+public class NetworkSampleActivity extends FragmentActivity {
 
     private static final String TAG = "Seven";
 
@@ -67,7 +68,11 @@ public class NetworkSampleActivity extends AppCompatActivity {
             .timeoutUnit(TimeUnit.SECONDS)
             .build();
 
+        UIUtils.init(getApplicationContext());
         ApiBiz.getInstance().setApiClient(apiClient);
+
+
+        download(null);
     }
 
     public void get(View view) {
@@ -182,6 +187,7 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         ApiBiz.getInstance().postBody(testRequest)
             .compose(new NormalSchedulerTransformer<>())
+            .as(autoDisposable(from(getLifecycle(), Lifecycle.Event.ON_DESTROY)))
             .subscribe(new Observer<String>() {
                 @Override
                 public void onSubscribe(Disposable d) {
@@ -280,20 +286,11 @@ public class NetworkSampleActivity extends AppCompatActivity {
 
         String url = "http://10.0.5.205:9999/abc.apk";
 
-        File file = new File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            "abc.apk");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "abc.apk");
 
-        Observable.just(file.getAbsolutePath())
-            .map(path -> {
-                File file1 = new File(path);
-                file1.delete();
-                return file1;
-            })
-            .flatMap(abc -> ApiBiz.getInstance().download(url, file))
-            .doOnNext(abc -> {
-                Log.d(TAG, "doOnNext ： 下载成功了");
-            })
+        UIUtils.showToast("standby");
+
+        ApiBiz.getInstance().download(url, file)
             .compose(new NormalSchedulerTransformer<>())
             .as(autoDisposable(from(this, Lifecycle.Event.ON_DESTROY)))
             .subscribe(new Observer<File>() {
