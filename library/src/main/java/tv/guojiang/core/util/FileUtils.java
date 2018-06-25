@@ -49,7 +49,11 @@ public class FileUtils {
      * @return /sdcard/Android/data/application package/
      */
     private static File getAppExternalStorageDir(Context context) {
-        return context.getExternalCacheDir().getParentFile();
+        File externalCacheDir = context.getExternalCacheDir();
+        if (externalCacheDir == null) {
+            return null;
+        }
+        return externalCacheDir.getParentFile();
     }
 
     /**
@@ -78,7 +82,11 @@ public class FileUtils {
             return context.getCacheDir();
         } else {
             // 外部缓存目录
-            return context.getExternalCacheDir();
+            File externalCacheDir = context.getExternalCacheDir();
+            if (externalCacheDir == null) {
+                return context.getCacheDir();
+            }
+            return externalCacheDir;
         }
     }
 
@@ -93,6 +101,10 @@ public class FileUtils {
         if (isSDCardAvailable()) {
             parent = getAppExternalStorageDir(context);
         } else {
+            parent = getAppInternalStoreDir(context);
+        }
+
+        if (parent == null) {
             parent = getAppInternalStoreDir(context);
         }
 

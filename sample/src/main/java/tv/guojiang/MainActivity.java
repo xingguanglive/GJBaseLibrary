@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 import tv.guojiang.base.R;
 import tv.guojiang.sample.LogSampleActivity;
 import tv.guojiang.sample.NetworkSampleActivity;
@@ -18,46 +19,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //        TextView textView = findViewById(R.id.tv_message);
+        TextView textView = findViewById(R.id.tv_message);
+
+        // StringBuilder builder = new StringBuilder();
         //
-        //        StringBuilder builder = new StringBuilder();
+        // File networkCacheDir = FileUtils.getNetworkCacheDir(this);
         //
-        //        File externalStorageFile = FileUtils.getExternalStorageFile(this);
-        //        if (externalStorageFile == null) {
-        //            builder.append("externalStorageFile = null");
-        //        } else {
-        //            builder.append(externalStorageFile.getAbsolutePath());
-        //            builder.append("\n");
-        //            builder.append("=====================================================");
-        //            builder.append("\n");
-        //            File core = new File(externalStorageFile, "core");
-        //            builder.append(core.getAbsolutePath());
-        //        }
+        // builder.append("networkCacheDir:");
+        // builder.append("\n");
+        // builder.append(networkCacheDir);
         //
-        //        builder.append("\n");
-        //        builder.append("=====================================================");
-        //        builder.append("\n");
-        //
-        //        File innerCacheDir = FileUtils.getInnerCacheDir(this);
-        //        if (innerCacheDir == null) {
-        //            builder.append("innerCacheDir = null");
-        //        } else {
-        //            builder.append(innerCacheDir.getAbsolutePath());
-        //
-        //            builder.append("\n");
-        //            builder.append("=====================================================");
-        //            builder.append("\n");
-        //            File core = new File(innerCacheDir, "core");
-        //            builder.append(core.getAbsolutePath());
-        //        }
-        //
-        //        builder.append("\n");
-        //        builder.append("=====================================================");
-        //        builder.append("\n");
-        //
-        //        builder.append(FileUtils.getApiCacheDir(this));
-        //
-        //        textView.setText(builder.toString());
+        // textView.setText(builder.toString());
 
     }
 
