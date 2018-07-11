@@ -81,9 +81,13 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     @Override
     public Cookie getCookie(String host, String key) {
 
+        HttpUrl httpUrl = new HttpUrl.Builder()
+            .host(host)
+            .build();
+
         // 从内存中获取，每次都会加载Cookie到内存中
         for (Cookie cookie : mCookieCache) {
-            if (cookie.domain().equals(host) && cookie.name().equals(key)) {
+            if (cookie.matches(httpUrl) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
@@ -91,7 +95,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
         // 从本地获取
         List<Cookie> cookies = mCookiePersistor.loadAll();
         for (Cookie cookie : cookies) {
-            if (cookie.domain().equals(host) && cookie.name().equals(key)) {
+            if (cookie.matches(httpUrl) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
@@ -114,10 +118,14 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
             return null;
         }
 
+        HttpUrl httpUrl = new HttpUrl.Builder()
+            .host(host)
+            .build();
+
         List<Cookie> filterCookies = new ArrayList<>();
 
         for (Cookie cookie : cookies) {
-            if (cookie.domain().equals(host)) {
+            if (cookie.matches(httpUrl)) {
                 filterCookies.add(cookie);
             }
         }
