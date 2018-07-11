@@ -83,6 +83,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
 
         HttpUrl httpUrl = new HttpUrl.Builder()
             .host(host)
+            .scheme("http")
             .build();
 
         // 从内存中获取，每次都会加载Cookie到内存中
@@ -120,6 +121,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
 
         HttpUrl httpUrl = new HttpUrl.Builder()
             .host(host)
+            .scheme("http")
             .build();
 
         List<Cookie> filterCookies = new ArrayList<>();
