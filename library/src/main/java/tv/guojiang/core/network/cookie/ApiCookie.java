@@ -147,4 +147,12 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
             .path(oldCookie.path())
             .build();
     }
+
+    /**
+     * 获取所有的Cookie.不区分域名
+     */
+    public List<Cookie> getCookies() {
+        // 获取本地的Cookie
+        return mCookiePersistor.loadAll();
+    }
 }
