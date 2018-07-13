@@ -11,7 +11,6 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Cookie;
-import okhttp3.Cookie.Builder;
 import okhttp3.HttpUrl;
 
 /**
@@ -79,24 +78,19 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public Cookie getCookie(String host, String key) {
-
-        HttpUrl httpUrl = new HttpUrl.Builder()
-            .host(host)
-            .scheme("http")
-            .build();
+    public Cookie getCookie(HttpUrl url, String key) {
 
         // 从内存中获取，每次都会加载Cookie到内存中
         for (Cookie cookie : mCookieCache) {
-            if (cookie.matches(httpUrl) && cookie.name().equals(key)) {
+            if (cookie.matches(url) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
 
         // 从本地获取
-        List<Cookie> cookies = mCookiePersistor.loadAll();
+        List<Cookie> cookies = getCookies();
         for (Cookie cookie : cookies) {
-            if (cookie.matches(httpUrl) && cookie.name().equals(key)) {
+            if (cookie.matches(url) && cookie.name().equals(key)) {
                 return cookie;
             }
         }
@@ -105,29 +99,23 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public String getCookieValue(String host, String key) {
-        Cookie cookie = getCookie(host, key);
+    public String getCookieValue(HttpUrl url, String key) {
+        Cookie cookie = getCookie(url, key);
         return cookie == null ? null : cookie.value();
     }
 
     @Override
-    public List<Cookie> getCookies(String host) {
-        // 获取本地的Cookie
-        List<Cookie> cookies = mCookiePersistor.loadAll();
+    public List<Cookie> getCookies(HttpUrl url) {
+        List<Cookie> cookies = getCookies();
 
         if (cookies == null) {
             return null;
         }
 
-        HttpUrl httpUrl = new HttpUrl.Builder()
-            .host(host)
-            .scheme("http")
-            .build();
-
         List<Cookie> filterCookies = new ArrayList<>();
 
         for (Cookie cookie : cookies) {
-            if (cookie.matches(httpUrl)) {
+            if (cookie.matches(url)) {
                 filterCookies.add(cookie);
             }
         }
@@ -135,24 +123,18 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
         return filterCookies;
     }
 
-    /**
-     * 获取更新的domain的Cookie
-     */
-    private Cookie getNewCookie(Cookie oldCookie, String domain) {
-        return new Builder()
-            .name(oldCookie.name())
-            .value(oldCookie.value())
-            .expiresAt(oldCookie.expiresAt())
-            .domain(domain)
-            .path(oldCookie.path())
-            .build();
-    }
-
-    /**
-     * 获取所有的Cookie.不区分域名
-     */
+    @Override
     public List<Cookie> getCookies() {
         // 获取本地的Cookie
         return mCookiePersistor.loadAll();
+    }
+
+    @Override
+    public void clearCookie(HttpUrl url) {
+        List<Cookie> cookies = getCookies(url);
+        if (cookies == null) {
+            return;
+        }
+        mCookiePersistor.removeAll(cookies);
     }
 }
