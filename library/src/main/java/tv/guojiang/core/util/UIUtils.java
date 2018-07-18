@@ -1,5 +1,6 @@
 package tv.guojiang.core.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -27,6 +28,7 @@ public class UIUtils {
 
     private static Toast mToast;
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     public static void init(Context context) {
@@ -220,35 +222,59 @@ public class UIUtils {
         }
     }
 
-    public static void showToast(String message) {
-        if (TextUtils.isEmpty(message)) {
-            return;
-        }
-
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            // 切换到主线程
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    showUIToast(message);
-                }
-            });
-        } else {
-            showUIToast(message);
-        }
-    }
-
-    private static void showUIToast(String message) {
+    @SuppressLint("ShowToast")
+    private static void showUIToast(String message, int duration) {
         if (mToast == null) {
-            mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(getContext(), message, duration);
         } else {
             mToast.setText(message);
         }
         mToast.show();
     }
 
+    public static void showToast(String message) {
+        showToast(message, Toast.LENGTH_SHORT);
+    }
+
+    public static void showToast(String message, int duration) {
+        if (TextUtils.isEmpty(message)) {
+            return;
+        }
+
+        if (!isMainThread()) {
+            // 切换到主线程
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    showUIToast(message, duration);
+                }
+            });
+        } else {
+            showUIToast(message, duration);
+        }
+    }
+
     public static void showToast(@StringRes int resId) {
-        showToast(getString(resId));
+        showToast(getString(resId), Toast.LENGTH_SHORT);
+    }
+
+    public static void showToast(@StringRes int resId, int duration) {
+        showToast(getString(resId), duration);
+    }
+
+    public static void showToast(@StringRes int resId, Object... formatArgs) {
+        showToast(getString(resId, formatArgs), Toast.LENGTH_SHORT);
+    }
+
+    public static void showToast(@StringRes int resId, int duration, Object... formatArgs) {
+        showToast(getString(resId, formatArgs), duration);
+    }
+
+    /**
+     * 是否处于主线程
+     */
+    public static boolean isMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
     }
 
     /**
