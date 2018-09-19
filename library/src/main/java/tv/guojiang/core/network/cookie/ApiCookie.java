@@ -2,6 +2,7 @@ package tv.guojiang.core.network.cookie;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.CookieCache;
@@ -25,24 +26,16 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
      */
     private PersistentCookieJar mCookieJar;
 
-    // 内存中的Cookie
-    private CookieCache mCookieCache;
-
-    // 本地的Cookie
-    private CookiePersistor mCookiePersistor;
-
     public ApiCookie(Context context) {
-        mCookieCache = new SetCookieCache();
-        mCookiePersistor = new SharedPrefsCookiePersistor(context);
-
-        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
+        this(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
 
     public ApiCookie(SharedPreferences preferences) {
-        mCookieCache = new SetCookieCache();
-        mCookiePersistor = new SharedPrefsCookiePersistor(preferences);
+        this(new SetCookieCache(), new SharedPrefsCookiePersistor(preferences));
+    }
 
-        mCookieJar = new PersistentCookieJar(mCookieCache, mCookiePersistor);
+    private ApiCookie(CookieCache cookieCache, CookiePersistor cookiePersistor) {
+        mCookieJar = new PersistentCookieJar(cookieCache, cookiePersistor);
     }
 
     /**
@@ -79,11 +72,13 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
 
     @Override
     public Cookie getCookie(HttpUrl url, String key) {
+        List<Cookie> cookies = mCookieJar.loadForRequest(url);
+        if (cookies == null || cookies.size() == 0 || TextUtils.isEmpty(key)) {
+            return null;
+        }
 
-        // 从本地获取
-        List<Cookie> cookies = getCookies();
         for (Cookie cookie : cookies) {
-            if (cookie.matches(url) && cookie.name().equals(key)) {
+            if (key.equals(cookie.name())) {
                 return cookie;
             }
         }
@@ -92,34 +87,8 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public String getCookieValue(HttpUrl url, String key) {
-        Cookie cookie = getCookie(url, key);
-        return cookie == null ? null : cookie.value();
-    }
-
-    @Override
     public List<Cookie> getCookies(HttpUrl url) {
-        List<Cookie> cookies = getCookies();
-
-        if (cookies == null) {
-            return null;
-        }
-
-        List<Cookie> filterCookies = new ArrayList<>();
-
-        for (Cookie cookie : cookies) {
-            if (cookie.matches(url)) {
-                filterCookies.add(cookie);
-            }
-        }
-
-        return filterCookies;
-    }
-
-    @Override
-    public List<Cookie> getCookies() {
-        // 获取本地的Cookie
-        return mCookiePersistor.loadAll();
+        return mCookieJar.loadForRequest(url);
     }
 
     @Override
@@ -128,6 +97,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
         if (cookies == null) {
             return;
         }
-        mCookiePersistor.removeAll(cookies);
+        // 清空Cookie
+        mCookieJar.saveFromResponse(url, new ArrayList<>());
     }
 }
