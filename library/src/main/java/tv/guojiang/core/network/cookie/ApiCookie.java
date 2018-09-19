@@ -80,13 +80,6 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     @Override
     public Cookie getCookie(HttpUrl url, String key) {
 
-        // 从内存中获取，每次都会加载Cookie到内存中
-        for (Cookie cookie : mCookieCache) {
-            if (cookie.matches(url) && cookie.name().equals(key)) {
-                return cookie;
-            }
-        }
-
         // 从本地获取
         List<Cookie> cookies = getCookies();
         for (Cookie cookie : cookies) {
