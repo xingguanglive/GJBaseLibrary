@@ -10,9 +10,9 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
- * RetrofitFormWrapper,主要用来封装文件上传相关的数据
+ * Retrofit post multipart 数据的封装
  */
-public class RetrofitFormWrapper {
+public class FormMultipart {
 
     /*
      * @Part('key') RequestBody

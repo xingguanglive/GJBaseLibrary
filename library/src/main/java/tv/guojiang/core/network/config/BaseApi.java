@@ -40,6 +40,7 @@ public interface BaseApi {
         @QueryMap Map<String, String> params
     );
 
+    // POST普通表单
     @POST
     @FormUrlEncoded
     Observable<ResponseBody> post(
@@ -48,17 +49,19 @@ public interface BaseApi {
         @FieldMap Map<String, String> params
     );
 
+    // POST Json
     @POST
     Observable<ResponseBody> post(
         @Url String url,
         @HeaderMap Map<String, String> headers,
         @Body RequestBody body);
 
+    // Download
     @GET
     @Streaming
     Observable<ResponseBody> download(@Url String url);
 
-    // 单个文件上传
+    // Post Multipart
     @POST
     @Multipart
     Observable<ResponseBody> uploadFile(
@@ -68,7 +71,7 @@ public interface BaseApi {
         @Part MultipartBody.Part file
     );
 
-    // 多个文件上传
+    // Post Multipart
     @POST
     @Multipart
     Observable<ResponseBody> uploadFiles(
