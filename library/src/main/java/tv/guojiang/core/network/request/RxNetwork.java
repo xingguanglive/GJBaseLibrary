@@ -75,10 +75,10 @@ public class RxNetwork {
                 RequestBody requestBody;
 
                 if (body instanceof String) {
-                    requestBody = FormMultipart.getStringBody((String) body);
+                    requestBody = HttpForm.toStringBody((String) body);
                 } else {
                     String json = JsonUtils.getInstance().toJson(request.body);
-                    requestBody = FormMultipart.getJsonBody(json);
+                    requestBody = HttpForm.toJsonBody(json);
                 }
 
                 return mBaseApi.post(finalUrl, request.getHeaders(), requestBody);
@@ -133,7 +133,7 @@ public class RxNetwork {
 
         Map<String, RequestBody> extra = new ArrayMap<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            extra.put(entry.getKey(), FormMultipart.param2RequestBody(entry.getValue()));
+            extra.put(entry.getKey(), HttpForm.toRequestBody(entry.getValue()));
         }
 
         // 文件的类型
@@ -148,7 +148,7 @@ public class RxNetwork {
 
         if (value instanceof File) {
             //@formatter:off
-                MultipartBody.Part filePart = FormMultipart.file2Part(key, (File) value,mediaType );
+                MultipartBody.Part filePart = HttpForm.fileToPart(key, (File) value,mediaType );
                 return getFinalUrl(request.url)
                     .flatMap(finalUrl -> mBaseApi.uploadFile(finalUrl, headers, extra, filePart))
                     .map(ResponseBody::string)
@@ -160,7 +160,7 @@ public class RxNetwork {
                 List<MultipartBody.Part> fileParts = new ArrayList<>();
                 for (File file : files) {
                     fileParts
-                        .add(FormMultipart.file2Part(key, file, mediaType));
+                        .add(HttpForm.fileToPart(key, file, mediaType));
                 }
                 return getFinalUrl(request.url)
                     .flatMap(finalUrl -> mBaseApi.uploadFiles(finalUrl, headers, extra, fileParts))

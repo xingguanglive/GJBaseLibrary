@@ -10,9 +10,9 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
- * Retrofit post multipart 数据的封装
+ * HTTP 表单数据的封装
  */
-public class FormMultipart {
+public class HttpForm {
 
     /*
      * @Part('key') RequestBody
@@ -42,7 +42,7 @@ public class FormMultipart {
      * @param file 上传的单个文件
      * @param mediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
-    public static MultipartBody.Part file2Part(String key, File file, MediaType mediaType) {
+    public static MultipartBody.Part fileToPart(String key, File file, MediaType mediaType) {
         RequestBody requestBody = RequestBody.create(mediaType, file);
         // 这里的作用应该和@Part("key")是一样的
         // RequestBody只是封装了值，并没有封装key
@@ -65,8 +65,8 @@ public class FormMultipart {
      * @param files 同一个Key对应的多个文件
      * @param mediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
-    public static List<MultipartBody.Part> files2Parts(String key, List<File> files,
-                                                       MediaType mediaType) {
+    public static List<MultipartBody.Part> filesToParts(String key, List<File> files,
+                                                        MediaType mediaType) {
 
         if (files == null || files.size() == 0) {
             throw new NullPointerException("Can not upload without files");
@@ -75,7 +75,7 @@ public class FormMultipart {
         List<MultipartBody.Part> parts = new ArrayList<>(files.size());
 
         for (File file : files) {
-            MultipartBody.Part part = file2Part(key, file, mediaType);
+            MultipartBody.Part part = fileToPart(key, file, mediaType);
             parts.add(part);
         }
 
@@ -96,8 +96,8 @@ public class FormMultipart {
      * @param files 同一个Key对应多个文件
      * @param fileMediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
-    public static MultipartBody getParamsFormData(Map<String, String> params, String fileKey,
-                                                  List<File> files, MediaType fileMediaType) {
+    public static MultipartBody toMulitipart(Map<String, String> params, String fileKey,
+                                             List<File> files, MediaType fileMediaType) {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
 
@@ -124,7 +124,7 @@ public class FormMultipart {
 
     /**
      * 将单个文件及参数转换成{@link MultipartBody}
-     * <p><em>一个key对应多个文件</em>
+     * <p><em>一个key对应单个文件</em>
      * <pre>
      * 使用时注意：
      *     1. Service对应的方法上需使用 @POST注解 , <b>不需要使用@MultiPart注解</b>
@@ -136,7 +136,7 @@ public class FormMultipart {
      * @param file 上传的文件
      * @param fileMediaType 文件类型,可通过{@link MediaType#parse(String)}方法转换
      */
-    public static MultipartBody getFormData(Map<String, String> params, String fileKey, File file,
+    public static MultipartBody toMultipart(Map<String, String> params, String fileKey, File file,
                                             MediaType fileMediaType) {
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
@@ -165,14 +165,14 @@ public class FormMultipart {
      * <p><em>主要用于 文件上传 与 普通key-value 分开 的情况</em>
      * <pre>
      * 使用时注意：
-     *      1. 对于单个文件，一般结合{@link #file2Part(String, File, MediaType)}一起使用
-     *      2. 对于多个文件，一般结合{@link #files2Parts(String, List, MediaType)}一起使用
+     *      1. 对于单个文件，一般结合{@link #fileToPart(String, File, MediaType)}一起使用
+     *      2. 对于多个文件，一般结合{@link #filesToParts(String, List, MediaType)}一起使用
      *      3. 对于文件之外的参数，使用 @Part("key") RequestBody value 来传递
      * </pre>
      *
      * @param value 对应key的value
      */
-    public static RequestBody param2RequestBody(String value) {
+    public static RequestBody toRequestBody(String value) {
         MediaType textType = MediaType.parse("text/plain");
         RequestBody requestBody = RequestBody.create(textType, value);
         return requestBody;
@@ -187,7 +187,7 @@ public class FormMultipart {
      *      2. 使用@Part MultipartBody.Part既可用完成使用
      * </pre>
      */
-    public static MultipartBody.Part param2Part(String key, String value) {
+    public static MultipartBody.Part pairToPart(String key, String value) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), value);
         MultipartBody.Part part = MultipartBody.Part.createFormData(key, null, requestBody);
         return part;
@@ -196,14 +196,14 @@ public class FormMultipart {
     /**
      * 生成一个json Body
      */
-    public static RequestBody getJsonBody(String json) {
+    public static RequestBody toJsonBody(String json) {
         return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
     }
 
     /**
      * 生成一个string body
      */
-    public static RequestBody getStringBody(String body) {
+    public static RequestBody toStringBody(String body) {
         return RequestBody.create(MediaType.parse("application/text; charset=utf-8"), body);
     }
 }
