@@ -26,6 +26,8 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
      */
     private PersistentCookieJar mCookieJar;
 
+    private CookiePersistor mLocalCookie;
+
     public ApiCookie(Context context) {
         this(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
@@ -35,6 +37,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     private ApiCookie(CookieCache cookieCache, CookiePersistor cookiePersistor) {
+        mLocalCookie = cookiePersistor;
         mCookieJar = new PersistentCookieJar(cookieCache, cookiePersistor);
     }
 
@@ -114,5 +117,10 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
 
         // 清除cookies
         mCookieJar.saveFromResponse(url, clearedCookies);
+    }
+
+    @Override
+    public List<Cookie> getAllCookies() {
+        return mLocalCookie.loadAll();
     }
 }

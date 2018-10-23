@@ -23,4 +23,6 @@ public interface ICookie {
      * 清除指定域名下的Cookie
      */
     void clearCookie(HttpUrl url);
+
+    List<Cookie> getAllCookies();
 }
