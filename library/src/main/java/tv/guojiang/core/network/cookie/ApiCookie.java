@@ -92,12 +92,27 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public void clearCookie(HttpUrl url) {
+    public synchronized void clearCookie(HttpUrl url) {
         List<Cookie> cookies = getCookies(url);
-        if (cookies == null) {
+        if (cookies == null || cookies.size() == 0) {
             return;
         }
-        // 清空Cookie
-        mCookieJar.saveFromResponse(url, new ArrayList<>());
+
+        List<Cookie> clearedCookies = new ArrayList<>();
+
+        for (Cookie cookie : cookies) {
+            Cookie clearedCookie = new Cookie.Builder()
+                .domain(cookie.domain())
+                .expiresAt(System.currentTimeMillis())
+                .name(cookie.name())
+                .value(cookie.value())
+                .path(cookie.path())
+                .build();
+
+            clearedCookies.add(clearedCookie);
+        }
+
+        // 清除cookies
+        mCookieJar.saveFromResponse(url, clearedCookies);
     }
 }
