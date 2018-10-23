@@ -92,7 +92,7 @@ public class ApiCookie implements ClearableCookieJar, ICookie {
     }
 
     @Override
-    public synchronized void clearCookie(HttpUrl url) {
+    public void clearCookie(HttpUrl url) {
         List<Cookie> cookies = getCookies(url);
         if (cookies == null || cookies.size() == 0) {
             return;
